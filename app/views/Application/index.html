@@ -1,4 +1,10 @@
-#{extends 'main.html' /}
-#{set title:'Home' /}
+  
+  <button id="runDemo"/>Run Demo</button>
 
-#{welcome /}
+  #{script 'lib/jquery.min.js' /}
+  #{script 'lib/underscore-min.js' /}
+  #{script 'lib/backbone-min.js' /}
+  
+  #{script 'models.js' /}
+
+  #{script 'demo.js' /}
