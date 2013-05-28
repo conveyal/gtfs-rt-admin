@@ -3,7 +3,7 @@ var GtfsRt = GtfsRt || {};
 (function(G, $) {
 
   G.Alert = Backbone.Model.extend({
-    url: '/api/alert/',
+    urlRoot: '/api/alert/',
     
     defaults: {
       id: null,

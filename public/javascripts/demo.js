@@ -1,6 +1,6 @@
+var alerts12;
 $(document).ready(function() {
    // page init scripts
-  
 
    // add language select handler
      $("#runDemo").click(function(e){
@@ -53,7 +53,14 @@ $(document).ready(function() {
         // fetch data from server
         alerts.fetch({success: function(collection, response, options) {
 
-          alert(collection.length);
+          console.log(collection.length);
+          
+          var alert = collection.at(0);
+          
+          alert.set('descriptionText', 'detour');
+          alert.save(); // fails -- 404 on PUT request 
+          
+          alert.destroy(); // fails -- 404 on DELETE
 
         }});
 

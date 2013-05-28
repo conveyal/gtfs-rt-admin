@@ -12,12 +12,14 @@ import javax.persistence.OneToMany;
 
 import org.apache.commons.codec.binary.Hex;
 import org.codehaus.jackson.annotate.JsonCreator;
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonManagedReference;
 import org.hsqldb.lib.MD5;
 
 import play.Play;
 import play.db.jpa.Model;
 
+@JsonIgnoreProperties({"entityId", "persistent"})
 @Entity
 public class Alert extends Model {
 
