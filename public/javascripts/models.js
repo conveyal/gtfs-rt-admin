@@ -23,7 +23,7 @@ var GtfsRt = GtfsRt || {};
   });
 
   G.TimeRange = Backbone.Model.extend({
-    url: '/api/tr/',
+    urlRoot: '/api/tr/',
 
     defaults: {
       id: null,
@@ -39,7 +39,7 @@ var GtfsRt = GtfsRt || {};
   });
 
   G.InformedEntity = Backbone.Model.extend({
-    url: '/api/ie/',
+    urlRoot: '/api/ie/',
 
     defaults: {
       id: null,
