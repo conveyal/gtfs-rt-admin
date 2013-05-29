@@ -22,6 +22,8 @@ otp.modules.alerts.AlertsModule =
 
     minimumZoomForStops : 15,
     
+    openEditAlertWidgets : { }, // maps the alert id to the widget object
+    
     initialize : function(webapp) {
         otp.modules.Module.prototype.initialize.apply(this, arguments);
     },
@@ -97,13 +99,22 @@ otp.modules.alerts.AlertsModule =
         }
                         
         var widget = new otp.modules.alerts.EditAlertWidget('otp-'+this.id+'-editAlertWidget-'+this.alertWidgetCount, this, alertObj);
+        widget.bringToFront();
         this.alertWidgetCount++;
     },
     
     editAlertWidget : function(alertObj) {
-        new otp.modules.alerts.EditAlertWidget('otp-'+this.id+'-editAlertWidget-'+this.alertWidgetCount, this, alertObj);
-        this.alertWidgetCount++;
-    },
+        if(_.has(this.openEditAlertWidgets, alertObj.get('id'))) {
+            var widget = this.openEditAlertWidgets[alertObj.get('id')];
+            if(widget.minimized) widget.unminimize();
+        }
+        else {
+            var widget = new otp.modules.alerts.EditAlertWidget('otp-'+this.id+'-editAlertWidget-'+this.alertWidgetCount, this, alertObj);
+            this.openEditAlertWidgets[alertObj.get('id')] = widget;
+            this.alertWidgetCount++;
+        }
+        widget.bringToFront();
+    },    
     
     fetchAlerts : function() {
         var this_ = this;

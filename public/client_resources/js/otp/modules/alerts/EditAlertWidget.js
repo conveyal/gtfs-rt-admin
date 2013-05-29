@@ -127,7 +127,7 @@ otp.modules.alerts.EditAlertWidget =
     initialize : function(id, module, alertObj) {
         var this_ = this;
         otp.widgets.Widget.prototype.initialize.call(this, id, module, {
-            title : 'Edit Alert',
+            title : (alertObj.get('id') == null) ? 'Create Alert' : 'Edit Alert #'+alertObj.get('id'),
             cssClass : 'otp-alerts-editAlertWidget',
             closeable: true
         });
@@ -161,6 +161,10 @@ otp.modules.alerts.EditAlertWidget =
 
         view.render();
     },
+    
+    onClose : function() {
+        delete this.module.openEditAlertWidgets[this.alertObj.get('id')];
+    }
     
 });
 
