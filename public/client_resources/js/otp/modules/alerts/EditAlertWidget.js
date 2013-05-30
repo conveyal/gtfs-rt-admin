@@ -63,7 +63,7 @@ otp.modules.alerts.EditAlertView = Backbone.View.extend({
         context = _.extend(context, {
             widgetId : this.options.widget.id,
             renderDate : function() {
-                return function(date, render) { return moment(parseInt(render(date))).format(otp.config.dateFormat+' '+otp.config.timeFormat); }
+                return function(date, render) { return moment(1000*parseInt(render(date))).format(otp.config.dateFormat+' '+otp.config.timeFormat); }
             },
             rangeIndex: function() { return rangeIndex++; },
             entityIndex: function() { return entityIndex++; },
@@ -104,10 +104,10 @@ otp.modules.alerts.EditAlertView = Backbone.View.extend({
     },
     
     addRangeButtonClicked : function(event) {
-        var start = 1000*moment($("#"+this.options.widget.id+'-rangeStartInput').val(), "MM/DD/YYYY "+otp.config.timeFormat).unix();
+        var start = moment($("#"+this.options.widget.id+'-rangeStartInput').val(), "MM/DD/YYYY "+otp.config.timeFormat).unix();
         var radio = $('input:radio[name='+this.options.widget.id+'-rangeEndRadio'+']:checked').val();
         var end = (radio === "indefinitely") ? null :
-            1000*moment($("#"+this.options.widget.id+'-rangeEndInput').val(), "MM/DD/YYYY "+otp.config.timeFormat).unix();
+            moment($("#"+this.options.widget.id+'-rangeEndInput').val(), "MM/DD/YYYY "+otp.config.timeFormat).unix();
         
         this.model.attributes.timeRanges.push({
             startTime: start,
