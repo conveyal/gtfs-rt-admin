@@ -66,7 +66,7 @@ otp.modules.alerts.EntitiesWidget =
                 var route = ti.routes[routeId];
                 //this_.routesSelect.append('<option value="'+i+'">'+otp.util.Itin.getRouteDisplayString(route.routeData)+'</option>');
                 ich['otp-alerts-routeRow'](route.routeData).appendTo(this_.routesDiv)
-                .data('routeId', route.routeData.id)
+                .data('route', route.routeData)
                 .draggable({
                     helper: 'clone',
                     revert: 'invalid',
@@ -76,8 +76,8 @@ otp.modules.alerts.EntitiesWidget =
                     }                    
                 })
                 .hover(function(evt) {
-                    var routeId = $(this).data('routeId');
-                    this_.module.highlightRoute(routeId.agencyId+"_"+routeId.id);
+                    var route = $(this).data('route');
+                    this_.module.highlightRoute(route.id.agencyId+"_"+route.id.id);
                 }, function(evt) {
                     this_.module.clearHighlights();
                 });
@@ -110,7 +110,7 @@ otp.modules.alerts.EntitiesWidget =
             var stop = stopArray[i];
             ich['otp-alerts-stopRow'](stop).appendTo(this_.stopsDiv)
             .data('stop', stop)
-            .data('stopId', stop.id)
+            //.data('stopId', stop.id)
             .draggable({
                 helper: 'clone',
                 revert: 'invalid',

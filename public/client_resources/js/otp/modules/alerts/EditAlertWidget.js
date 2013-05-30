@@ -84,11 +84,12 @@ otp.modules.alerts.EditAlertView = Backbone.View.extend({
 
         // allow the entities list to accept route/stop elements via drag & drop
         $("#"+this.options.widget.id+'-entitiesList').droppable({
-            accept: '.otp-alerts-entitiesWidget-entityRow',
+            accept: '.otp-alerts-draggableEntity', //'.otp-alerts-entitiesWidget-entityRow',
             hoverClass: 'otp-alerts-editAlert-entitiesList-dropHover',
             drop: function(event, ui) { this_.handleEntityDrop(event, ui); }
         });
 
+        // select the current cause/effect items
         if(this.model.get('cause')) {
             $('#'+this.options.widget.id+'-causeSelect option[value="'+this.model.get('cause')+'"]').prop('selected', true)
         }
@@ -142,19 +143,19 @@ otp.modules.alerts.EditAlertView = Backbone.View.extend({
     
     handleEntityDrop : function(event, ui) {
         
-        var routeIdObj = $(ui.draggable.context).data('routeId');
-        if(typeof routeIdObj !== 'undefined' && routeIdObj !== null) {
+        var route = $(ui.draggable.context).data('route');
+        if(typeof route !== 'undefined' && route !== null) {
             this.model.attributes.informedEntities.push({
-                agencyId : routeIdObj.agencyId,
-                routeId : routeIdObj.id,
+                agencyId : route.id.agencyId,
+                routeId : route.id.id,
             });
         }
 
-        var stopIdObj = $(ui.draggable.context).data('stopId');
-        if(typeof stopIdObj !== 'undefined' && stopIdObj !== null) {
+        var stop = $(ui.draggable.context).data('stop');
+        if(typeof stop !== 'undefined' && stop !== null) {
             this.model.attributes.informedEntities.push({
-                agencyId : stopIdObj.agencyId,
-                stopId : stopIdObj.id,
+                agencyId : stop.id.agencyId,
+                stopId : stop.id.id,
             });
         }
 

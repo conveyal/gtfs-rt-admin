@@ -93,9 +93,23 @@
 
 
 <script id="otp-alerts-routeRow" type="text/html">
-    <div class="otp-alerts-entitiesWidget-entityRow">({{routeShortName}}) {{routeLongName}}</div>
+    <div class="otp-alerts-entitiesWidget-entityRow otp-alerts-draggableEntity">({{routeShortName}}) {{routeLongName}}</div>
 </script>
 
+
 <script id="otp-alerts-stopRow" type="text/html">
-    <div class="otp-alerts-entitiesWidget-entityRow">({{id.agencyId}}-{{id.id}}) {{stopName}}</div>
+    <div class="otp-alerts-entitiesWidget-entityRow otp-alerts-draggableEntity">({{id.agencyId}}-{{id.id}}) {{stopName}}</div>
 </script>
+
+
+<script id="otp-alerts-stopPopup" type="text/html">
+    <div style='text-align: center;'>
+        <div style='font-weight: bold; font-size: 1.1em;'>
+            Stop {{id.agencyId}}_{{id.id}}: {{stopName}}
+        </div>
+        <div style='margin-top: 3px;'>
+            Routes serving this stop (drag to add to alert):
+        </div>
+    </div>
+</script>
+    

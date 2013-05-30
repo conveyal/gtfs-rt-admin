@@ -20,7 +20,7 @@ otp.modules.alerts.AlertsModule =
     
     moduleName  : "Alerts Manager",
 
-    minimumZoomForStops : 15,
+    minimumZoomForStops : 14,
     
     openEditAlertWidgets : { }, // maps the alert id to the widget object
     
@@ -50,23 +50,83 @@ otp.modules.alerts.AlertsModule =
 
         this.stopHighlightLayer = new L.LayerGroup();
         this.routeHighlightLayer = new L.LayerGroup();
+        this.stopsLayer = new L.LayerGroup();
     
         this.addLayer("Route Highlights", this.routeHighlightLayer);
         this.addLayer("Stop Highlights", this.stopHighlightLayer);
+        this.addLayer("Stops", this.stopsLayer);
 
     },
     
     mapBoundsChanged : function(event) {
         if(this.webapp.map.lmap.getZoom() >= this.minimumZoomForStops) {
             this.webapp.transitIndex.loadStopsInRectangle(null, this.webapp.map.lmap.getBounds(), this, function(data) {
-                this.entitiesWidget.updateStops(data.stops);
+                this.updateStops(data.stops);
             });
         }
         else {
             var diff = this.minimumZoomForStops - this.webapp.map.lmap.getZoom();
             this.entitiesWidget.stopsText("<i>Please zoom an additional " + diff + " zoom level" + (diff > 1 ? "s" : "") + " to see stops.</i>");
+            this.stopsLayer.clearLayers();
         }
 
+    },
+    
+    updateStops : function(stops) {
+        var this_ = this;
+        this.entitiesWidget.updateStops(stops);
+        this.stopsLayer.clearLayers();
+        for(var i=0; i<stops.length; i++) {
+            var stop = stops[i];
+            //console.log(stop);
+            
+            var icon = L.divIcon({
+                className : 'otp-alerts-stopIcon',
+                iconSize: [13,23],
+                iconAnchor: [7,23],
+                html: '<div id="stopMarker-'+i+'" class="otp-alerts-draggableEntity otp-alerts-stopMarker" />'
+            });
+            
+            var popupContent = ich['otp-alerts-stopPopup'](stop) //$('<div>Routes serving this stop (drag to add to alert):</div>'); 
+            if(stop.routes) {
+                for(var r = 0; r < stop.routes.length; r++) {
+                    var agencyAndId = stop.routes[r].agencyId + '_' + stop.routes[r].id;
+                    var routeData = this.webapp.transitIndex.routes[agencyAndId].routeData;
+                    ich['otp-alerts-routeRow'](routeData).appendTo(popupContent)
+                    .data('route', routeData)
+                    .draggable({
+                        helper: 'clone',
+                        revert: 'invalid',
+                        appendTo: 'body',
+                        zIndex: '100000',
+                        drag: function(event,ui){ 
+                            $(ui.helper).css("border", '2px solid gray');
+                        }                    
+                    });
+                    
+                }
+            }
+                    
+            L.marker([stop.stopLat, stop.stopLon], {
+                icon : icon,
+            }).addTo(this.stopsLayer)
+            .bindPopup(popupContent.get(0), {
+                offset: new L.Point(0, -20),
+            });
+
+            $('#stopMarker-'+i).data('stop', stop)
+            .draggable({
+                helper : 'clone',
+                appendTo : 'body',
+                zIndex: 100000,
+                revert : 'invalid',
+            }).hover(function(evt, ui) { // disable map panning before dragging begins
+                this_.webapp.map.lmap.dragging.disable();
+            }, function(evt, ui) {
+                this_.webapp.map.lmap.dragging.enable();
+            });
+            
+        }
     },
     
     alertWidgetCount : 0,

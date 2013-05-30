@@ -1,4 +1,20 @@
 
+/** Map-based objects **/
+
+.otp-alerts-stopMarker {
+    width: 13px;
+    height: 23px;
+    background: url('../../../../images/marker-blue-med.png');
+    cursor: move;
+}
+
+.otp-alerts-stopIcon {
+    width: 13px;
+    height: 23px;
+}
+
+/** Alerts Widget **/
+
 .otp-alerts-alertsWidget {
     left: 20px;
     top: 80px;
