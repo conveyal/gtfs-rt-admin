@@ -55,6 +55,24 @@
     </div>
     <div style="font-style: italic;">Drag Routes/Stops from the &quot;Entities&quot; Widget to the above area to add to this alert </div>
 
+    <div style="float:left; width: 40%;">
+        <div class="otp-defaultLabel">Cause:</div>
+        <select id="{{widgetId}}-causeSelect" class="otp-alerts-editAlert-causeSelect notDraggable">
+            {{#causes}}
+                <option value="{{value}}">{{display}}</option>
+            {{/causes}}
+        </select>
+    </div>
+
+    <div style="margin-left: 50%;">
+        <div class="otp-defaultLabel">Effect:</div>
+        <select id="{{widgetId}}-effectSelect" class="otp-alerts-editAlert-effectSelect notDraggable">
+            {{#effects}}
+                <option value="{{value}}">{{display}}</option>
+            {{/effects}}
+        </select>
+    </div>
+    
 </script>
 
 

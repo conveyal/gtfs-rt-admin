@@ -14,6 +14,35 @@
 
 otp.namespace("otp.modules.alerts");
 
+otp.modules.alerts.causes = [
+    { value: 'NONE', display: '(none)' },
+    { value: 'TECHNICAL_PROBLEM', display: 'Technical Problem' },
+    { value: 'STRIKE', display: 'Strike' },
+    { value: 'DEMONSTRATION', display: 'Demonstration' },
+    { value: 'ACCIDENT', display: 'Accident' },
+    { value: 'HOLIDAY', display: 'Holiday' },
+    { value: 'WEATHER', display: 'Weather' },
+    { value: 'MAINTENANCE', display: 'Maintenance' },
+    { value: 'CONSTRUCTION', display: 'Construction' },
+    { value: 'POLICE_ACTIVITY', display: 'Police Activity' },
+    { value: 'MEDICAL_EMERGENCY', display: 'Medical Emergency' },
+    { value: 'UNKNOWN_CAUSE', display: 'Unknown Cause' },
+    { value: 'OTHER_CAUSE', display: 'Other Cause' },
+];
+
+
+otp.modules.alerts.effects = [
+    { value: 'NONE', display: '(none)' },
+    { value: 'NO_SERVICE', display: 'No Service' },
+    { value: 'REDUCED_SERVICE', display: 'Reduced Service' },
+    { value: 'SIGNIFICANT_DELAYS', display: 'Significant Delays' },
+    { value: 'DETOUR', display: 'Detour' },
+    { value: 'ADDITIONAL_SERVICE', display: 'Additional Service' },
+    { value: 'MODIFIED_SERVICE', display: 'Modified Service' },
+    { value: 'STOP_MOVED', display: 'Stop Moved' },
+    { value: 'OTHER_EFFECT', display: 'Other Effect' },
+    { value: 'UNKNOWN_EFFECT', display: 'Unknown Effect' },
+];
 
 otp.modules.alerts.EditAlertView = Backbone.View.extend({
 
@@ -22,11 +51,12 @@ otp.modules.alerts.EditAlertView = Backbone.View.extend({
         'click #addRangeButton' : 'addRangeButtonClicked',
         'click .otp-alerts-editAlert-deleteRangeButton' : 'deleteRangeButtonClicked',
         'click .otp-alerts-editAlert-deleteEntityButton' : 'deleteEntityButtonClicked',
+        'change .otp-alerts-editAlert-causeSelect' : 'causeChanged',
+        'change .otp-alerts-editAlert-effectSelect' : 'effectChanged',
     },    
     
     render : function() {
         var this_ = this;
-
         
         var context = this.options.widget.module.prepareAlertTemplateContext(this.model); //_.clone(this.model.attributes);
         var rangeIndex = entityIndex = 0;
@@ -37,9 +67,9 @@ otp.modules.alerts.EditAlertView = Backbone.View.extend({
             },
             rangeIndex: function() { return rangeIndex++; },
             entityIndex: function() { return entityIndex++; },
+            causes: otp.modules.alerts.causes,
+            effects: otp.modules.alerts.effects,
         });
-        
-
         
         this.$el.html(ich['otp-alerts-alertEditor'](context));
 
@@ -59,6 +89,13 @@ otp.modules.alerts.EditAlertView = Backbone.View.extend({
             drop: function(event, ui) { this_.handleEntityDrop(event, ui); }
         });
 
+        if(this.model.get('cause')) {
+            $('#'+this.options.widget.id+'-causeSelect option[value="'+this.model.get('cause')+'"]').prop('selected', true)
+        }
+
+        if(this.model.get('effect')) {
+            $('#'+this.options.widget.id+'-effectSelect option[value="'+this.model.get('effect')+'"]').prop('selected', true)
+        }
     },
 
     descriptionTextChanged : function(event) {
@@ -90,6 +127,18 @@ otp.modules.alerts.EditAlertView = Backbone.View.extend({
         this.render();
     },
     
+    causeChanged : function(event) {
+        var cause = $('#'+this.options.widget.id+'-causeSelect').val();
+        if(cause === "NONE") this.model.set('cause', null);
+        else this.model.set('cause', cause);
+    },
+    
+    effectChanged : function(event) {
+        var effect = $('#'+this.options.widget.id+'-effectSelect').val();
+        if(effect === "NONE") this.model.set('effect', null);
+        else this.model.set('effect', effect);
+    },
+
     handleEntityDrop : function(event, ui) {
         
         var routeIdObj = $(ui.draggable.context).data('routeId');
