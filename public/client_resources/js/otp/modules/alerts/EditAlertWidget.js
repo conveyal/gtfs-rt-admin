@@ -73,6 +73,14 @@ otp.modules.alerts.EditAlertView = Backbone.View.extend({
         
         this.$el.html(ich['otp-alerts-alertEditor'](context));
 
+        $("#"+this.options.widget.id+'-accordion').accordion({
+            active : (this.activeAccordionIndex || 0),
+            activate : function( event, ui ) {
+                this_.activeAccordionIndex = $('#'+this_.options.widget.id+'-accordion').accordion('option', 'active');
+                
+            }
+        });
+        
         // set up the date/time pickers for the 'create new timerange' input
         $("#"+this.options.widget.id+'-rangeStartInput').datetimepicker({
             timeFormat: "h:mmtt", 
@@ -180,7 +188,7 @@ otp.modules.alerts.EditAlertWidget =
         otp.widgets.Widget.prototype.initialize.call(this, id, module, {
             title : (alertObj.get('id') == null) ? 'Create Alert' : 'Edit Alert #'+alertObj.get('id'),
             cssClass : 'otp-alerts-editAlertWidget',
-            closeable: true
+            closeable: true,
         });
         
         this.module = module;
@@ -208,9 +216,9 @@ otp.modules.alerts.EditAlertWidget =
             this_.module.deleteAlert(this_.alertObj);
             this_.close();
         });
-        
 
         view.render();
+
     },
     
     onClose : function() {
