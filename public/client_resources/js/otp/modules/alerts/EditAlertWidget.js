@@ -75,11 +75,11 @@ otp.modules.alerts.EditAlertView = Backbone.View.extend({
 
         // set up the date/time pickers for the 'create new timerange' input
         $("#"+this.options.widget.id+'-rangeStartInput').datetimepicker({
-            timeFormat: otp.config.timeFormat, 
+            timeFormat: "h:mmtt", 
         }).datepicker("setDate", new Date());
 
         $("#"+this.options.widget.id+'-rangeEndInput').datetimepicker({
-            timeFormat: otp.config.timeFormat, 
+            timeFormat: "h:mmtt",
         }).datepicker("setDate", new Date());
 
         // allow the entities list to accept route/stop elements via drag & drop
