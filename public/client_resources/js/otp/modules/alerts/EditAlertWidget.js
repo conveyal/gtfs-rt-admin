@@ -105,8 +105,9 @@ otp.modules.alerts.EditAlertView = Backbone.View.extend({
     
     addRangeButtonClicked : function(event) {
         var start = 1000*moment($("#"+this.options.widget.id+'-rangeStartInput').val(), "MM/DD/YYYY "+otp.config.timeFormat).unix();
-        var end = 1000*moment($("#"+this.options.widget.id+'-rangeEndInput').val(), "MM/DD/YYYY "+otp.config.timeFormat).unix();
-        console.log("new range: "+start+" to "+end);
+        var radio = $('input:radio[name='+this.options.widget.id+'-rangeEndRadio'+']:checked').val();
+        var end = (radio === "indefinitely") ? null :
+            1000*moment($("#"+this.options.widget.id+'-rangeEndInput').val(), "MM/DD/YYYY "+otp.config.timeFormat).unix();
         
         this.model.attributes.timeRanges.push({
             startTime: start,
@@ -120,7 +121,7 @@ otp.modules.alerts.EditAlertView = Backbone.View.extend({
         this.model.attributes.timeRanges.splice(index, 1);
         this.render();
     },
-
+    
     deleteEntityButtonClicked : function(event) {
         var index = parseInt(event.target.id.split('-').pop());
         this.model.attributes.informedEntities.splice(index, 1);
@@ -138,7 +139,7 @@ otp.modules.alerts.EditAlertView = Backbone.View.extend({
         if(effect === "NONE") this.model.set('effect', null);
         else this.model.set('effect', effect);
     },
-
+    
     handleEntityDrop : function(event, ui) {
         
         var routeIdObj = $(ui.draggable.context).data('routeId');

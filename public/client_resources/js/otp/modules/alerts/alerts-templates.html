@@ -25,17 +25,33 @@
                     <div style="margin-right: 25px;">
                         {{#renderDate}}{{startTime}}{{/renderDate}}
                         &nbsp;to&nbsp;
-                        {{#renderDate}}{{endTime}}{{/renderDate}}
+                        {{#endTime}}{{#renderDate}}{{endTime}}{{/renderDate}}{{/endTime}}
+                        {{^endTime}}(indefinitely){{/endTime}}
                     </div>
                 </div>
             {{/timeRanges}}
         </div>
         
-        <div style="background: #bbb; padding: 4px;">
-            <input type="text" id="{{widgetId}}-rangeStartInput" class="otp-alerts-editAlert-dateInput">
-            &nbsp;to&nbsp;
-            <input type="text" id="{{widgetId}}-rangeEndInput" class="otp-alerts-editAlert-dateInput">
-            <button id="addRangeButton">Add</button>
+        <div style="background: #ccc padding: 4px;">
+            <div style="float: left; width: 35%; padding: 12px 0px 0px 6px">
+                <input type="text" id="{{widgetId}}-rangeStartInput" class="otp-alerts-editAlert-dateInput" style="width:90%;" />
+            </div>
+            <div style="float: left; width: 5%; padding-top: 12px; font-weight: bold;">
+                to
+            </div>
+            <div style="float: left; width: 45%;">
+                <div style="padding: 3px 0px">
+                    <input type="radio" name="{{widgetId}}-rangeEndRadio" value="indefinitely" checked /> Indefinitely<br />
+                </div>
+                <div style="padding: 3px 0px">
+                <input type="radio" name="{{widgetId}}-rangeEndRadio" value="endTime" />
+                    <input type="text" id="{{widgetId}}-rangeEndInput" class="otp-alerts-editAlert-dateInput" style="width: 85%"/>
+                </div>
+            </div>
+            <div style="float: left; width: 10%; text-align: right; padding-top: 12px;">
+                <button id="addRangeButton">Add</button>
+            </div>
+            <br style="clear: left;" />
         </div>
         
     </div>
