@@ -24,6 +24,8 @@ otp.modules.alerts.AlertsWidget =
     
     affectedRoutes : [],
     affectedStops : [],
+    
+    filterMode : 'current',
 
     initialize : function(id, module, routes, stops) {
         var this_ = this;
@@ -34,6 +36,24 @@ otp.modules.alerts.AlertsWidget =
             closeable: true
         });
         
+        ich['otp-alerts-filterRadio']({
+            widgetId : this.id,
+            initialStartDate : moment().format("MM/DD/YYYY"),
+            initialEndDate : moment().add('d',30).format("MM/DD/YYYY"),
+        }).appendTo(this.mainDiv);
+        $('input:radio[name='+this.id+'-filterRadio]').click(function() {
+            this_.filterMode = $('input:radio[name='+this_.id+'-filterRadio]:checked').val();
+            this_.refreshAlerts(this_.module.alerts);
+        })
+        $('#'+this.id+'-rangeStartInput').datepicker()
+        .change(function() {
+            this_.refreshAlerts(this_.module.alerts);
+        });
+        $('#'+this.id+'-rangeEndInput').datepicker()
+        .change(function() {
+            this_.refreshAlerts(this_.module.alerts);
+        });
+            
         this.alertsList = $(Mustache.render(otp.templates.div, {
             id : this.id+'-alertsList',
             cssClass : 'otp-alerts-alertsWidget-alertsList notDraggable'
@@ -52,15 +72,9 @@ otp.modules.alerts.AlertsWidget =
         var this_ = this;
         this.alertsList.empty();
         for(var i = 0; i < alerts.length; i++) {
-            /*$(Mustache.render(otp.modules.alerts.alertRow, alerts.models[i].attributes))
-            .appendTo(this.alertsList)
-            .data('alertObj', alerts.at(i))
-            .click(function() {
-                var alertObj = $(this).data('alertObj');
-                this_.module.editAlertWidget(alertObj);
-            });*/
-            
-            //var context = _.clone(alerts.models[i].attributes);
+
+            if(!this.filterAlert(alerts.at(i))) continue;
+
             var context = this.module.prepareAlertTemplateContext(alerts.models[i]);
 
             var routeIdArr = [], stopIdArr = [];
@@ -79,6 +93,45 @@ otp.modules.alerts.AlertsWidget =
                 this_.module.editAlertWidget(alertObj);
             });
         }
+    },
+    
+    filterAlert : function(alert) {
+        // if no time information, show it regardless of mode
+        if(typeof alert.attributes.timeRanges == 'undefined' || alert.attributes.timeRanges == null || alert.attributes.timeRanges.length == 0) {
+            return true;
+        }
         
+        var filterStart = filterEnd = null;
+        var now = moment().unix();
+        for(var i = 0; i < alert.attributes.timeRanges.length; i++) {
+            //var alert = alert.timeRanges[i];
+            var start = alert.attributes.timeRanges[i].startTime;
+            var end = (alert.attributes.timeRanges[i].endTime !== null) ? alert.attributes.timeRanges[i] : null;
+
+            if(this.filterMode == 'current') {
+                if(start <= now && (end == null || end >= now)) {
+                    return true;
+                }
+            }
+            if(this.filterMode == 'range') {
+                filterStart = filterStart || moment($('#'+this.id+'-rangeStartInput').val()).unix();
+                filterEnd = filterEnd || moment($('#'+this.id+'-rangeEndInput').val()).unix();
+
+                // timeRange straddles start of filterRange
+                if(start <= filterStart && (end == null || end >= filterStart)) {
+                    return true;                    
+                }
+                // timeRange straddles end of filterRange
+                if(start <= filterEnd && (end == null || end >= filterEnd)) {
+                    return true;
+                }
+                // timeRange completely contained in filterRange
+                if(start >= filterStart && start <= filterEnd && (end != null || (end >= filterStart && end <= filterEnd))) {
+                    return true;
+                }
+            }        
+        }
+        
+        return false;
     },
 });

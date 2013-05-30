@@ -1,3 +1,16 @@
+<script id="otp-alerts-filterRadio" type="text/html">
+
+    <div style="">
+        <input type="radio" name="{{widgetId}}-filterRadio" value="current" checked /> Show alerts active at current time<br />
+    </div>
+    <div style="margin-top: 4px;">
+        <input type="radio" name="{{widgetId}}-filterRadio" value="range" /> Show alerts active during date range:
+    <div style="margin: 2px 0px 8px 18px;" class="notDraggable">
+        <input type="text" id="{{widgetId}}-rangeStartInput" style="width: 40%" value="{{initialStartDate}}" />
+        &nbsp;to&nbsp;
+        <input type="text" id="{{widgetId}}-rangeEndInput" style="width: 40%" value="{{initialEndDate}}" />
+    </div>
+</script>
 
 <script id="otp-alerts-alertRow" type="text/html">
     <div class="otp-alerts-alertRow">
