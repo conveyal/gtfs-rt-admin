@@ -123,6 +123,10 @@ otp.modules.alerts.EntitiesWidget =
                 this_.module.highlightStop($(this).data('stop'));
             }, function(evt) {
                 this_.module.clearHighlights();
+            })
+            .click(function(evt) {
+                var stop = $(this).data('stop');
+                this_.module.webapp.map.lmap.panTo(new L.LatLng(stop.stopLat, stop.stopLon));
             });
 
             //this_.stopsSelect.append('<option value="'+i+'">('+stop.id.agencyId+'_'+stop.id.id+') '+stop.stopName+'</option>');                       

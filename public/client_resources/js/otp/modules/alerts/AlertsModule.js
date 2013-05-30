@@ -66,8 +66,9 @@ otp.modules.alerts.AlertsModule =
         }
         else {
             var diff = this.minimumZoomForStops - this.webapp.map.lmap.getZoom();
-            this.entitiesWidget.stopsText("<i>Please zoom an additional " + diff + " zoom level" + (diff > 1 ? "s" : "") + " to see stops.</i>");
-            this.stopsLayer.clearLayers();
+            if(this.entitiesWidget)
+                this.entitiesWidget.stopsText("<i>Please zoom an additional " + diff + " zoom level" + (diff > 1 ? "s" : "") + " to see stops.</i>");
+            if(this.stopsLayer) this.stopsLayer.clearLayers();
         }
 
     },
