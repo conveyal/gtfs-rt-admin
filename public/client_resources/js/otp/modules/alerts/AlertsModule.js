@@ -27,12 +27,12 @@ otp.modules.alerts.AlertsModule =
     initialize : function(webapp) {
         otp.modules.Module.prototype.initialize.apply(this, arguments);
     },
-
+    
     activate : function() {
         if(this.activated) return;
         var this_ = this;
         
-        $.get('/public/client_resources/js/otp/modules/alerts/alerts-templates.html')
+        $.get(otp.config.resourcePath + 'js/otp/modules/alerts/alerts-templates.html')
         .success(function(data) {
             $('<div style="display:none;" />').appendTo($("body")).html(data);
             ich.grabTemplates();
