@@ -99,9 +99,9 @@
         <div style="font-size: .9em; padding: 10px;">
             <div id="{{widgetId}}-entitiesList" class="otp-alerts-editAlert-entitiesList notDraggable" size="5">
                 {{#informedEntities}}
-                    <div class="otp-alerts-editAlert-entityRow">
-                        <button id='{{widgetId}}-deleteRangeButton-{{entityIndex}}' class="otp-alerts-editAlert-deleteEntityButton" style="font-size: 10px;">X</button>
-                        <div style="margin-right: 25px;">
+                    <div id="{{widgetId}}-entityRow-{{entityIndex}}" class="otp-alerts-editAlert-entityRow">
+                        <button class="otp-alerts-editAlert-deleteEntityButton" style="font-size: 10px;">X</button>
+                        <div class="entityRowLabel" style="margin-right: 25px; cursor: pointer;">
                             {{agencyId}} 
                             {{#routeId}}Route {{routeReference}}{{/routeId}}
                             {{#stopId}}Stop {{stopId}}{{/stopId}}

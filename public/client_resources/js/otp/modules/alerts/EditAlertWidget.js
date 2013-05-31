@@ -51,6 +51,7 @@ otp.modules.alerts.EditAlertView = Backbone.View.extend({
         'click #addRangeButton' : 'addRangeButtonClicked',
         'click .otp-alerts-editAlert-deleteRangeButton' : 'deleteRangeButtonClicked',
         'click .otp-alerts-editAlert-deleteEntityButton' : 'deleteEntityButtonClicked',
+        'click .entityRowLabel' : 'entityRowClicked',
         'change .otp-alerts-editAlert-causeSelect' : 'causeChanged',
         'change .otp-alerts-editAlert-effectSelect' : 'effectChanged',
     },    
@@ -131,8 +132,22 @@ otp.modules.alerts.EditAlertView = Backbone.View.extend({
         this.render();
     },
     
+    entityRowClicked : function(event) {
+        var parentId = $($(event.target).parent()).attr('id');
+        var index = parseInt(parentId.split('-').pop());
+        var entity = this.model.attributes.informedEntities[index];
+        
+        if(entity.routeId !== null) {
+            this.options.widget.module.drawRoute(entity.agencyId + "_" + entity.routeId);
+        }
+        if(entity.stopId !== null) {
+            // TODO: show stop on map
+        }
+    },
+    
     deleteEntityButtonClicked : function(event) {
-        var index = parseInt(event.target.id.split('-').pop());
+        var parentId = $($(event.target).parent()).attr('id');
+        var index = parseInt(parentId.split('-').pop());
         this.model.attributes.informedEntities.splice(index, 1);
         this.render();
     },
