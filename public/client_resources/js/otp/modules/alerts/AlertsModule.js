@@ -33,6 +33,7 @@ otp.modules.alerts.AlertsModule =
     
     activate : function() {
         if(this.activated) return;
+
         var this_ = this;
         
         $.get(otp.config.resourcePath + 'js/otp/modules/alerts/alerts-templates.html')
@@ -61,6 +62,7 @@ otp.modules.alerts.AlertsModule =
         this.addLayer("Stops", this.stopsLayer);
         this.addLayer("Routes", this.routesLayer);
 
+        this.activated = true;
     },
     
     mapBoundsChanged : function(event) {
