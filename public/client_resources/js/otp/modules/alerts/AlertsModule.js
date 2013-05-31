@@ -265,7 +265,22 @@ otp.modules.alerts.AlertsModule =
             }
             this.updateStops();
         });
+        this.panToRoute(agencyAndId);
     },
+
+    panToRoute : function(agencyAndId) {
+        var this_ = this;
+        this.webapp.transitIndex.loadVariants(agencyAndId, this, function(variants) {
+            var latLngs = [];
+            for(variantName in variants) {
+                var variant = variants[variantName];
+                var polyline = new L.Polyline(otp.util.Geo.decodePolyline(variant.geometry.points));
+                latLngs = latLngs.concat(polyline.getLatLngs())
+            }
+            this_.webapp.map.lmap.fitBounds(new L.LatLngBounds(latLngs));
+        });
+    },    
+    
     
     prepareAlertTemplateContext : function(alertObj) {
 
