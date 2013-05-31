@@ -24,6 +24,9 @@ otp.modules.alerts.AlertsModule =
     
     openEditAlertWidgets : { }, // maps the alert id to the widget object
     
+    routeStops : { },
+    windowStops : { },
+    
     initialize : function(webapp) {
         otp.modules.Module.prototype.initialize.apply(this, arguments);
     },
@@ -51,32 +54,44 @@ otp.modules.alerts.AlertsModule =
         this.stopHighlightLayer = new L.LayerGroup();
         this.routeHighlightLayer = new L.LayerGroup();
         this.stopsLayer = new L.LayerGroup();
+        this.routesLayer = new L.LayerGroup();
     
         this.addLayer("Route Highlights", this.routeHighlightLayer);
         this.addLayer("Stop Highlights", this.stopHighlightLayer);
         this.addLayer("Stops", this.stopsLayer);
+        this.addLayer("Routes", this.routesLayer);
 
     },
     
     mapBoundsChanged : function(event) {
         if(this.webapp.map.lmap.getZoom() >= this.minimumZoomForStops) {
             this.webapp.transitIndex.loadStopsInRectangle(null, this.webapp.map.lmap.getBounds(), this, function(data) {
-                this.updateStops(data.stops);
+                this.windowStops = { };
+                for(var i = 0; i < data.stops.length; i++) {
+                    var agencyAndId = data.stops[i].id.agencyId + "_" + data.stops[i].id.id;
+                    this.windowStops[agencyAndId] = data.stops[i];
+                }
+                this.updateStops();
             });
         }
         else {
             var diff = this.minimumZoomForStops - this.webapp.map.lmap.getZoom();
             if(this.entitiesWidget)
                 this.entitiesWidget.stopsText("<i>Please zoom an additional " + diff + " zoom level" + (diff > 1 ? "s" : "") + " to see stops.</i>");
-            if(this.stopsLayer) this.stopsLayer.clearLayers();
+            //if(this.stopsLayer) this.stopsLayer.clearLayers();
+            this.windowStops = {};
+            this.updateStops();
         }
 
     },
     
-    updateStops : function(stops) {
+    updateStops : function() {
         var this_ = this;
-        this.entitiesWidget.updateStops(stops);
         this.stopsLayer.clearLayers();
+        
+        var stops = _.values(_.extend(_.clone(this.routeStops), this.windowStops));
+        this.entitiesWidget.updateStops(stops);
+        
         for(var i=0; i<stops.length; i++) {
             var stop = stops[i];
             //console.log(stop);
@@ -108,7 +123,7 @@ otp.modules.alerts.AlertsModule =
                 }
             }
                     
-            L.marker([stop.stopLat, stop.stopLon], {
+            L.marker([stop.stopLat || stop.lat, stop.stopLon || stop.lon], {
                 icon : icon,
             }).addTo(this.stopsLayer)
             .bindPopup(popupContent.get(0), {
@@ -215,20 +230,41 @@ otp.modules.alerts.AlertsModule =
         this.webapp.transitIndex.loadVariants(agencyAndId, this, function(variants) {
             for(variantName in variants) {
                 var polyline = new L.Polyline(otp.util.Geo.decodePolyline(variants[variantName].geometry.points));
-                polyline.setStyle({ color : "blue", weight: 6, opacity: 0.4 });
+                polyline.setStyle({ color : "#3cf", weight: 6, opacity: 0.4 });
                 this.routeHighlightLayer.addLayer(polyline);            
             }
         });
     },
     
     highlightStop : function(stopObj) {
-        L.marker([stopObj.stopLat, stopObj.stopLon]).addTo(this.stopHighlightLayer);
+        L.marker([stopObj.stopLat || stopObj.lat, stopObj.stopLon || stopObj.lon]).addTo(this.stopHighlightLayer);
     },
 
     
     clearHighlights : function() {
         this.stopHighlightLayer.clearLayers(); 
         this.routeHighlightLayer.clearLayers(); 
+    },
+    
+    drawRoute : function(agencyAndId) {
+        this.routeHighlightLayer.clearLayers(); 
+        this.routesLayer.clearLayers(); 
+        this.routeStops = {};
+        this.webapp.transitIndex.loadVariants(agencyAndId, this, function(variants) {
+            for(variantName in variants) {
+                var variant = variants[variantName];
+                var polyline = new L.Polyline(otp.util.Geo.decodePolyline(variant.geometry.points));
+                polyline.setStyle({ color : "#39f", weight: 6, opacity: 0.4 });
+                this.routesLayer.addLayer(polyline);            
+                var stops = { };
+                for(var i = 0; i < variant.stops.length; i++) {
+                    var agencyAndId = variant.stops[i].id.agencyId + "_" + variant.stops[i].id.id;
+                    this.routeStops[agencyAndId] = variant.stops[i];                    
+                }
+                _.extend(this.routeStops, stops);
+            }
+            this.updateStops();
+        });
     },
     
     prepareAlertTemplateContext : function(alertObj) {

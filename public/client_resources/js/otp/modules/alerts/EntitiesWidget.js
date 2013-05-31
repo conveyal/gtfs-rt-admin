@@ -80,6 +80,10 @@ otp.modules.alerts.EntitiesWidget =
                     this_.module.highlightRoute(route.id.agencyId+"_"+route.id.id);
                 }, function(evt) {
                     this_.module.clearHighlights();
+                })
+                .click(function(evt) {
+                    var routeId = $(this).data('route').id;
+                    this_.module.drawRoute(routeId.agencyId + "_" + routeId.id);
                 });
                 this.routesLookup[i] = route;
                 i++;
