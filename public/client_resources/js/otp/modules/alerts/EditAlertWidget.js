@@ -168,6 +168,7 @@ otp.modules.alerts.EditAlertView = Backbone.View.extend({
         
         var route = $(ui.draggable.context).data('route');
         if(typeof route !== 'undefined' && route !== null) {
+            if(!this.options.widget.module.isValidAgency(route.id.agencyId)) return;
             this.model.attributes.informedEntities.push({
                 agencyId : route.id.agencyId,
                 routeId : route.id.id,
@@ -176,6 +177,7 @@ otp.modules.alerts.EditAlertView = Backbone.View.extend({
 
         var stop = $(ui.draggable.context).data('stop');
         if(typeof stop !== 'undefined' && stop !== null) {
+            if(!this.options.widget.module.isValidAgency(stop.id.agencyId)) return;
             this.model.attributes.informedEntities.push({
                 agencyId : stop.id.agencyId,
                 stopId : stop.id.id,

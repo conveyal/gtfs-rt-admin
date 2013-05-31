@@ -64,6 +64,8 @@ otp.modules.alerts.EntitiesWidget =
             var i = 0;
             for(var routeId in ti.routes) {
                 var route = ti.routes[routeId];
+                if(!this.module.isValidAgency(route.routeData.id.agencyId)) continue;
+
                 //this_.routesSelect.append('<option value="'+i+'">'+otp.util.Itin.getRouteDisplayString(route.routeData)+'</option>');
                 ich['otp-alerts-routeRow'](route.routeData).appendTo(this_.routesDiv)
                 .data('route', route.routeData)
@@ -112,6 +114,7 @@ otp.modules.alerts.EntitiesWidget =
         this.stopsDiv.empty();
         for(var i = 0; i < stopArray.length; i++) {
             var stop = stopArray[i];
+            if(!this.module.isValidAgency(stop.id.agencyId)) continue;
             ich['otp-alerts-stopRow'](stop).appendTo(this_.stopsDiv)
             .data('stop', stop)
             //.data('stopId', stop.id)

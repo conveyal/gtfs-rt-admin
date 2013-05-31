@@ -27,8 +27,12 @@ otp.modules.alerts.AlertsModule =
     routeStops : { },
     windowStops : { },
     
+    validAgencies : [],
+    
     initialize : function(webapp) {
-        otp.modules.Module.prototype.initialize.apply(this, arguments);
+        otp.modules.Module.prototype.initialize.apply(this, arguments);        
+        
+        this.validAgencies = [ 'METRO' ];
     },
     
     activate : function() {
@@ -70,6 +74,7 @@ otp.modules.alerts.AlertsModule =
             this.webapp.transitIndex.loadStopsInRectangle(null, this.webapp.map.lmap.getBounds(), this, function(data) {
                 this.windowStops = { };
                 for(var i = 0; i < data.stops.length; i++) {
+                    if(!this.isValidAgency(data.stops[i].id.agencyId)) continue;
                     var agencyAndId = data.stops[i].id.agencyId + "_" + data.stops[i].id.id;
                     this.windowStops[agencyAndId] = data.stops[i];
                 }
@@ -249,6 +254,7 @@ otp.modules.alerts.AlertsModule =
     },
     
     drawRoute : function(agencyAndId) {
+        if(!this.isValidAgency(agencyAndId.split('_')[0])) return;
         this.routeHighlightLayer.clearLayers(); 
         this.routesLayer.clearLayers(); 
         this.routeStops = {};
@@ -301,5 +307,9 @@ otp.modules.alerts.AlertsModule =
         context.informedEntities = informedEntitiesCopy;
         
         return context;
-    }
+    },
+    
+    isValidAgency : function(agencyId) {
+        return _.contains(this.validAgencies, agencyId);
+    },
 });
