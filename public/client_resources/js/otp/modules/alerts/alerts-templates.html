@@ -14,7 +14,10 @@
 
 <script id="otp-alerts-alertRow" type="text/html">
     <div class="otp-alerts-alertRow">
-        <div>{{descriptionText}}</div>
+        <div>
+            {{#descriptionText}}{{descriptionText}}{{/descriptionText}}
+            {{^descriptionText}}(No description){{/descriptionText}}
+        </div>
         {{#routeIds}}
             <div style="font-size: 11px; margin-top: 3px;"><b>Affects Routes</b>: {{routeIds}}</div>
         {{/routeIds}}
