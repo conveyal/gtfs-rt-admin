@@ -114,8 +114,8 @@ otp.modules.alerts.AlertsWidget =
                 }
             }
             if(this.filterMode == 'range') {
-                filterStart = filterStart || moment($('#'+this.id+'-rangeStartInput').val()).unix();
-                filterEnd = filterEnd || moment($('#'+this.id+'-rangeEndInput').val()).unix();
+                filterStart = filterStart || moment($('#'+this.id+'-rangeStartInput').val()).unix() * 1000;
+                filterEnd = filterEnd || moment($('#'+this.id+'-rangeEndInput').val()).unix() * 1000;
 
                 // timeRange straddles start of filterRange
                 if(start <= filterStart && (end == null || end >= filterStart)) {
