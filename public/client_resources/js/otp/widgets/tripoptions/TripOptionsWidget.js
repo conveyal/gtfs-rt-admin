@@ -492,7 +492,7 @@ otp.widgets.tripoptions.PreferredRoutes =
             this.tripWidget.module.preferredRoutes = planData.queryParams.preferredRoutes;
             
             // resolve the IDs to user-friendly names
-            var url = otp.config.hostname + '/opentripplanner-api-webapp/ws/transit/routes';
+            var url = otp.config.hostname + '/otp-api-df/ws/transit/routes';
             this.currentRequest = $.ajax(url, {
                 dataType:   'jsonp',
                     

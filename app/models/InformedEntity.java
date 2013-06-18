@@ -35,6 +35,7 @@ public class InformedEntity extends Model {
 	public String agencyId;
 	public String routeId;
 	public String stopId;
+	public String description;
 
 	// trip descriptor TBD !!! 
 	

@@ -61,7 +61,8 @@ otp.namespace("otp.modules.alerts");
       id: null,
       agencyId: null,
       routeId: null,
-      stopId: null
+      stopId: null,
+      description: null
     }
   });
   

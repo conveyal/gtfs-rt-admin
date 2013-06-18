@@ -32,7 +32,7 @@ otp.core.TransitIndex = otp.Class({
             return;
         }
         
-        var url = otp.config.hostname + '/opentripplanner-api-webapp/ws/transit/routes';
+        var url = otp.config.hostname + '/otp-api-df/ws/transit/routes';
         $.ajax(url, {
             dataType:   'jsonp',
                 
@@ -81,7 +81,7 @@ otp.core.TransitIndex = otp.Class({
             return;
         }
 
-        var url = otp.config.hostname + '/opentripplanner-api-webapp/ws/transit/routeData';
+        var url = otp.config.hostname + '/otp-api-df/ws/transit/routeData';
         $.ajax(url, {
             data: {
                 agency : route.routeData.id.agencyId,
@@ -107,7 +107,7 @@ otp.core.TransitIndex = otp.Class({
     
     readVariantForTrip : function(tripAgency, tripId, callbackTarget, callback) {
     
-        var url = otp.config.hostname + '/opentripplanner-api-webapp/ws/transit/variantForTrip';
+        var url = otp.config.hostname + '/otp-api-df/ws/transit/variantForTrip';
         $.ajax(url, {
             data: {
                 tripAgency : tripAgency,
@@ -158,7 +158,7 @@ otp.core.TransitIndex = otp.Class({
             params.routerId = otp.config.routerId;
         }
         
-        var url = otp.config.hostname + '/opentripplanner-api-webapp/ws/transit/stopTimesForStop';
+        var url = otp.config.hostname + '/otp-api-df/ws/transit/stopTimesForStop';
         $.ajax(url, {
             data:       params,
             dataType:   'jsonp',
@@ -188,7 +188,7 @@ otp.core.TransitIndex = otp.Class({
             params.routerId = otp.config.routerId;
         }
         
-        var url = otp.config.hostname + '/opentripplanner-api-webapp/ws/transit/stopTimesForStop';
+        var url = otp.config.hostname + '/otp-api-df/ws/transit/stopTimesForStop';
         $.ajax(url, {
             data:       params,
             dataType:   'jsonp',
@@ -214,7 +214,7 @@ otp.core.TransitIndex = otp.Class({
             params.routerId = otp.config.routerId;
         }
         
-        var url = otp.config.hostname + '/opentripplanner-api-webapp/ws/transit/stopsInRectangle';
+        var url = otp.config.hostname + '/otp-api-df/ws/transit/stopsInRectangle';
         $.ajax(url, {
             data:       params,
             dataType:   'jsonp',

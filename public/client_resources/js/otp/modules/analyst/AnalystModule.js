@@ -34,7 +34,7 @@ otp.modules.analyst.AnalystModule =
         //otp.modules.planner.PlannerModule.prototype.initialize.apply(this, arguments);
         otp.modules.Module.prototype.initialize.apply(this, arguments);
         
-        this.analystUrl = otp.config.hostname + "/opentripplanner-api-webapp/ws/tile/{z}/{x}/{y}.png";
+        this.analystUrl = otp.config.hostname + "/otp-api-df/ws/tile/{z}/{x}/{y}.png";
     },
 
     activate : function() {
@@ -133,7 +133,7 @@ otp.modules.analyst.AnalystModule =
         this.webapp.map.lmap.addLayer(this.analystLayer);
 
         this.legendWidget.refresh(params);
-	    //legend.src = "/opentripplanner-api-webapp/ws/legend.png?width=300&height=40&styles=" + params.styles;
+	    //legend.src = "/otp-api-df/ws/legend.png?width=300&height=40&styles=" + params.styles;
 	    //return false;*/
     },     
 

@@ -31,9 +31,9 @@ otp.modules.alerts.AlertsWidget =
         var this_ = this;
         this.module = module;
         otp.widgets.Widget.prototype.initialize.call(this, id, module, {
-            title : 'Alerts',
+            title : 'Interrupciones',
             cssClass : 'otp-alerts-alertsWidget',
-            closeable: true
+            closeable: false
         });
         
         ich['otp-alerts-filterRadio']({
@@ -62,7 +62,7 @@ otp.modules.alerts.AlertsWidget =
         // set up the 'new alert' button
         var buttonRow = $('<div>').addClass('otp-alerts-entitiesWidget-buttonRow').appendTo(this.mainDiv)
         
-        $(Mustache.render(otp.templates.button, { text : "Create New Alert"}))
+        $(Mustache.render(otp.templates.button, { text : "Crear Interrupción"}))
         .button().appendTo(buttonRow).click(function() {
             this_.module.newAlertWidget();
         });        
@@ -81,7 +81,7 @@ otp.modules.alerts.AlertsWidget =
             for(var e = 0; e < context.informedEntities.length; e++) {
                 var entity = context.informedEntities[e];
                 if(entity.routeId) routeIdArr.push(entity.routeReference);
-                if(entity.stopId) stopIdArr.push(entity.stopId);
+                if(entity.stopId) stopIdArr.push(entity.description);
             }
             context['routeIds'] = routeIdArr.join(', ');
             context['stopIds'] = stopIdArr.join(', ');
@@ -102,7 +102,7 @@ otp.modules.alerts.AlertsWidget =
         }
         
         var filterStart = filterEnd = null;
-        var now = moment().unix();
+        var now = moment().unix() * 1000;
         for(var i = 0; i < alert.attributes.timeRanges.length; i++) {
             //var alert = alert.timeRanges[i];
             var start = alert.attributes.timeRanges[i].startTime;

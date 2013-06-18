@@ -7,11 +7,13 @@ var GtfsRt = GtfsRt || {};
     
     defaults: {
       id: null,
+      agencyId: null,
       timeRanges: [],
       informedEntities: [],
       cause: null,
       effect: null,
       url: null,
+      headerText: null,
       descriptionText: null
     }
   });
@@ -43,7 +45,7 @@ var GtfsRt = GtfsRt || {};
 
     defaults: {
       id: null,
-      agencyId: null,
+      agencyId: null, // replacing with single agencyId from alert model
       routeId: null,
       stopId: null
     }

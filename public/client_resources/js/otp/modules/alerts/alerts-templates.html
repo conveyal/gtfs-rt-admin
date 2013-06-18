@@ -15,14 +15,17 @@
 <script id="otp-alerts-alertRow" type="text/html">
     <div class="otp-alerts-alertRow">
         <div>
+            <strong>{{#headerText}}{{headerText}}{{/headerText}}</strong>
+            {{^headerText}}<strong style="color:red;">(No header)</strong>{{/headerText}}
+            <br/>
             {{#descriptionText}}{{descriptionText}}{{/descriptionText}}
             {{^descriptionText}}(No description){{/descriptionText}}
         </div>
         {{#routeIds}}
-            <div style="font-size: 11px; margin-top: 3px;"><b>Affects Routes</b>: {{routeIds}}</div>
+            <div style="font-size: 11px; margin-top: 3px;"><b>Rutas afectadas</b>: {{routeIds}}</div>
         {{/routeIds}}
         {{#stopIds}}
-            <div style="font-size: 11px;"><b>Affects Stops</b>: {{stopIds}}</div>
+            <div style="font-size: 11px;"><b>Estaciones Afectadas</b>: {{stopIds}}</div>
         {{/stopIds}}
     </div>
 </script>
@@ -30,13 +33,15 @@
 <script id="otp-alerts-alertEditor" type="text/html">
 
     <div id="{{widgetId}}-accordion" class="notDraggable {{widgetId}}-alsoResize">
-        <h3>General Information</h3>
+        <h3>Información General</h3>
         <div style="padding: 10px;">
+            <div>Header:</div>
+            <input id="{{widgetId}}-headerText" class="notDraggable" style="width: 95%;" value="{{headerText}}">
             <div>Description:</div>
             <textarea id="{{widgetId}}-descriptionText" class="otp-alerts-editAlert-text notDraggable">{{descriptionText}}</textarea>
 
             <div style="float:left; width: 40%;">
-                <div class="otp-defaultLabel">Cause:</div>
+                <div class="otp-defaultLabel">Causa:</div>
                 <select id="{{widgetId}}-causeSelect" class="otp-alerts-editAlert-causeSelect notDraggable">
                     {{#causes}}
                         <option value="{{value}}">{{display}}</option>
@@ -45,7 +50,7 @@
             </div>
 
             <div style="margin-left: 50%;">
-                <div class="otp-defaultLabel">Effect:</div>
+                <div class="otp-defaultLabel">Efecto:</div>
                 <select id="{{widgetId}}-effectSelect" class="otp-alerts-editAlert-effectSelect notDraggable">
                     {{#effects}}
                         <option value="{{value}}">{{display}}</option>
@@ -55,7 +60,7 @@
         </div>
 
 
-        <h3>Affected Date/Time Ranges</h3>
+        <h3>Fechas / Horas Afectados</h3>
         <div style="padding: 10px; font-size: 13px;">
             <div style="background: white; height: 60px; overflow: auto; border: 1px solid black; margin-bottom: 4px;">
                 {{#timeRanges}}
@@ -95,7 +100,7 @@
             
         </div>
 
-        <h3>Affected Transit Entities</h3>
+        <h3>Servicios de Tránsito Afectados</h3>
         <div style="font-size: .9em; padding: 10px;">
             <div id="{{widgetId}}-entitiesList" class="otp-alerts-editAlert-entitiesList notDraggable" size="5">
                 {{#informedEntities}}
@@ -103,14 +108,14 @@
                         <button class="otp-alerts-editAlert-deleteEntityButton" style="font-size: 10px;">X</button>
                         <div class="entityRowLabel" style="margin-right: 25px; cursor: pointer;">
                             {{agencyId}} 
-                            {{#routeId}}Route {{routeReference}}{{/routeId}}
-                            {{#stopId}}Stop {{stopId}}{{/stopId}}
+                            {{#routeId}}Route {{description}}{{/routeId}}
+                            {{#stopId}}Stop {{description}}{{/stopId}}
                         </div>
                     </div>
                 {{/informedEntities}}
             </div>
             <div style="font-style: italic; margin-top: 4px; text-align: center;">
-                Drag Routes/Stops to the above area from the &quot;Entities&quot; widget or from the map to add to this alert.
+                Arrastre rutas / paradas desde el widget de "Servicios" o en el mapa  para agregar a esta alerta.
             </div>
         </div>
     </div>

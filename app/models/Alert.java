@@ -2,7 +2,9 @@ package models;
 
 import java.security.MessageDigest;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.ArrayList;
 import java.util.UUID;
 
 import javax.persistence.CascadeType;
@@ -41,6 +43,8 @@ public class Alert extends Model {
     @OneToMany(cascade = CascadeType.ALL)
     public List<InformedEntity> informedEntities;
 	
+	public String agencyId;
+	
 	public String cause;
 	public String effect;
 	
@@ -56,6 +60,43 @@ public class Alert extends Model {
     @JsonCreator
     public static Alert factory(String id) {
       return Alert.findById(Long.parseLong(id));
+    }
+
+    static public List<Alert> findActiveAlerts() {
+    	
+    	List<TimeRange> timeRanges = TimeRange.find("endTime > now() or endTime is null").fetch();
+    	
+    	HashMap<Long, Alert> alerts = new HashMap<Long, Alert>();
+    	
+    	for(TimeRange tr : timeRanges){
+    		
+    		if(!alerts.containsKey(tr.alert.id)) {
+    			alerts.put(tr.alert.id, tr.alert);
+    		}
+    	}
+    	
+    	List<Alert> alertsWithoutRanges = Alert.findAll();
+    	
+    	for(Alert a : alertsWithoutRanges){
+    		
+    		if(a.timeRanges.isEmpty() && !alerts.containsKey(a.id)) {
+    			alerts.put(a.id, a);
+    		}
+    	}
+ 
+    	return new ArrayList<Alert>(alerts.values());
+    }
+    
+    public Alert delete() {
+
+    	this.informedEntities = new ArrayList<InformedEntity>();
+    	this.timeRanges = new ArrayList<TimeRange>();
+    	this.save();
+
+        InformedEntity.delete("alert = ?", this);
+        TimeRange.delete("alert = ?", this);
+
+        return super.delete();
     }
 
 
