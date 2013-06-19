@@ -28,6 +28,8 @@ public class Account extends Model {
     public Boolean active;
     
     public Boolean admin;
+    
+    public String agencyId;
    
     
     public Account(String username, String password, String email, Boolean admin, Long agencyId)

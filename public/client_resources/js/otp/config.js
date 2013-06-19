@@ -57,7 +57,7 @@ otp.config = {
      * Site name / description / branding display options
      */
 
-    siteName            : "Interrupciones de Tránsito",
+    siteName            : "Advisos de Transporte Público",
     siteDescription     : "An OpenTripPlanner deployment.",
     logoGraphic         : 'images/otp_logo_darkbg_40px.png',
     // bikeshareName    : "",
@@ -116,6 +116,7 @@ otp.config = {
 
 
     infoWidgets: [
+    'Logout'
                    
     ],
     

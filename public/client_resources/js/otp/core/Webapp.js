@@ -161,28 +161,8 @@ otp.core.Webapp = otp.Class({
         if(otp.config.infoWidgets !== undefined && otp.config.infoWidgets.length > 0) {
             var nav = $('<nav id="main-menu" role="article">').appendTo('#branding');
             var ul = $('<ul>').appendTo(nav);
-            
-            for(var i=0; i<otp.config.infoWidgets.length; i++) {
-            
-                if(otp.config.infoWidgets[i] == undefined) continue;
-    
-                var id = "otp-infoWidget-"+i;            
-                
-                var options = {};
-                if(_.has(otp.config.infoWidgets[i], 'title')) options.title = otp.config.infoWidgets[i].title;
-                if(_.has(otp.config.infoWidgets[i], 'cssClass')) options.cssClass = otp.config.infoWidgets[i].cssClass;
-                
-                this.infoWidgets[id] = new otp.widgets.InfoWidget(otp.config.infoWidgets[i].styleId,
-                                                                  this, options, otp.config.infoWidgets[i].content);
-                
-                $("<li id='"+id+"'><a href='#'>"+otp.config.infoWidgets[i].title+"</a></li>").appendTo(ul).click(function(e) {
-                    e.preventDefault();
-                    var widget = this_.infoWidgets[this.id];
-                    if(!widget.isOpen) widget.show();
-                    widget.bringToFront();
-                });
-            
-            }
+            $("<li><a href='/secure/logout'>Logout</a></li>").appendTo(ul)
+        
         }
 
 

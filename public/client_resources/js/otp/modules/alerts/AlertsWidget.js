@@ -31,7 +31,7 @@ otp.modules.alerts.AlertsWidget =
         var this_ = this;
         this.module = module;
         otp.widgets.Widget.prototype.initialize.call(this, id, module, {
-            title : 'Interrupciones',
+            title : 'Avisos',
             cssClass : 'otp-alerts-alertsWidget',
             closeable: false
         });
@@ -62,10 +62,14 @@ otp.modules.alerts.AlertsWidget =
         // set up the 'new alert' button
         var buttonRow = $('<div>').addClass('otp-alerts-entitiesWidget-buttonRow').appendTo(this.mainDiv)
         
-        $(Mustache.render(otp.templates.button, { text : "Crear Interrupción"}))
+        $(Mustache.render(otp.templates.button, { text : "Crear aviso"}))
         .button().appendTo(buttonRow).click(function() {
             this_.module.newAlertWidget();
         });        
+
+        //self.setInterval(function(){
+        //        this_.refreshAlerts(this_.module.alerts);
+        //   },5000);
     },
     
     refreshAlerts : function(alerts) {

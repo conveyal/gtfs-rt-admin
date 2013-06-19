@@ -16,32 +16,31 @@ otp.namespace("otp.modules.alerts");
 
 otp.modules.alerts.causes = [
     { value: 'NONE', display: '(none)' },
-    { value: 'TECHNICAL_PROBLEM', display: 'Technical Problem' },
-    { value: 'STRIKE', display: 'Strike' },
-    { value: 'DEMONSTRATION', display: 'Demonstration' },
-    { value: 'ACCIDENT', display: 'Accident' },
-    { value: 'HOLIDAY', display: 'Holiday' },
-    { value: 'WEATHER', display: 'Weather' },
-    { value: 'MAINTENANCE', display: 'Maintenance' },
-    { value: 'CONSTRUCTION', display: 'Construction' },
-    { value: 'POLICE_ACTIVITY', display: 'Police Activity' },
-    { value: 'MEDICAL_EMERGENCY', display: 'Medical Emergency' },
-    { value: 'UNKNOWN_CAUSE', display: 'Unknown Cause' },
-    { value: 'OTHER_CAUSE', display: 'Other Cause' },
+    { value: 'TECHNICAL_PROBLEM', display: 'Problemas técnicos' },
+    { value: 'STRIKE', display: 'Huelga' },
+    { value: 'DEMONSTRATION', display: 'Manifestación' },
+    { value: 'ACCIDENT', display: 'Accidente' },
+    { value: 'HOLIDAY', display: 'Día festivo' },
+    { value: 'WEATHER', display: 'Condiciones atmosféricas' },
+    { value: 'MAINTENANCE', display: 'Mantenimiento' },
+    { value: 'CONSTRUCTION', display: 'Obras' },
+    { value: 'POLICE_ACTIVITY', display: 'Operativo policiaco' },
+    { value: 'MEDICAL_EMERGENCY', display: 'Emergencia médica' },
+    { value: 'UNKNOWN_CAUSE', display: 'Causa desconocida' },
+    { value: 'OTHER_CAUSE', display: 'Otra causa' },
 ];
-
 
 otp.modules.alerts.effects = [
     { value: 'NONE', display: '(none)' },
-    { value: 'NO_SERVICE', display: 'No Service' },
-    { value: 'REDUCED_SERVICE', display: 'Reduced Service' },
-    { value: 'SIGNIFICANT_DELAYS', display: 'Significant Delays' },
-    { value: 'DETOUR', display: 'Detour' },
-    { value: 'ADDITIONAL_SERVICE', display: 'Additional Service' },
-    { value: 'MODIFIED_SERVICE', display: 'Modified Service' },
-    { value: 'STOP_MOVED', display: 'Stop Moved' },
-    { value: 'OTHER_EFFECT', display: 'Other Effect' },
-    { value: 'UNKNOWN_EFFECT', display: 'Unknown Effect' },
+    { value: 'NO_SERVICE', display: 'Sin servicio' },
+    { value: 'REDUCED_SERVICE', display: 'Servicio limitado' },
+    { value: 'SIGNIFICANT_DELAYS', display: 'Retrasos significativos' },
+    { value: 'DETOUR', display: 'Desvío' },
+    { value: 'ADDITIONAL_SERVICE', display: 'Servicio adicional' },
+    { value: 'MODIFIED_SERVICE', display: 'Servicio modificado' },
+    { value: 'STOP_MOVED', display: 'Parada reubicada' },
+    { value: 'OTHER_EFFECT', display: 'Otro efecto' },
+    { value: 'UNKNOWN_EFFECT', display: 'Efecto desconocido' },
 ];
 
 otp.modules.alerts.EditAlertView = Backbone.View.extend({
@@ -214,7 +213,7 @@ otp.modules.alerts.EditAlertWidget =
     initialize : function(id, module, alertObj) {
         var this_ = this;
         otp.widgets.Widget.prototype.initialize.call(this, id, module, {
-            title : (alertObj.get('id') == null) ? 'Crear Interrupción' : 'Editar Interrupción #'+alertObj.get('id'),
+            title : (alertObj.get('id') == null) ? 'Crear aviso' : 'Editar aviso #'+alertObj.get('id'),
             cssClass : 'otp-alerts-editAlertWidget',
             closeable: true,
         });

@@ -1,10 +1,10 @@
 <script id="otp-alerts-filterRadio" type="text/html">
 
     <div style="">
-        <input type="radio" name="{{widgetId}}-filterRadio" value="current" checked /> Show alerts active at current time<br />
+        <input type="radio" name="{{widgetId}}-filterRadio" value="current" checked /> Mostrar los avisos activos en este momento<br />
     </div>
     <div style="margin-top: 4px;">
-        <input type="radio" name="{{widgetId}}-filterRadio" value="range" /> Show alerts active during date range:
+        <input type="radio" name="{{widgetId}}-filterRadio" value="range" /> Mostrar los avisos durante un rango de fechas:
     <div style="margin: 2px 0px 8px 18px;" class="notDraggable">
         <input type="text" id="{{widgetId}}-rangeStartInput" style="width: 40%" value="{{initialStartDate}}" />
         &nbsp;to&nbsp;
@@ -19,7 +19,7 @@
             {{^headerText}}<strong style="color:red;">(No header)</strong>{{/headerText}}
             <br/>
             {{#descriptionText}}{{descriptionText}}{{/descriptionText}}
-            {{^descriptionText}}(No description){{/descriptionText}}
+            {{^descriptionText}}(sin descripción){{/descriptionText}}
         </div>
         {{#routeIds}}
             <div style="font-size: 11px; margin-top: 3px;"><b>Rutas afectadas</b>: {{routeIds}}</div>
@@ -35,9 +35,9 @@
     <div id="{{widgetId}}-accordion" class="notDraggable {{widgetId}}-alsoResize">
         <h3>Información General</h3>
         <div style="padding: 10px;">
-            <div>Header:</div>
+            <div>Título:</div>
             <input id="{{widgetId}}-headerText" class="notDraggable" style="width: 95%;" value="{{headerText}}">
-            <div>Description:</div>
+            <div>Descripción:</div>
             <textarea id="{{widgetId}}-descriptionText" class="otp-alerts-editAlert-text notDraggable">{{descriptionText}}</textarea>
 
             <div style="float:left; width: 40%;">
@@ -85,7 +85,7 @@
                 </div>
                 <div style="float: left; width: 45%;">
                     <div style="padding: 3px 0px">
-                        <input type="radio" name="{{widgetId}}-rangeEndRadio" value="indefinitely" checked /> Indefinitely<br />
+                        <input type="radio" name="{{widgetId}}-rangeEndRadio" value="indefinitely" checked /> Indefinido<br />
                     </div>
                     <div style="padding: 3px 0px">
                     <input type="radio" name="{{widgetId}}-rangeEndRadio" value="endTime" />
@@ -93,14 +93,14 @@
                     </div>
                 </div>
                 <div style="float: left; width: 10%; text-align: right; padding-top: 12px;">
-                    <button id="addRangeButton">Add</button>
+                    <button id="addRangeButton">Agregar</button>
                 </div>
                 <br style="clear: left;" />
             </div>
             
         </div>
 
-        <h3>Servicios de Tránsito Afectados</h3>
+        <h3>Servicios de Transporte Público Afectados</h3>
         <div style="font-size: .9em; padding: 10px;">
             <div id="{{widgetId}}-entitiesList" class="otp-alerts-editAlert-entitiesList notDraggable" size="5">
                 {{#informedEntities}}
@@ -115,7 +115,7 @@
                 {{/informedEntities}}
             </div>
             <div style="font-style: italic; margin-top: 4px; text-align: center;">
-                Arrastre rutas / paradas desde el widget de "Servicios" o en el mapa  para agregar a esta alerta.
+                Arrastre rutas / paradas desde el widget de "Servicios" o en el mapa  para agregar a esta aviso.
             </div>
         </div>
     </div>
@@ -136,10 +136,10 @@
 <script id="otp-alerts-stopPopup" type="text/html">
     <div style='text-align: center;'>
         <div style='font-weight: bold; font-size: 1.1em;'>
-            Stop {{id.agencyId}}_{{id.id}}: {{stopName}}
+            Parada {{id.agencyId}}_{{id.id}}: {{stopName}}
         </div>
         <div style='margin-top: 3px;'>
-            Routes serving this stop (drag to add to alert):
+            Líneas/Rutas que sirven esta estación/parada (arrastra para agregar al aviso)
         </div>
     </div>
 </script>

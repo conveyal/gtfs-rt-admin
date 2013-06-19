@@ -25,7 +25,7 @@ otp.modules.alerts.EntitiesWidget =
     initialize : function(id, module) {
         var this_ = this;
         otp.widgets.Widget.prototype.initialize.call(this, id, module, {
-            title : 'Servicios de Tránsito',
+            title : 'Servicios de Transporte Público',
             cssClass : 'otp-alerts-entitiesWidget'
         });
         

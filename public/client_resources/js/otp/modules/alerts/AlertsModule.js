@@ -32,7 +32,7 @@ otp.modules.alerts.AlertsModule =
     initialize : function(webapp) {
         otp.modules.Module.prototype.initialize.apply(this, arguments);        
         
-        this.validAgencies = [ 'STE' ];
+        this.validAgencies = [ GTFSAgencyId ];
     },
     
     activate : function() {
