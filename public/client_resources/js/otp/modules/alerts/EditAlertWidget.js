@@ -46,9 +46,12 @@ otp.modules.alerts.effects = [
 otp.modules.alerts.EditAlertView = Backbone.View.extend({
 
     events : {
-        'keyup textarea' : 'descriptionTextChanged',
-        'keyup input' : 'headerTextChanged',
+        'keyup .otp-alerts-editAlert-descriptionText' : 'descriptionTextChanged',
+        'keyup .otp-alerts-editAlert-headerText' : 'headerTextChanged',
+        'keyup .otp-alerts-editAlert-commentsText' : 'commentsTextChanged',
+    
         'click #addRangeButton' : 'addRangeButtonClicked',
+        'click .otp-alerts-editAlert-publiclyVisible' : 'publiclyVisibleClicked',
         'click .otp-alerts-editAlert-deleteRangeButton' : 'deleteRangeButtonClicked',
         'click .otp-alerts-editAlert-deleteEntityButton' : 'deleteEntityButtonClicked',
         'click .entityRowLabel' : 'entityRowClicked',
@@ -85,11 +88,18 @@ otp.modules.alerts.EditAlertView = Backbone.View.extend({
         // set up the date/time pickers for the 'create new timerange' input
         $("#"+this.options.widget.id+'-rangeStartInput').datetimepicker({
             timeFormat: "h:mmtt", 
-        }).datepicker("setDate", new Date());
+        }).datepicker("setDate", new Date(), $.datepicker.regional["es"]);
 
         $("#"+this.options.widget.id+'-rangeEndInput').datetimepicker({
             timeFormat: "h:mmtt",
-        }).datepicker("setDate", new Date());
+        }).datepicker("setDate", new Date(), $.datepicker.regional["es"]);
+
+        // change from indefinate to rangeEnd when user clicks on rangeEndInput
+
+        var widgetId = this.options.widget.id;
+        $("#"+this.options.widget.id+'-rangeEndInput').on('click', function() {
+            $("input[name=" + widgetId + "-rangeEndRadio][value=endTime]").prop('checked', true);
+        })
 
         // allow the entities list to accept route/stop elements via drag & drop
         $("#"+this.options.widget.id+'-entitiesList').droppable({
@@ -117,12 +127,22 @@ otp.modules.alerts.EditAlertView = Backbone.View.extend({
         var text = $('#'+this.options.widget.id+'-headerText').val();
         this.model.set('headerText', text);
     },
+
+    commentsTextChanged : function(event) {
+        var text = $('#'+this.options.widget.id+'-commentsText').val();
+        this.model.set('commentsText', text);
+    },
+
+    publiclyVisibleClicked :  function(event) {
+        var publiclyVisible = $('#'+this.options.widget.id+'-publiclyVisible').prop('checked');
+        this.model.set('publiclyVisible', publiclyVisible);
+    },
     
     addRangeButtonClicked : function(event) {
-        var start = moment($("#"+this.options.widget.id+'-rangeStartInput').val(), "MM/DD/YYYY "+otp.config.timeFormat).unix();
+        var start = otp.config.moment($("#"+this.options.widget.id+'-rangeStartInput').val(), "L"+otp.config.timeFormat).unix();
         var radio = $('input:radio[name='+this.options.widget.id+'-rangeEndRadio'+']:checked').val();
         var end = (radio === "indefinitely") ? null :
-            moment($("#"+this.options.widget.id+'-rangeEndInput').val(), "MM/DD/YYYY "+otp.config.timeFormat).unix();
+            otp.config.moment($("#"+this.options.widget.id+'-rangeEndInput').val(), "L LT "+otp.config.timeFormat).unix();
         
         if(end != null)
             end = end * 1000;

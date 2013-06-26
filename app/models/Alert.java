@@ -51,6 +51,9 @@ public class Alert extends Model {
     public String url;
     public String headerText;
     public String descriptionText;
+    public String commentsText;
+    
+    public Boolean publiclyVisible;
     
     @JsonCreator
     public static Alert factory(long id) {
@@ -99,5 +102,25 @@ public class Alert extends Model {
         return super.delete();
     }
 
+    public Boolean securityCheck(String agencyId) {
+    	
+    	if(!agencyId.equals(agencyId))
+         	return false;
+    	
+    	
+    	// need to download  IEs list from transit index and validate requests aginst that...
+    	
+    	/* List<InformedEntity> ies = InformedEntity.find("alert = ?", this).fetch();
+    	
+    	for(InformedEntity ie : ies) {
+    		
+    		if(!ie.agencyId.equals(agencyId)) 
+    			return false;
+    		
+    	} */
+  
+    	return true;
+    }
+    
 
 }

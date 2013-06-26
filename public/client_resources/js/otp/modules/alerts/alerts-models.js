@@ -28,7 +28,10 @@ otp.namespace("otp.modules.alerts");
       cause: null,
       effect: null,
       url: null,
-      descriptionText: null
+      descriptionText: null,
+      headerText: null,
+      commentsText: null,
+      publiclyVisible: null
     }
   });
 

@@ -26,7 +26,7 @@ public class Account extends Model {
     public Date lastLogin;
     
     public Boolean active;
-    
+       
     public Boolean admin;
     
     public String agencyId;

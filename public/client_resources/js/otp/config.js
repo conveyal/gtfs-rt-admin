@@ -9,7 +9,10 @@ otp.config = {
     /**
      * The OTP web service locations
      */
-     
+    
+    // set data format language
+    moment: moment().lang('es'),
+
     hostname : "http://setravi.dev.conveyal.com:8080",
     //hostname: "http://localhost:8080",
     //municoderHostname : "http://localhost:8080",
@@ -39,7 +42,6 @@ otp.config = {
             attribution : '<a href="http://www.openstreetmap.org/" target="_blank">OpenStreetMap</a> and contributors.'
         }        
     ],
-    
 
     /**
      * Map start location and zoom settings: by default, the client uses the
@@ -57,7 +59,7 @@ otp.config = {
      * Site name / description / branding display options
      */
 
-    siteName            : "Advisos de Transporte Público",
+    siteName            : "Avisos de Transporte Público",
     siteDescription     : "An OpenTripPlanner deployment.",
     logoGraphic         : 'images/otp_logo_darkbg_40px.png',
     // bikeshareName    : "",
@@ -88,7 +90,6 @@ otp.config = {
         }
     ],
     
-    
     /**
      * Geocoders: a list of supported geocoding services available for use in
      * address resolution. Expressed as an array of objects, where each object
@@ -103,7 +104,6 @@ otp.config = {
     geocoders : [
     ],
 
-    
     /**
      * Info Widgets: a list of the non-module-specific "information widgets"
      * that can be accessed from the top bar of the client display. Expressed as

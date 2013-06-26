@@ -16,7 +16,7 @@
     <div class="otp-alerts-alertRow">
         <div>
             <strong>{{#headerText}}{{headerText}}{{/headerText}}</strong>
-            {{^headerText}}<strong style="color:red;">(No header)</strong>{{/headerText}}
+            {{^headerText}}<strong style="color:red;">(sin título)</strong>{{/headerText}}
             <br/>
             {{#descriptionText}}{{descriptionText}}{{/descriptionText}}
             {{^descriptionText}}(sin descripción){{/descriptionText}}
@@ -35,10 +35,15 @@
     <div id="{{widgetId}}-accordion" class="notDraggable {{widgetId}}-alsoResize">
         <h3>Información General</h3>
         <div style="padding: 10px;">
+            <div>
+                <input type="checkbox" id="{{widgetId}}-publiclyVisible" class="otp-alerts-editAlert-publiclyVisible" name="{{widgetId}}-publiclyVisible" {{#publiclyVisible}}checked{{/publiclyVisible}}/> Visible públicamente
+            </div>
             <div>Título:</div>
-            <input id="{{widgetId}}-headerText" class="notDraggable" style="width: 95%;" value="{{headerText}}">
+            <input id="{{widgetId}}-headerText" class="otp-alerts-editAlert-text otp-alerts-editAlert-headerText notDraggable" style="width: 95%;" value="{{headerText}}"/>
             <div>Descripción:</div>
-            <textarea id="{{widgetId}}-descriptionText" class="otp-alerts-editAlert-text notDraggable">{{descriptionText}}</textarea>
+            <textarea id="{{widgetId}}-descriptionText" class="otp-alerts-editAlert-textarea otp-alerts-editAlert-descriptionText notDraggable">{{descriptionText}}</textarea>
+            <div>Comentarios:</div>
+            <textarea id="{{widgetId}}-commentsText" class="otp-alerts-editAlert-textarea otp-alerts-editAlert-commentsText notDraggable">{{commentsText}}</textarea>
 
             <div style="float:left; width: 40%;">
                 <div class="otp-defaultLabel">Causa:</div>

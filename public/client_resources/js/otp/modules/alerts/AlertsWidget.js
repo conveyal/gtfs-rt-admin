@@ -38,18 +38,19 @@ otp.modules.alerts.AlertsWidget =
         
         ich['otp-alerts-filterRadio']({
             widgetId : this.id,
-            initialStartDate : moment().format("MM/DD/YYYY"),
-            initialEndDate : moment().add('d',30).format("MM/DD/YYYY"),
+
+            initialStartDate : otp.config.moment.format("L"),
+            initialEndDate : otp.config.moment.add('d',30).format("L"),
         }).appendTo(this.mainDiv);
         $('input:radio[name='+this.id+'-filterRadio]').click(function() {
             this_.filterMode = $('input:radio[name='+this_.id+'-filterRadio]:checked').val();
             this_.refreshAlerts(this_.module.alerts);
         })
-        $('#'+this.id+'-rangeStartInput').datepicker()
+        $('#'+this.id+'-rangeStartInput').datepicker($.datepicker.regional["es"])
         .change(function() {
             this_.refreshAlerts(this_.module.alerts);
         });
-        $('#'+this.id+'-rangeEndInput').datepicker()
+        $('#'+this.id+'-rangeEndInput').datepicker($.datepicker.regional["es"])
         .change(function() {
             this_.refreshAlerts(this_.module.alerts);
         });

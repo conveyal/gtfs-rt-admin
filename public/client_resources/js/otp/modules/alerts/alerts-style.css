@@ -87,9 +87,13 @@
 }
 
 
-.otp-alerts-editAlert-text {
+.otp-alerts-editAlert-textarea {
     width: 95%;
     height: 40px;
+}
+
+.otp-alerts-editAlert-text {
+    width: 95%;
 }
 
 .otp-alerts-editAlert-rangeList {
