@@ -173,7 +173,7 @@ otp.modules.alerts.AlertsModule =
         
         if(affectedRoutes) {
             for(var i = 0; i < affectedRoutes.length; i++) {
-                console.log(affectedRoutes[i]);
+                //console.log(affectedRoutes[i]);
                 var entity = {
                     agencyId: affectedRoutes[i].routeData.id.agencyId,
                     routeId: affectedRoutes[i].routeData.id.id
@@ -223,7 +223,7 @@ otp.modules.alerts.AlertsModule =
         var this_ = this;
         alertObj.save({}, {
             success : function() {
-                console.log("saved!");
+                //console.log("saved!");
                 this_.fetchAlerts();
             }
         });
@@ -234,12 +234,12 @@ otp.modules.alerts.AlertsModule =
         alertObj.destroy({
             dataType: "text", // success is not triggered unless we do this
             success : function() {
-                console.log("deleted!");
+                //console.log("deleted!");
                 this_.fetchAlerts();
             },
             error: function(model, response) {
-                console.log("Error deleting");
-                console.log(response);
+                //console.log("Error deleting");
+                //console.log(response);
             }            
         });
     },

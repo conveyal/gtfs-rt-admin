@@ -108,7 +108,7 @@ otp.core.Webapp = otp.Class({
         if(otp.config.geocoders) {
             for(var i=0; i<otp.config.geocoders.length; i++) {
                 var gcConfig = otp.config.geocoders[i];
-                console.log('init geocoder: '+gcConfig.name);
+                //console.log('init geocoder: '+gcConfig.name);
                 //var geocoder = window[gcConfig.classname](gcConfig.url, gcConfig.addressParam);
                 
                 var gcClass = this.stringToFunction(gcConfig.className);
@@ -168,8 +168,8 @@ otp.core.Webapp = otp.Class({
 
         // initialize the modules 
         
-        if(this.urlParams['module'])
-            console.log("startup module: "+this.urlParams['module'])
+        //if(this.urlParams['module'])
+        //   console.log("startup module: "+this.urlParams['module'])
         if(otp.config.modules) {
             var setDefault = false, defaultModule = null;
             for(var i=0; i<otp.config.modules.length; i++) {
@@ -191,7 +191,7 @@ otp.core.Webapp = otp.Class({
                 this.addModule(module, isDefault);//modConfig.isDefault || false);
             }
             if(_.has(this.urlParams, 'module') && !setDefault) {
-                console.log("OTP module with id="+this.urlParams['module']+" not found");
+                //console.log("OTP module with id="+this.urlParams['module']+" not found");
                 if(defaultModule) this.setActiveModule(defaultModule);
             }
         }                
@@ -248,7 +248,7 @@ otp.core.Webapp = otp.Class({
         
         for(var i = 0; i < module.widgets.length; i++) {
             if(module.widgets[i].isOpen) {
-                console.log(" - showing widget: "+module.widgets[i].id);
+                //console.log(" - showing widget: "+module.widgets[i].id);
                 module.widgets[i].show();
             }
         }        
