@@ -74,5 +74,5 @@ otp.util.Geo = {
 		  }	
 		  
 		  return polylineLatLngs;
-	},
+	}
 };

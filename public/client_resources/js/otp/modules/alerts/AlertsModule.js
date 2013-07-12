@@ -327,5 +327,5 @@ otp.modules.alerts.AlertsModule =
     
     isValidAgency : function(agencyId) {
         return _.contains(this.validAgencies, agencyId);
-    },
+    }
 });

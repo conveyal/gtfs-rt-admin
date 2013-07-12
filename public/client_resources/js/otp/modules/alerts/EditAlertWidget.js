@@ -138,11 +138,15 @@ otp.modules.alerts.EditAlertView = Backbone.View.extend({
         this.model.set('publiclyVisible', publiclyVisible);
     },
     
+    
     addRangeButtonClicked : function(event) {
-        var start = otp.config.moment($("#"+this.options.widget.id+'-rangeStartInput').val(), "L"+otp.config.timeFormat).unix();
+
+        var dateParser = moment().lang('es');
+
+        var start = moment($("#"+this.options.widget.id+'-rangeStartInput').val(), "DD/MM/YYYY hh:mma", 'es').unix();
         var radio = $('input:radio[name='+this.options.widget.id+'-rangeEndRadio'+']:checked').val();
         var end = (radio === "indefinitely") ? null :
-            otp.config.moment($("#"+this.options.widget.id+'-rangeEndInput').val(), "L LT "+otp.config.timeFormat).unix();
+            moment($("#"+this.options.widget.id+'-rangeEndInput').val(), "DD/MM/YYYY hh:mma", 'es').unix();
         
         if(end != null)
             end = end * 1000;

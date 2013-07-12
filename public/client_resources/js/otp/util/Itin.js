@@ -88,7 +88,7 @@ otp.util.Itin = {
         'BUS' : 'Bus',
         'SUBWAY' : 'Subway',
         'TRAM' : 'Light Rail',
-        'GONDOLA' : 'Aerial Tram',
+        'GONDOLA' : 'Aerial Tram'
     },
     
     modeString : function(mode) {
