@@ -34,27 +34,29 @@ public class PublishRtJob extends Job {
 		
 		synchronized (publishPending) {
 			
-			List<Alert> alerts = Alert.findActiveAlerts();
+			if(Play.configuration.getProperty("aws.key") != null && Play.configuration.getProperty("aws.secret") != null)
+			{
+				List<Alert> alerts = Alert.findActiveAlerts();
+				
+				AWSCredentials credentials = new BasicAWSCredentials(Play.configuration.getProperty("aws.key"), Play.configuration.getProperty("aws.secret"));
+				AmazonS3 conn = new AmazonS3Client(credentials);
+				conn.setEndpoint("s3.amazonaws.com");
+				
+				Map<String, Object> args = new HashMap<String, Object>();
 			
-			AWSCredentials credentials = new BasicAWSCredentials(Play.configuration.getProperty("aws.key"), Play.configuration.getProperty("aws.secret"));
-			AmazonS3 conn = new AmazonS3Client(credentials);
-			conn.setEndpoint("s3.amazonaws.com");
-			
-			Map<String, Object> args = new HashMap<String, Object>();
+				args.put("alerts", alerts);
+				args.put("lastUpdate", (new Date()).toString());
+				
+				Template template = TemplateLoader.load("app/views/gtfs-rt.html");
+				String s = template.render(args);
+				InputStream stream = new ByteArrayInputStream(s.getBytes("UTF-8"));
 		
-			args.put("alerts", alerts);
-			args.put("lastUpdate", (new Date()).toString());
-			
-			Template template = TemplateLoader.load("app/views/gtfs-rt.html");
-			String s = template.render(args);
-			InputStream stream = new ByteArrayInputStream(s.getBytes("UTF-8"));
-	
-			ObjectMetadata html = new ObjectMetadata();
-			html.setContentType("text/html");
-			
-			conn.putObject("setravi", "gtfs-rt.html", stream, html);
-			conn.setObjectAcl("setravi", "gtfs-rt.html", CannedAccessControlList.PublicRead);
+				ObjectMetadata html = new ObjectMetadata();
+				html.setContentType("text/html");
+				
+				conn.putObject("setravi", "gtfs-rt.html", stream, html);
+				conn.setObjectAcl("setravi", "gtfs-rt.html", CannedAccessControlList.PublicRead);
+			}
 		}
-		
 	}
 }
