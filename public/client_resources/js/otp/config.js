@@ -9,7 +9,10 @@ otp.config = {
     /**
      * The OTP web service locations
      */
-     
+    
+    // set data format language
+    moment: moment().lang('es'),
+
     hostname : "http://setravi.dev.conveyal.com:8080",
     //hostname: "http://localhost:8080",
     //municoderHostname : "http://localhost:8080",
@@ -33,19 +36,12 @@ otp.config = {
      
     baseLayers: [
         {
-            name: 'MapQuest OSM',
-            tileUrl: 'http://{s}.mqcdn.com/tiles/1.0.0/osm/{z}/{x}/{y}.png',
-            subdomains : ['otile1','otile2','otile3','otile4'],
-            attribution : 'Data, imagery and map information provided by <a href="http://open.mapquest.com" target="_blank">MapQuest</a>, <a href="http://www.openstreetmap.org/" target="_blank">OpenStreetMap</a> and contributors.'
-        },
-        {
-            name: 'MapQuest Aerial',
-            tileUrl: 'http://{s}.mqcdn.com/tiles/1.0.0/sat/{z}/{x}/{y}.png',
-            subdomains : ['otile1','otile2','otile3','otile4'],
-            attribution : 'Data, imagery and map information provided by <a href="http://open.mapquest.com" target="_blank">MapQuest</a>, <a href="http://www.openstreetmap.org/" target="_blank">OpenStreetMap</a> and contributors.'
-        },           
+            name: 'Mapbox OSM',
+            tileUrl: 'http://{s}.tiles.mapbox.com/v3/conveyal.map-jc4m5i21/{z}/{x}/{y}.png',
+            subdomains : ['a','b','c','d'],
+            attribution : '<a href="http://www.openstreetmap.org/" target="_blank">OpenStreetMap</a> and contributors.'
+        }        
     ],
-    
 
     /**
      * Map start location and zoom settings: by default, the client uses the
@@ -63,7 +59,7 @@ otp.config = {
      * Site name / description / branding display options
      */
 
-    siteName            : "My OTP Instance",
+    siteName            : "Avisos de Transporte Público",
     siteDescription     : "An OpenTripPlanner deployment.",
     logoGraphic         : 'images/otp_logo_darkbg_40px.png',
     // bikeshareName    : "",
@@ -89,21 +85,10 @@ otp.config = {
         {
             id : 'alerts',
             className : 'otp.modules.alerts.AlertsModule',
-            defaultBaseLayer : 'MapQuest OSM',
+            defaultBaseLayer : 'Mapbox OSM',
             isDefault: true
-        },
-        {
-            id : 'planner',
-            className : 'otp.modules.multimodal.MultimodalPlannerModule',
-            defaultBaseLayer : 'MapQuest OSM',
-            isDefault: false
-        },
-        {
-            id : 'analyst',
-            className : 'otp.modules.analyst.AnalystModule',
         }
     ],
-    
     
     /**
      * Geocoders: a list of supported geocoding services available for use in
@@ -119,7 +104,6 @@ otp.config = {
     geocoders : [
     ],
 
-    
     /**
      * Info Widgets: a list of the non-module-specific "information widgets"
      * that can be accessed from the top bar of the client display. Expressed as
@@ -132,15 +116,8 @@ otp.config = {
 
 
     infoWidgets: [
-        {
-            title: 'About',
-            content: '<p>About this site</p>',
-            //cssClass: 'otp-contactWidget',
-        },
-        {
-            title: 'Contact',
-            content: '<p>Comments? Contact us at...</p>'
-        },           
+    'Logout'
+                   
     ],
     
     

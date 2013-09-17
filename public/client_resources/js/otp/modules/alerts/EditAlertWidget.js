@@ -16,39 +16,42 @@ otp.namespace("otp.modules.alerts");
 
 otp.modules.alerts.causes = [
     { value: 'NONE', display: '(none)' },
-    { value: 'TECHNICAL_PROBLEM', display: 'Technical Problem' },
-    { value: 'STRIKE', display: 'Strike' },
-    { value: 'DEMONSTRATION', display: 'Demonstration' },
-    { value: 'ACCIDENT', display: 'Accident' },
-    { value: 'HOLIDAY', display: 'Holiday' },
-    { value: 'WEATHER', display: 'Weather' },
-    { value: 'MAINTENANCE', display: 'Maintenance' },
-    { value: 'CONSTRUCTION', display: 'Construction' },
-    { value: 'POLICE_ACTIVITY', display: 'Police Activity' },
-    { value: 'MEDICAL_EMERGENCY', display: 'Medical Emergency' },
-    { value: 'UNKNOWN_CAUSE', display: 'Unknown Cause' },
-    { value: 'OTHER_CAUSE', display: 'Other Cause' },
+    { value: 'TECHNICAL_PROBLEM', display: 'Problemas técnicos' },
+    { value: 'STRIKE', display: 'Huelga' },
+    { value: 'DEMONSTRATION', display: 'Manifestación' },
+    { value: 'ACCIDENT', display: 'Accidente' },
+    { value: 'HOLIDAY', display: 'Día festivo' },
+    { value: 'WEATHER', display: 'Condiciones atmosféricas' },
+    { value: 'MAINTENANCE', display: 'Mantenimiento' },
+    { value: 'CONSTRUCTION', display: 'Obras' },
+    { value: 'POLICE_ACTIVITY', display: 'Operativo policiaco' },
+    { value: 'MEDICAL_EMERGENCY', display: 'Emergencia médica' },
+    { value: 'UNKNOWN_CAUSE', display: 'Causa desconocida' },
+    { value: 'OTHER_CAUSE', display: 'Otra causa' },
 ];
-
 
 otp.modules.alerts.effects = [
     { value: 'NONE', display: '(none)' },
-    { value: 'NO_SERVICE', display: 'No Service' },
-    { value: 'REDUCED_SERVICE', display: 'Reduced Service' },
-    { value: 'SIGNIFICANT_DELAYS', display: 'Significant Delays' },
-    { value: 'DETOUR', display: 'Detour' },
-    { value: 'ADDITIONAL_SERVICE', display: 'Additional Service' },
-    { value: 'MODIFIED_SERVICE', display: 'Modified Service' },
-    { value: 'STOP_MOVED', display: 'Stop Moved' },
-    { value: 'OTHER_EFFECT', display: 'Other Effect' },
-    { value: 'UNKNOWN_EFFECT', display: 'Unknown Effect' },
+    { value: 'NO_SERVICE', display: 'Sin servicio' },
+    { value: 'REDUCED_SERVICE', display: 'Servicio limitado' },
+    { value: 'SIGNIFICANT_DELAYS', display: 'Retrasos significativos' },
+    { value: 'DETOUR', display: 'Desvío' },
+    { value: 'ADDITIONAL_SERVICE', display: 'Servicio adicional' },
+    { value: 'MODIFIED_SERVICE', display: 'Servicio modificado' },
+    { value: 'STOP_MOVED', display: 'Parada reubicada' },
+    { value: 'OTHER_EFFECT', display: 'Otro efecto' },
+    { value: 'UNKNOWN_EFFECT', display: 'Efecto desconocido' },
 ];
 
 otp.modules.alerts.EditAlertView = Backbone.View.extend({
 
     events : {
-        'keyup textarea' : 'descriptionTextChanged',
+        'keyup .otp-alerts-editAlert-descriptionText' : 'descriptionTextChanged',
+        'keyup .otp-alerts-editAlert-headerText' : 'headerTextChanged',
+        'keyup .otp-alerts-editAlert-commentsText' : 'commentsTextChanged',
+    
         'click #addRangeButton' : 'addRangeButtonClicked',
+        'click .otp-alerts-editAlert-publiclyVisible' : 'publiclyVisibleClicked',
         'click .otp-alerts-editAlert-deleteRangeButton' : 'deleteRangeButtonClicked',
         'click .otp-alerts-editAlert-deleteEntityButton' : 'deleteEntityButtonClicked',
         'click .entityRowLabel' : 'entityRowClicked',
@@ -64,7 +67,7 @@ otp.modules.alerts.EditAlertView = Backbone.View.extend({
         context = _.extend(context, {
             widgetId : this.options.widget.id,
             renderDate : function() {
-                return function(date, render) { return moment(1000*parseInt(render(date))).format(otp.config.dateFormat+' '+otp.config.timeFormat); }
+                return function(date, render) { return moment(parseInt(render(date))).format(otp.config.dateFormat+' '+otp.config.timeFormat); }
             },
             rangeIndex: function() { return rangeIndex++; },
             entityIndex: function() { return entityIndex++; },
@@ -85,11 +88,18 @@ otp.modules.alerts.EditAlertView = Backbone.View.extend({
         // set up the date/time pickers for the 'create new timerange' input
         $("#"+this.options.widget.id+'-rangeStartInput').datetimepicker({
             timeFormat: "h:mmtt", 
-        }).datepicker("setDate", new Date());
+        }).datepicker("setDate", new Date(), $.datepicker.regional["es"]);
 
         $("#"+this.options.widget.id+'-rangeEndInput').datetimepicker({
             timeFormat: "h:mmtt",
-        }).datepicker("setDate", new Date());
+        }).datepicker("setDate", new Date(), $.datepicker.regional["es"]);
+
+        // change from indefinate to rangeEnd when user clicks on rangeEndInput
+
+        var widgetId = this.options.widget.id;
+        $("#"+this.options.widget.id+'-rangeEndInput').on('click', function() {
+            $("input[name=" + widgetId + "-rangeEndRadio][value=endTime]").prop('checked', true);
+        })
 
         // allow the entities list to accept route/stop elements via drag & drop
         $("#"+this.options.widget.id+'-entitiesList').droppable({
@@ -112,15 +122,37 @@ otp.modules.alerts.EditAlertView = Backbone.View.extend({
         var text = $('#'+this.options.widget.id+'-descriptionText').val();
         this.model.set('descriptionText', text);
     },
+
+    headerTextChanged : function(event) {
+        var text = $('#'+this.options.widget.id+'-headerText').val();
+        this.model.set('headerText', text);
+    },
+
+    commentsTextChanged : function(event) {
+        var text = $('#'+this.options.widget.id+'-commentsText').val();
+        this.model.set('commentsText', text);
+    },
+
+    publiclyVisibleClicked :  function(event) {
+        var publiclyVisible = $('#'+this.options.widget.id+'-publiclyVisible').prop('checked');
+        this.model.set('publiclyVisible', publiclyVisible);
+    },
+    
     
     addRangeButtonClicked : function(event) {
-        var start = moment($("#"+this.options.widget.id+'-rangeStartInput').val(), "MM/DD/YYYY "+otp.config.timeFormat).unix();
+
+        var dateParser = moment().lang('es');
+
+        var start = moment($("#"+this.options.widget.id+'-rangeStartInput').val(), "DD/MM/YYYY hh:mma", 'es').unix();
         var radio = $('input:radio[name='+this.options.widget.id+'-rangeEndRadio'+']:checked').val();
         var end = (radio === "indefinitely") ? null :
-            moment($("#"+this.options.widget.id+'-rangeEndInput').val(), "MM/DD/YYYY "+otp.config.timeFormat).unix();
+            moment($("#"+this.options.widget.id+'-rangeEndInput').val(), "DD/MM/YYYY hh:mma", 'es').unix();
         
+        if(end != null)
+            end = end * 1000;
+
         this.model.attributes.timeRanges.push({
-            startTime: start,
+            startTime: start * 1000,
             endTime: end
         });
         this.render();
@@ -172,6 +204,7 @@ otp.modules.alerts.EditAlertView = Backbone.View.extend({
             this.model.attributes.informedEntities.push({
                 agencyId : route.id.agencyId,
                 routeId : route.id.id,
+                description: route.routeShortName
             });
         }
 
@@ -181,6 +214,7 @@ otp.modules.alerts.EditAlertView = Backbone.View.extend({
             this.model.attributes.informedEntities.push({
                 agencyId : stop.id.agencyId,
                 stopId : stop.id.id,
+                description : stop.stopName
             });
         }
 
@@ -203,14 +237,17 @@ otp.modules.alerts.EditAlertWidget =
     initialize : function(id, module, alertObj) {
         var this_ = this;
         otp.widgets.Widget.prototype.initialize.call(this, id, module, {
-            title : (alertObj.get('id') == null) ? 'Create Alert' : 'Edit Alert #'+alertObj.get('id'),
+            title : (alertObj.get('id') == null) ? 'Crear aviso' : 'Editar aviso #'+alertObj.get('id'),
             cssClass : 'otp-alerts-editAlertWidget',
             closeable: true,
         });
         
+        // hack to force first valid agency as default...
+        alertObj.set('agencyId', module.validAgencies[0]);           
+
         this.module = module;
         this.alertObj = alertObj;
-        
+ 
         // set up the view 
         var view = new otp.modules.alerts.EditAlertView({
             el: $('<div />').appendTo(this.mainDiv),
@@ -222,13 +259,13 @@ otp.modules.alerts.EditAlertWidget =
         // create the save and delete buttons
         var buttonRow = $('<div>').addClass('otp-alerts-entitiesWidget-buttonRow').appendTo(this.mainDiv)
         
-        $(Mustache.render(otp.templates.button, { text : "Save"}))
+        $(Mustache.render(otp.templates.button, { text : "Guardar"}))
         .button().appendTo(buttonRow).click(function() {
             this_.module.saveAlert(this_.alertObj);
             this_.close();
         });
 
-        $(Mustache.render(otp.templates.button, { text : "Delete"}))
+        $(Mustache.render(otp.templates.button, { text : "Borrar"}))
         .button().appendTo(buttonRow).click(function() {
             this_.module.deleteAlert(this_.alertObj);
             this_.close();

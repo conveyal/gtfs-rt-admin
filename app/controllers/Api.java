@@ -16,7 +16,30 @@ import org.codehaus.jackson.map.ObjectMapper;
 
 import models.*;
 
+
+@With(Secure.class)
 public class Api extends Controller {
+	
+	@Before
+	static void initSession() throws Throwable {
+		
+	    if(Security.isConnected()) {
+	    	renderArgs.put("user", Security.connected());
+	    	
+	    	Account account = Account.find("username = ?", Security.connected()).first();
+	            
+	        if(account == null && Account.count() == 0) {
+	        	account = new Account("admin", "admin", "admin@test.com", true, null);
+	        	account.save();
+	        }
+	           
+	        renderArgs.put("agencyId", account.agencyId);
+        }
+        else {
+        	Secure.login();
+        }
+    }
+	
 
     private static ObjectMapper mapper = new ObjectMapper();
     private static JsonFactory jf = new JsonFactory();
@@ -55,9 +78,16 @@ public class Api extends Controller {
 
     public static void createAlert() {
         Alert alert;
+        
+        
 
         try {
             alert = mapper.readValue(params.get("body"), Alert.class);
+            
+            // security check
+            if(!alert.securityCheck((String)renderArgs.get("agencyId")))
+            	badRequest();
+            	
             alert.save();
 
             renderJSON(Api.toJson(alert, false));
@@ -65,6 +95,7 @@ public class Api extends Controller {
             e.printStackTrace();
             badRequest();
         }
+    
     }
 
 
@@ -74,6 +105,10 @@ public class Api extends Controller {
         try {
             alert = mapper.readValue(params.get("body"), Alert.class);
 
+            // security check
+            if(!alert.securityCheck((String)renderArgs.get("agencyId")))
+            	badRequest();
+            
             if(alert.id == null || Alert.findById(alert.id) == null)
                 badRequest();
 
@@ -95,6 +130,10 @@ public class Api extends Controller {
 
         if(alert == null)
             badRequest();
+        
+        // security check
+        if(!alert.securityCheck((String)renderArgs.get("agencyId")))
+        	badRequest();
 
         alert.delete();
 

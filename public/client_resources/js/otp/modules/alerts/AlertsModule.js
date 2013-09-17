@@ -32,7 +32,7 @@ otp.modules.alerts.AlertsModule =
     initialize : function(webapp) {
         otp.modules.Module.prototype.initialize.apply(this, arguments);        
         
-        this.validAgencies = [ 'METRO' ];
+        this.validAgencies = [ GTFSAgencyId ];
     },
     
     activate : function() {
@@ -74,9 +74,18 @@ otp.modules.alerts.AlertsModule =
             this.webapp.transitIndex.loadStopsInRectangle(null, this.webapp.map.lmap.getBounds(), this, function(data) {
                 this.windowStops = { };
                 for(var i = 0; i < data.stops.length; i++) {
-                    if(!this.isValidAgency(data.stops[i].id.agencyId)) continue;
-                    var agencyAndId = data.stops[i].id.agencyId + "_" + data.stops[i].id.id;
-                    this.windowStops[agencyAndId] = data.stops[i];
+
+                    // this is a hack to overcome limitations of the gtfs stop-agency link. should move this upstream to OTP transit index.
+                    for(var j = 0; j < data.stops[i].routes.length; j++) {
+
+
+                        if(this.isValidAgency(data.stops[i].routes[j].agencyId)) {;
+                            data.stops[i].id.agencyId = data.stops[i].routes[j].agencyId;
+                            var agencyAndId = data.stops[i].routes[j].agencyId + "_" + data.stops[i].id.id;
+                            this.windowStops[agencyAndId] = data.stops[i];        
+                            continue;
+                        }
+                    }
                 }
                 this.updateStops();
             });
@@ -97,7 +106,9 @@ otp.modules.alerts.AlertsModule =
         this.stopsLayer.clearLayers();
         
         var stops = _.values(_.extend(_.clone(this.routeStops), this.windowStops));
-        this.entitiesWidget.updateStops(stops);
+
+        if(this.entitiesWidget != undefined)
+            this.entitiesWidget.updateStops(stops);
         
         for(var i=0; i<stops.length; i++) {
             var stop = stops[i];
@@ -162,7 +173,7 @@ otp.modules.alerts.AlertsModule =
         
         if(affectedRoutes) {
             for(var i = 0; i < affectedRoutes.length; i++) {
-                console.log(affectedRoutes[i]);
+                //console.log(affectedRoutes[i]);
                 var entity = {
                     agencyId: affectedRoutes[i].routeData.id.agencyId,
                     routeId: affectedRoutes[i].routeData.id.id
@@ -212,7 +223,7 @@ otp.modules.alerts.AlertsModule =
         var this_ = this;
         alertObj.save({}, {
             success : function() {
-                console.log("saved!");
+                //console.log("saved!");
                 this_.fetchAlerts();
             }
         });
@@ -223,12 +234,12 @@ otp.modules.alerts.AlertsModule =
         alertObj.destroy({
             dataType: "text", // success is not triggered unless we do this
             success : function() {
-                console.log("deleted!");
+                //console.log("deleted!");
                 this_.fetchAlerts();
             },
             error: function(model, response) {
-                console.log("Error deleting");
-                console.log(response);
+                //console.log("Error deleting");
+                //console.log(response);
             }            
         });
     },
@@ -254,7 +265,9 @@ otp.modules.alerts.AlertsModule =
     },
     
     drawRoute : function(agencyAndId) {
-        if(!this.isValidAgency(agencyAndId.split('_')[0])) return;
+
+        var agencyId = agencyAndId.split('_')[0];
+        if(!this.isValidAgency(agencyId)) return;
         this.routeHighlightLayer.clearLayers(); 
         this.routesLayer.clearLayers(); 
         this.routeStops = {};
@@ -266,7 +279,10 @@ otp.modules.alerts.AlertsModule =
                 this.routesLayer.addLayer(polyline);            
                 var stops = { };
                 for(var i = 0; i < variant.stops.length; i++) {
-                    var agencyAndId = variant.stops[i].id.agencyId + "_" + variant.stops[i].id.id;
+                    var agencyAndId = agencyId + "_" + variant.stops[i].id.id;
+                    if(variant.stops[i].stopName == undefined && variant.stops[i].name != undefined) 
+                        variant.stops[i].stopName = variant.stops[i].name;
+                    variant.stops[i].id.agencyId = agencyId;
                     this.routeStops[agencyAndId] = variant.stops[i];                    
                 }
                 _.extend(this.routeStops, stops);
@@ -311,5 +327,5 @@ otp.modules.alerts.AlertsModule =
     
     isValidAgency : function(agencyId) {
         return _.contains(this.validAgencies, agencyId);
-    },
+    }
 });

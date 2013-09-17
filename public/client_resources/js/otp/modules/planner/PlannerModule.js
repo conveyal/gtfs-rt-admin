@@ -222,7 +222,7 @@ otp.modules.planner.PlannerModule =
         }
     	
     	apiMethod = apiMethod || 'plan';
-        var url = otp.config.hostname + '/opentripplanner-api-webapp/ws/'+apiMethod;
+        var url = otp.config.hostname + '/otp-api-df/ws/'+apiMethod;
         this.pathLayer.clearLayers();        
         
         var this_ = this;

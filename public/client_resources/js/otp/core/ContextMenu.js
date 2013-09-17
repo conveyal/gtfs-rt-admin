@@ -34,5 +34,5 @@ otp.core.ContextMenu =
 
             if(menuClicked) menuClicked.call(this, event);
         });
-    },
+    }
 });    

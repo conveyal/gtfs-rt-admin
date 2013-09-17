@@ -1,10 +1,10 @@
 <script id="otp-alerts-filterRadio" type="text/html">
 
     <div style="">
-        <input type="radio" name="{{widgetId}}-filterRadio" value="current" checked /> Show alerts active at current time<br />
+        <input type="radio" name="{{widgetId}}-filterRadio" value="current" checked /> Mostrar los avisos activos en este momento<br />
     </div>
     <div style="margin-top: 4px;">
-        <input type="radio" name="{{widgetId}}-filterRadio" value="range" /> Show alerts active during date range:
+        <input type="radio" name="{{widgetId}}-filterRadio" value="range" /> Mostrar los avisos durante un rango de fechas:
     <div style="margin: 2px 0px 8px 18px;" class="notDraggable">
         <input type="text" id="{{widgetId}}-rangeStartInput" style="width: 40%" value="{{initialStartDate}}" />
         &nbsp;to&nbsp;
@@ -15,14 +15,17 @@
 <script id="otp-alerts-alertRow" type="text/html">
     <div class="otp-alerts-alertRow">
         <div>
+            <strong>{{#headerText}}{{headerText}}{{/headerText}}</strong>
+            {{^headerText}}<strong style="color:red;">(sin título)</strong>{{/headerText}}
+            <br/>
             {{#descriptionText}}{{descriptionText}}{{/descriptionText}}
-            {{^descriptionText}}(No description){{/descriptionText}}
+            {{^descriptionText}}(sin descripción){{/descriptionText}}
         </div>
         {{#routeIds}}
-            <div style="font-size: 11px; margin-top: 3px;"><b>Affects Routes</b>: {{routeIds}}</div>
+            <div style="font-size: 11px; margin-top: 3px;"><b>Rutas afectadas</b>: {{routeIds}}</div>
         {{/routeIds}}
         {{#stopIds}}
-            <div style="font-size: 11px;"><b>Affects Stops</b>: {{stopIds}}</div>
+            <div style="font-size: 11px;"><b>Estaciones Afectadas</b>: {{stopIds}}</div>
         {{/stopIds}}
     </div>
 </script>
@@ -30,13 +33,20 @@
 <script id="otp-alerts-alertEditor" type="text/html">
 
     <div id="{{widgetId}}-accordion" class="notDraggable {{widgetId}}-alsoResize">
-        <h3>General Information</h3>
+        <h3>Información General</h3>
         <div style="padding: 10px;">
-            <div>Description:</div>
-            <textarea id="{{widgetId}}-descriptionText" class="otp-alerts-editAlert-text notDraggable">{{descriptionText}}</textarea>
+            <div>
+                <input type="checkbox" id="{{widgetId}}-publiclyVisible" class="otp-alerts-editAlert-publiclyVisible" name="{{widgetId}}-publiclyVisible" {{#publiclyVisible}}checked{{/publiclyVisible}}/> Visible públicamente
+            </div>
+            <div>Título:</div>
+            <input id="{{widgetId}}-headerText" class="otp-alerts-editAlert-text otp-alerts-editAlert-headerText notDraggable" style="width: 95%;" value="{{headerText}}"/>
+            <div>Descripción:</div>
+            <textarea id="{{widgetId}}-descriptionText" class="otp-alerts-editAlert-textarea otp-alerts-editAlert-descriptionText notDraggable">{{descriptionText}}</textarea>
+            <div>Comentarios:</div>
+            <textarea id="{{widgetId}}-commentsText" class="otp-alerts-editAlert-textarea otp-alerts-editAlert-commentsText notDraggable">{{commentsText}}</textarea>
 
             <div style="float:left; width: 40%;">
-                <div class="otp-defaultLabel">Cause:</div>
+                <div class="otp-defaultLabel">Causa:</div>
                 <select id="{{widgetId}}-causeSelect" class="otp-alerts-editAlert-causeSelect notDraggable">
                     {{#causes}}
                         <option value="{{value}}">{{display}}</option>
@@ -45,7 +55,7 @@
             </div>
 
             <div style="margin-left: 50%;">
-                <div class="otp-defaultLabel">Effect:</div>
+                <div class="otp-defaultLabel">Efecto:</div>
                 <select id="{{widgetId}}-effectSelect" class="otp-alerts-editAlert-effectSelect notDraggable">
                     {{#effects}}
                         <option value="{{value}}">{{display}}</option>
@@ -55,7 +65,7 @@
         </div>
 
 
-        <h3>Affected Date/Time Ranges</h3>
+        <h3>Fechas / Horas Afectados</h3>
         <div style="padding: 10px; font-size: 13px;">
             <div style="background: white; height: 60px; overflow: auto; border: 1px solid black; margin-bottom: 4px;">
                 {{#timeRanges}}
@@ -80,7 +90,7 @@
                 </div>
                 <div style="float: left; width: 45%;">
                     <div style="padding: 3px 0px">
-                        <input type="radio" name="{{widgetId}}-rangeEndRadio" value="indefinitely" checked /> Indefinitely<br />
+                        <input type="radio" name="{{widgetId}}-rangeEndRadio" value="indefinitely" checked /> Indefinido<br />
                     </div>
                     <div style="padding: 3px 0px">
                     <input type="radio" name="{{widgetId}}-rangeEndRadio" value="endTime" />
@@ -88,14 +98,14 @@
                     </div>
                 </div>
                 <div style="float: left; width: 10%; text-align: right; padding-top: 12px;">
-                    <button id="addRangeButton">Add</button>
+                    <button id="addRangeButton">Agregar</button>
                 </div>
                 <br style="clear: left;" />
             </div>
             
         </div>
 
-        <h3>Affected Transit Entities</h3>
+        <h3>Servicios de Transporte Público Afectados</h3>
         <div style="font-size: .9em; padding: 10px;">
             <div id="{{widgetId}}-entitiesList" class="otp-alerts-editAlert-entitiesList notDraggable" size="5">
                 {{#informedEntities}}
@@ -103,14 +113,14 @@
                         <button class="otp-alerts-editAlert-deleteEntityButton" style="font-size: 10px;">X</button>
                         <div class="entityRowLabel" style="margin-right: 25px; cursor: pointer;">
                             {{agencyId}} 
-                            {{#routeId}}Route {{routeReference}}{{/routeId}}
-                            {{#stopId}}Stop {{stopId}}{{/stopId}}
+                            {{#routeId}}Route {{description}}{{/routeId}}
+                            {{#stopId}}Stop {{description}}{{/stopId}}
                         </div>
                     </div>
                 {{/informedEntities}}
             </div>
             <div style="font-style: italic; margin-top: 4px; text-align: center;">
-                Drag Routes/Stops to the above area from the &quot;Entities&quot; widget or from the map to add to this alert.
+                Arrastre rutas / paradas desde el widget de "Servicios" o en el mapa  para agregar a esta aviso.
             </div>
         </div>
     </div>
@@ -131,10 +141,10 @@
 <script id="otp-alerts-stopPopup" type="text/html">
     <div style='text-align: center;'>
         <div style='font-weight: bold; font-size: 1.1em;'>
-            Stop {{id.agencyId}}_{{id.id}}: {{stopName}}
+            Parada {{id.agencyId}}_{{id.id}}: {{stopName}}
         </div>
         <div style='margin-top: 3px;'>
-            Routes serving this stop (drag to add to alert):
+            Líneas/Rutas que sirven esta estación/parada (arrastra para agregar al aviso)
         </div>
     </div>
 </script>

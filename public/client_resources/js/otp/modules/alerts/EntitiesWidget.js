@@ -25,7 +25,7 @@ otp.modules.alerts.EntitiesWidget =
     initialize : function(id, module) {
         var this_ = this;
         otp.widgets.Widget.prototype.initialize.call(this, id, module, {
-            title : 'Transit Entities',
+            title : 'Servicios de Transporte Público',
             cssClass : 'otp-alerts-entitiesWidget'
         });
         
@@ -34,8 +34,8 @@ otp.modules.alerts.EntitiesWidget =
         var tabPanel = $('<div />').addClass('notDraggable').appendTo(this.mainDiv);
         
         $('<ul />').appendTo(tabPanel)
-        .append('<li><a href="#'+id+'-routesTab">Routes</a></li>')
-        .append('<li><a href="#'+id+'-stopsTab">Stops</a></li>');
+        .append('<li><a href="#'+id+'-routesTab">Rutas</a></li>')
+        .append('<li><a href="#'+id+'-stopsTab">Estaciones</a></li>');
         
         this.routesDiv = $('<div id="'+id+'-routesTab" />').addClass('otp-alerts-entitiesWidget-tabPanel').appendTo(tabPanel)
         //this.routesSelect = $('<select multiple />').addClass('otp-alerts-entitiesWidget-select').appendTo(this.routesDiv);

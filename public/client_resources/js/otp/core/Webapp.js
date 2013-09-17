@@ -108,7 +108,7 @@ otp.core.Webapp = otp.Class({
         if(otp.config.geocoders) {
             for(var i=0; i<otp.config.geocoders.length; i++) {
                 var gcConfig = otp.config.geocoders[i];
-                console.log('init geocoder: '+gcConfig.name);
+                //console.log('init geocoder: '+gcConfig.name);
                 //var geocoder = window[gcConfig.classname](gcConfig.url, gcConfig.addressParam);
                 
                 var gcClass = this.stringToFunction(gcConfig.className);
@@ -161,35 +161,15 @@ otp.core.Webapp = otp.Class({
         if(otp.config.infoWidgets !== undefined && otp.config.infoWidgets.length > 0) {
             var nav = $('<nav id="main-menu" role="article">').appendTo('#branding');
             var ul = $('<ul>').appendTo(nav);
-            
-            for(var i=0; i<otp.config.infoWidgets.length; i++) {
-            
-                if(otp.config.infoWidgets[i] == undefined) continue;
-    
-                var id = "otp-infoWidget-"+i;            
-                
-                var options = {};
-                if(_.has(otp.config.infoWidgets[i], 'title')) options.title = otp.config.infoWidgets[i].title;
-                if(_.has(otp.config.infoWidgets[i], 'cssClass')) options.cssClass = otp.config.infoWidgets[i].cssClass;
-                
-                this.infoWidgets[id] = new otp.widgets.InfoWidget(otp.config.infoWidgets[i].styleId,
-                                                                  this, options, otp.config.infoWidgets[i].content);
-                
-                $("<li id='"+id+"'><a href='#'>"+otp.config.infoWidgets[i].title+"</a></li>").appendTo(ul).click(function(e) {
-                    e.preventDefault();
-                    var widget = this_.infoWidgets[this.id];
-                    if(!widget.isOpen) widget.show();
-                    widget.bringToFront();
-                });
-            
-            }
+            $("<li><a href='/secure/logout'>Logout</a></li>").appendTo(ul)
+        
         }
 
 
         // initialize the modules 
         
-        if(this.urlParams['module'])
-            console.log("startup module: "+this.urlParams['module'])
+        //if(this.urlParams['module'])
+        //   console.log("startup module: "+this.urlParams['module'])
         if(otp.config.modules) {
             var setDefault = false, defaultModule = null;
             for(var i=0; i<otp.config.modules.length; i++) {
@@ -211,7 +191,7 @@ otp.core.Webapp = otp.Class({
                 this.addModule(module, isDefault);//modConfig.isDefault || false);
             }
             if(_.has(this.urlParams, 'module') && !setDefault) {
-                console.log("OTP module with id="+this.urlParams['module']+" not found");
+                //console.log("OTP module with id="+this.urlParams['module']+" not found");
                 if(defaultModule) this.setActiveModule(defaultModule);
             }
         }                
@@ -268,7 +248,7 @@ otp.core.Webapp = otp.Class({
         
         for(var i = 0; i < module.widgets.length; i++) {
             if(module.widgets[i].isOpen) {
-                console.log(" - showing widget: "+module.widgets[i].id);
+                //console.log(" - showing widget: "+module.widgets[i].id);
                 module.widgets[i].show();
             }
         }        

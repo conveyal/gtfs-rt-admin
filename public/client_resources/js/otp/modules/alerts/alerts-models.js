@@ -28,7 +28,10 @@ otp.namespace("otp.modules.alerts");
       cause: null,
       effect: null,
       url: null,
-      descriptionText: null
+      descriptionText: null,
+      headerText: null,
+      commentsText: null,
+      publiclyVisible: null
     }
   });
 
@@ -61,7 +64,8 @@ otp.namespace("otp.modules.alerts");
       id: null,
       agencyId: null,
       routeId: null,
-      stopId: null
+      stopId: null,
+      description: null
     }
   });
   

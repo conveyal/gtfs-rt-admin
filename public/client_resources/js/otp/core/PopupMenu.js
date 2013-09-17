@@ -55,5 +55,5 @@ otp.core.PopupMenu = otp.Class({
     
     addSeparator : function(scrollable) {
         $("<hr />").appendTo($(this.menu));
-    },
+    }
 });    
