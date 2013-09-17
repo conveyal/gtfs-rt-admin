@@ -21,14 +21,15 @@ public class Application extends Controller {
 	    	
 	    	Account account = Account.find("username = ?", Security.connected()).first();
 	            
-	        if(account == null && Account.count() == 0) {
-	        	account = new Account("admin", "admin", "admin@test.com", true, null);
-	        	account.save();
-	        }
-	           
 	        renderArgs.put("agencyId", account.agencyId);
         }
         else {
+        	
+        	if(Account.count() == 0) {
+        		Account account = new Account("admin", "admin", "admin@test.com", true, null);
+	        	account.save();
+	        }
+        	
         	Secure.login();
         }
     }
