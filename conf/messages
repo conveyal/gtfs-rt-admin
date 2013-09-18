@@ -105,6 +105,11 @@ shared.loading=Loading
 main.active-alerts=Avisos activos en este momento
 main.future-alerts=Avisos activos en el futuro
 
+main.refresh=Refresh alert data
+
+main.no-active-alerts=No active alerts
+main.no-future-alerts=No future alerts
+
 main.new-alert=Crear nueva aviso
 
 # create

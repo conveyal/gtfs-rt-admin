@@ -3,20 +3,43 @@
 
 <div class="container">
 	<div class="row">
-		<div class="col-xs-12">
-			<a href="@{Application.create}" type="button" class="btn btn-primary pull-right">&{'main.new-alert'}</a>
-
-			<h3>&{'main.active-alerts'}</h3>
-
-			<p><em>&{'main.no-active-alerts'}</em></p>
+		<div class="col-xs-6">
+			<a href="@{Application.index}" type="button" class="btn btn-default col-xs-12"><span class="glyphicon glyphicon-refresh"></span> &{'main.refresh'}</a>
+		</div>
+		<div class="col-xs-6">
+			<a href="@{Application.create}" type="button" class="btn btn-primary col-xs-12">&{'main.new-alert'}</a>
 		</div>
 	</div>
+	<hr/>
+	<div class="row">
+		<div class="col-xs-12">
 
+			<h3>&{'main.active-alerts'}</h3>
+			#{if activeAlerts}
+				#{list items:activeAlerts, as:'alert' }
+
+					<div class="well">
+						<a href="@{Application.edit(alert.id)}" class="pull-right" style="font-size: 30px;"><span class="glyphicon glyphicon-list-alt"></span></a>
+						<a href="@{Application.edit(alert.id)}"><h4>&{alert.headerText}</h4></a>
+						<p>&{alert.descriptionText}</p>
+					</div>
+
+				#{/list}
+			#{/if}
+			#{else}
+				<div class="alert alert-info">&{'main.no-active-alerts'}</div>
+			#{/else}
+			
+		</div>
+	</div>
+	<hr/>
 	<div class="row">
 		<div class="col-xs-12">
 			<h3>&{'main.future-alerts'}</h3>
 
-			<p><em>&{'main.no-future-alerts'}</em></p>
+			<div class="alert alert-info">&{'main.no-future-alerts'}</div>
+
+
 		</div>
 	</div>
 </div>

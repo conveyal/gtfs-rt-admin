@@ -65,7 +65,7 @@ public class Alert extends Model {
       return Alert.findById(Long.parseLong(id));
     }
 
-    static public List<Alert> findActiveAlerts() {
+    static public List<Alert> findActiveAlerts(String agencyId) {
     	
     	List<TimeRange> timeRanges = TimeRange.find("endTime > now() or endTime is null").fetch();
     	
@@ -73,7 +73,7 @@ public class Alert extends Model {
     	
     	for(TimeRange tr : timeRanges){
     		
-    		if(!alerts.containsKey(tr.alert.id)) {
+    		if(!alerts.containsKey(tr.alert.id) && tr.alert.agencyId.equals(agencyId)) {
     			alerts.put(tr.alert.id, tr.alert);
     		}
     	}
@@ -82,7 +82,7 @@ public class Alert extends Model {
     	
     	for(Alert a : alertsWithoutRanges){
     		
-    		if(a.timeRanges.isEmpty() && !alerts.containsKey(a.id)) {
+    		if(a.agencyId.equals(agencyId) && a.timeRanges.isEmpty() && !alerts.containsKey(a.id)) {
     			alerts.put(a.id, a);
     		}
     	}

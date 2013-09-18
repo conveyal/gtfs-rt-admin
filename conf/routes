@@ -11,6 +11,11 @@ GET 	/logout									Secure.logout
 GET 	/login									Secure.login
 GET 	/authenticate							Secure.authenticate
 
+GET 	/changePassword							Application.changePassword
+POST 	/changePassword							Application.changePassword
+GET 	/passwordChanged						Application.passwordChanged
+
+
 # Ignore favicon requests
 GET     /favicon.ico                            404
 

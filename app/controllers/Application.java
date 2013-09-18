@@ -27,7 +27,8 @@ public class Application extends Controller {
 	    	renderArgs.put("user", Security.connected());
 	    	
 	    	Account account = Account.find("username = ?", Security.connected()).first();
-	            
+	        
+	    	renderArgs.put("agencyName", entities.agencyMap.get(account.agencyId));
 	        renderArgs.put("agencyId", account.agencyId);
         }
         else {
@@ -58,7 +59,12 @@ public class Application extends Controller {
     }
 
     public static void index() {
-        render();
+    	
+    	String agencyId = renderArgs.get("agencyId").toString();
+    	
+    	List<Alert> activeAlerts = Alert.findActiveAlerts(agencyId);
+    	
+        render(activeAlerts);
     }
     
     public static void create() {
@@ -69,7 +75,33 @@ public class Application extends Controller {
         render(id);
     }
     
+    public static void changePassword(String currentPassword, String newPassword) {
+        
+        if(Security.isConnected())
+        {
+            if(currentPassword != null && newPassword != null)
+            {
+                Boolean changed = Account.changePassword(Security.connected(), currentPassword, newPassword);
+                
+                if(changed)
+                    Application.passwordChanged();
+                else
+                {
+                    Boolean badPassword = true;
+                    render(badPassword);
+                }
+            }   
+            else
+                render();
+        }
+        else
+            Application.index();
+    }
     
+    public static void passwordChanged() {
+        
+        render();
+    }
     
 
 }

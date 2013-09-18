@@ -81,7 +81,7 @@ public class Api extends Controller {
     public static void createAlert() {
         Alert alert;
         
-        
+        String agencyId = renderArgs.get("agencyId").toString();
 
         try {
             alert = mapper.readValue(params.get("body"), Alert.class);
@@ -89,7 +89,7 @@ public class Api extends Controller {
             // security check
             if(!alert.securityCheck((String)renderArgs.get("agencyId")))
             	badRequest();
-            	
+            alert.agencyId = agencyId;
             alert.save();
 
             renderJSON(Api.toJson(alert, false));
@@ -282,7 +282,7 @@ public class Api extends Controller {
     
     
     public static void routes() throws JsonMappingException, JsonGenerationException, IOException {
-    	String agencyId = "STE";
+    	String agencyId = renderArgs.get("agencyId").toString();
     	
     	ArrayList<IdValuePair> pairs = new ArrayList<IdValuePair>();
     	

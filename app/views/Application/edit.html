@@ -9,16 +9,16 @@
 			<span class="glyphicon glyphicon-remove-circle pull-right" style="font-size: 24px;" id="removeEntity" data-position="{{pos}}"></span>
 
 			{{#if stopId}}
-				<strong>Stop:</strong> {{ description }} ({{ stopId }})
+				<strong>&{'shared.stop'}:</strong> {{ description }} ({{ stopId }})
 			{{/if}}
 
 			{{#if routeId}}
-				<strong>Route:</strong> {{ description }} ({{ routeId }})
+				<strong>&{'shared.route'}:</strong> {{ description }} ({{ routeId }})
 			{{/if}}
 
 		</div>
 	{{else}}
-		<div class="alert alert-info">No routes/stops selected.</div>
+		<div class="alert alert-info">&{'create.no-routes-stops'}</div>
 	{{/each}}
 
 </script>
@@ -54,7 +54,7 @@
 
 		<div class="row">
 	  		<div class="col-xs-6">
-				<button class="btn btn-default" id="addRange">Additional Time Range</button>
+				<button class="btn btn-default" id="addRange">&{'create.add-range'}</button>
 			</div>
 	   </div>
 
@@ -62,19 +62,37 @@
 
 <script id="alertFromTemplate" type="text/x-handlebars-template">
 
-			<div id="save-warning" class="alert alert-danger text-right">
-				<p>Unable to save alert data.</p>
+			<div id="save-warning" class="alert alert-danger text-center">
+				<p>&{'create.save-failed'}</p>
 			</div>
 
-			<button class="btn btn-primary pull-right col-xs-2" id="saveAlert" disabled>Save</button>
+			<div class="row">
+			     	<div class="col-xs-4">
+						<a href="@{Application.index}" class="btn btn-default col-xs-12">&laquo; &{'shared.button.close'}</a>
+					</div>
+					<div class="col-xs-4">
+						
+					</div>
+					<div class="col-xs-4">
+						<button class="btn btn-primary col-xs-12" id="saveAlert" disabled>&{'shared.button.save'}</button>
+					</div>
+			</div>
 
-			<h3>&{'create-alert.title'}</h3>
+			<hr/>
+
+			<div class="row">
+			     	<div class="col-xs-12" >
+						<h3>&{'create-alert.title'}</h3>
+					</div>
+			</div>
+
+			
 
 			<hr/>
 
 			<div class="form-group pull-right">
 			    <label>
-			      <input type="checkbox" id="publiclyVisible"> Make publicly visible <span class="glyphicon glyphicon-eye-open"></span>
+			      <input type="checkbox" id="publiclyVisible"> &{'create.publicly-visible'} <span class="glyphicon glyphicon-eye-open"></span>
 			    </label>
 			 </div>
 			
@@ -97,7 +115,7 @@
 					  <div class="form-group">
 					    <label for="description">&{'create.cause'}</label>
 					    <select class="form-control" id="cause" name="cause">
-					    	<option value="NONE">(none)</option>
+					    	<option value="NONE" selected>(nada)</option>
 						    <option value="TECHNICAL_PROBLEM">Problemas técnicos</option>
 						    <option value="STRIKE">Huelga</option>
 						    <option value="DEMONSTRATION">Manifestación</option>
@@ -117,7 +135,7 @@
 					  <div class="form-group">
 					     <label for="effect">&{'create.effect'}</label>
 					     <select class="form-control" id="effect" name="effect">
-						    <option value="NONE">(none)</option>
+						    <option value="NONE" selected>(nada)</option>
 						    <option value="NO_SERVICE">Sin servicio</option>
 						    <option value="REDUCED_SERVICE">Servicio limitado</option>
 						    <option value="SIGNIFICANT_DELAYS">Retrasos significativos</option>
@@ -131,6 +149,13 @@
 					  </div>
 					</div>
 				</div>
+
+
+			<hr/>
+			<h4>&{'create.times'}</h4>
+
+			<div id="affected-times">
+		  	</div>
 
 			<hr/>
 			<h4>&{'create.entities'}</h4>
@@ -148,7 +173,7 @@
 				     	</select>
 				    </div>
 				    <div class="col-xs-2">
-				     	<button id="addRoute" class="btn btn-default">Add Route</button>
+				     	<button id="addRoute" class="btn btn-default">&{'create.add-route'}</button>
 				    </div>
 				</div>
 
@@ -163,24 +188,21 @@
 				     	</select>
 				 	</div>
 				 	<div class="col-xs-2">
-				     	<button id="addStop" class="btn btn-default">Add Stop</button>
+				     	<button id="addStop" class="btn btn-default">&{'create.add-stop'}</button>
 				    </div>
 				 </div>
 			  </div>
 
 
 
-			<hr/>
-			<h4>&{'create.times'}</h4>
+			
 
-		  <div id="affected-times">
-		  </div>
+		 
 
 		  <hr/>		  
 
 
 </script>
-
 <div class="container">
 	<div class="row">
 		<div class="col-xs-12">
