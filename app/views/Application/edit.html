@@ -1,0 +1,208 @@
+#{extends 'main.html' /}
+#{set title:'Home' /}
+
+
+<script id="selectedEntitiesTemplate" type="text/x-handlebars-template">
+
+	{{#each entities}}
+		<div class="alert alert-success">
+			<span class="glyphicon glyphicon-remove-circle pull-right" style="font-size: 24px;" id="removeEntity" data-position="{{pos}}"></span>
+
+			{{#if stopId}}
+				<strong>Stop:</strong> {{ description }} ({{ stopId }})
+			{{/if}}
+
+			{{#if routeId}}
+				<strong>Route:</strong> {{ description }} ({{ routeId }})
+			{{/if}}
+
+		</div>
+	{{else}}
+		<div class="alert alert-info">No routes/stops selected.</div>
+	{{/each}}
+
+</script>
+
+
+<script id="affectedTimesTemplate" type="text/x-handlebars-template">
+
+		{{#each ranges}}
+				<div class="row" id="timeRange" data-position="{{pos}}">
+			     	<div class="col-xs-5">
+					  <div class="form-group">
+					  	  <label for="dtFrom">&{'create.from'}</label>
+						  <div class="input-group date" id="dtFrom_{{pos}}" data-position="{{pos}}" data-fromto="from">
+					        <input type="text" class="form-control"/>
+					        <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+					      </div>
+					  </div>
+					 </div>
+					 <div class="col-xs-5">
+					  <div class="form-group">
+					  	  <label for="dtTo">&{'create.to'}</label>
+					      <div class="input-group date" id="dtTo_{{pos}}" data-position="{{pos}}" data-fromto="to">
+					        <input type="text" class="form-control"/>
+					        <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+					      </div>
+					  </div>
+					</div>
+					<div class="col-xs-1">
+						<span class="glyphicon glyphicon-remove-circle pull-right" style="font-size: 24px; padding-top: 24px;" id="removeRange" data-position="{{pos}}"></span>
+					</div>
+			  </div>
+		{{/each}}
+
+		<div class="row">
+	  		<div class="col-xs-6">
+				<button class="btn btn-default" id="addRange">Additional Time Range</button>
+			</div>
+	   </div>
+
+</script>
+
+<script id="alertFromTemplate" type="text/x-handlebars-template">
+
+			<div id="save-warning" class="alert alert-danger text-right">
+				<p>Unable to save alert data.</p>
+			</div>
+
+			<button class="btn btn-primary pull-right col-xs-2" id="saveAlert" disabled>Save</button>
+
+			<h3>&{'create-alert.title'}</h3>
+
+			<hr/>
+
+			<div class="form-group pull-right">
+			    <label>
+			      <input type="checkbox" id="publiclyVisible"> Make publicly visible <span class="glyphicon glyphicon-eye-open"></span>
+			    </label>
+			 </div>
+			
+			<h4>&{'create.general-info'}</h4>
+			
+			  <div class="form-group">
+			    <label for="title">&{'create.title'}</label>
+			    <input type="text" class="form-control" name="title" id="title" placeholder="&{'create.title'}">
+			  </div>
+			  <div class="form-group">
+			    <label for="description">&{'create.description'}</label>
+			    <textarea type="text" class="form-control" name="description" id="description" placeholder="&{'create.description'}"></textarea>
+			  </div>
+			  <div class="form-group">
+			    <label for="comments">&{'create.comments'}</label>
+			    <textarea type="text" class="form-control" name="comments" id="comments" placeholder="&{'create.comments'}"></textarea>
+			  </div>
+			  <div class="row">
+			     	<div class="col-xs-6">
+					  <div class="form-group">
+					    <label for="description">&{'create.cause'}</label>
+					    <select class="form-control" id="cause" name="cause">
+					    	<option value="NONE">(none)</option>
+						    <option value="TECHNICAL_PROBLEM">Problemas técnicos</option>
+						    <option value="STRIKE">Huelga</option>
+						    <option value="DEMONSTRATION">Manifestación</option>
+						    <option value="ACCIDENT">Accidente</option>
+						    <option value="HOLIDAY">Día festivo</option>
+						    <option value="WEATHER">Condiciones atmosféricas</option>
+						    <option value="MAINTENANCE">Mantenimiento</option>
+						    <option value="CONSTRUCTION">Obras</option>
+						    <option value="POLICE_ACTIVITY">Operativo policiaco</option>
+						    <option value="MEDICAL_EMERGENCY">Emergencia médica</option>
+						    <option value="UNKNOWN_CAUSE">Causa desconocida</option>
+						    <option value="OTHER_CAUSE">Otra causa</option>
+					    </select>
+					  </div>
+					</div>
+					<div class="col-xs-6">
+					  <div class="form-group">
+					     <label for="effect">&{'create.effect'}</label>
+					     <select class="form-control" id="effect" name="effect">
+						    <option value="NONE">(none)</option>
+						    <option value="NO_SERVICE">Sin servicio</option>
+						    <option value="REDUCED_SERVICE">Servicio limitado</option>
+						    <option value="SIGNIFICANT_DELAYS">Retrasos significativos</option>
+						    <option value="DETOUR">Desvío</option>
+						    <option value="ADDITIONAL_SERVICE">Servicio adicional</option>
+						    <option value="MODIFIED_SERVICE">Servicio modificado</option>
+						    <option value="STOP_MOVED">Parada reubicada</option>
+						    <option value="OTHER_EFFECT">Otro efecto</option>
+						    <option value="UNKNOWN_EFFECT">Efecto desconocido</option>
+					     </select>
+					  </div>
+					</div>
+				</div>
+
+			<hr/>
+			<h4>&{'create.entities'}</h4>
+
+			  <div id="selected-entities">
+
+			  </div>
+
+			  <div class="form-group">
+			     <label for="route">&{'create.select_route'}</label>
+			     <div class="row">
+			     	<div class="col-xs-6">
+				     	<select class="form-control" id="route" name="rotue">
+					    	<option value="">&{'shared.loading'}...</option>
+				     	</select>
+				    </div>
+				    <div class="col-xs-2">
+				     	<button id="addRoute" class="btn btn-default">Add Route</button>
+				    </div>
+				</div>
+
+			  </div>
+
+			  <div class="form-group">
+			     <label for="stop">&{'create.select_stop'}</label>
+			     <div class="row">
+			     	<div class="col-xs-6">
+				     	<select class="form-control" id="stop" name="effect">
+					    	<option value="">&{'shared.loading'}...</option>
+				     	</select>
+				 	</div>
+				 	<div class="col-xs-2">
+				     	<button id="addStop" class="btn btn-default">Add Stop</button>
+				    </div>
+				 </div>
+			  </div>
+
+
+
+			<hr/>
+			<h4>&{'create.times'}</h4>
+
+		  <div id="affected-times">
+		  </div>
+
+		  <hr/>		  
+
+
+</script>
+
+<div class="container">
+	<div class="row">
+		<div class="col-xs-12">
+
+
+
+			<div id="alertFrom"></div>
+			
+		</div>
+	</div>
+</div>
+
+<script>
+
+$( document ).ready(function() {
+
+	var model = new GtfsRtEditor.Alert({id: ${id}});		
+
+	var view = new GtfsRtEditor.AlertEditorView({
+		model: model,
+		el: $('#alertFrom')
+	});
+});
+
+</script>

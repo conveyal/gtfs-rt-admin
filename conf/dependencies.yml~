@@ -6,4 +6,4 @@ require:
     - org.codehaus.jackson -> jackson-core-asl 1.9.5
     - org.codehaus.jackson -> jackson-mapper-asl 1.9.5
     - org.hsqldb -> hsqldb 2.0.0
-    - org.onebusaway -> onebusaway-gtfs 1.3.2
+    - org.onebusaway -> onebusaway-gtfs -> 1.3.2

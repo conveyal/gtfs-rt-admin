@@ -4,6 +4,12 @@
 
 # Home page
 GET     /                                       Application.index
+GET     /create                                 Application.create
+GET     /edit/{id}                              Application.edit
+
+GET 	/logout									Secure.logout
+GET 	/login									Secure.login
+GET 	/authenticate							Secure.authenticate
 
 # Ignore favicon requests
 GET     /favicon.ico                            404
@@ -30,5 +36,6 @@ POST    /api/tr/                             	Api.createTimeRange
 PUT     /api/tr/{id}                         	Api.updateTimeRange
 DELETE  /api/tr/{id}                         	Api.deleteTimeRange
 
-# Catch all
-*       /{controller}/{action}                  {controller}.{action}
+GET  	/api/routes                         	Api.routes
+GET  	/api/stops/{routeId}                    Api.stops
+

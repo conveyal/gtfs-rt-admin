@@ -2,6 +2,7 @@ package controllers;
 
 import play.*;
 import play.mvc.*;
+import utils.IdValuePair;
 
 import java.io.IOException;
 import java.io.StringWriter;
@@ -28,14 +29,15 @@ public class Api extends Controller {
 	    	
 	    	Account account = Account.find("username = ?", Security.connected()).first();
 	            
-	        if(account == null && Account.count() == 0) {
-	        	account = new Account("admin", "admin", "admin@test.com", true, null);
-	        	account.save();
-	        }
-	           
 	        renderArgs.put("agencyId", account.agencyId);
         }
         else {
+        	
+        	if(Account.count() == 0) {
+        		Account account = new Account("admin", "admin", "admin@test.com", true, null);
+	        	account.save();
+	        }
+        	
         	Secure.login();
         }
     }
@@ -276,6 +278,34 @@ public class Api extends Controller {
         tr.delete();
 
         ok();
+    }
+    
+    
+    public static void routes() throws JsonMappingException, JsonGenerationException, IOException {
+    	String agencyId = "STE";
+    	
+    	ArrayList<IdValuePair> pairs = new ArrayList<IdValuePair>();
+    	
+    	List<String> routes = Application.entities.agencyRouteMap.get(agencyId);
+       	for(String routeId : routes) {
+       		IdValuePair pair = new IdValuePair(routeId, Application.entities.routeMap.get(routeId));
+    		pairs.add(pair);
+    	}
+       	Collections.sort(pairs);
+        renderJSON(toJson(pairs, false));
+    }
+    
+    public static void stops(String routeId) throws JsonMappingException, JsonGenerationException, IOException {
+    	
+    	List<IdValuePair> pairs = new ArrayList<IdValuePair>();
+    	
+    	List<String> stops = Application.entities.routeStopMap.get(routeId);
+       	for(String stopId : stops) {
+       		IdValuePair pair = new IdValuePair(stopId, Application.entities.stopMap.get(stopId));
+    		pairs.add(pair);
+    	}
+    	Collections.sort(pairs);
+        renderJSON(toJson(pairs, false));
     }
     
 
