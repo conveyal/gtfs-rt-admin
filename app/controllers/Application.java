@@ -23,23 +23,7 @@ public class Application extends Controller {
 	@Before
 	static void initSession() throws Throwable {
 		
-	    if(Security.isConnected()) {
-	    	renderArgs.put("user", Security.connected());
-	    	
-	    	Account account = Account.find("username = ?", Security.connected()).first();
-	        
-	    	renderArgs.put("agencyName", entities.agencyMap.get(account.agencyId));
-	        renderArgs.put("agencyId", account.agencyId);
-        }
-        else {
-        	
-        	if(Account.count() == 0) {
-        		Account account = new Account("admin", "admin", "admin@test.com", true, null);
-	        	account.save();
-	        }
-        	
-        	Secure.login();
-        }
+	   Security.setupSession(false);
     }
 	
 	public static GtfsEntitiesCache entities = new GtfsEntitiesCache();
@@ -60,9 +44,15 @@ public class Application extends Controller {
 
     public static void index() {
     	
-    	String agencyId = renderArgs.get("agencyId").toString();
+    	List<Alert> activeAlerts;
     	
-    	List<Alert> activeAlerts = Alert.findActiveAlerts(agencyId);
+    	if(renderArgs.get("agencyId") != null) {
+    	
+    		activeAlerts = Alert.findActiveAlerts(renderArgs.get("agencyId").toString());
+    	}
+    	else {
+    		activeAlerts = Alert.findActiveAlerts(null);
+    	}
     	
         render(activeAlerts);
     }
