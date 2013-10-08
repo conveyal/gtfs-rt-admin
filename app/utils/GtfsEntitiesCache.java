@@ -7,6 +7,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import models.Account;
+import models.Agency;
+
 import org.onebusaway.gtfs.impl.GtfsDaoImpl;
 import org.onebusaway.gtfs.serialization.GtfsReader;
 
@@ -39,7 +42,28 @@ public class GtfsEntitiesCache {
         	reader.run();
         		
         	for (org.onebusaway.gtfs.model.Agency gtfsAgency : store.getAllAgencies()) {
+        		
+        		
         		agencyMap.put(gtfsAgency.getId(), gtfsAgency.getName());
+        		
+        		// add agencies to db
+        		
+        		Agency agency = Agency.find("gtfsAgencyId = ?", gtfsAgency.getId()).first();
+        		
+        		if(agency == null) {
+        			
+        			agency = new Agency();
+        			
+        			agency.gtfsAgencyId = gtfsAgency.getId();
+        			agency.name = gtfsAgency.getName();
+        			
+        			agency.save();
+        			
+        			Account account = new Account(gtfsAgency.getId().toLowerCase(), "admin", "admin@test.com", true, agency);
+    	        	account.save();
+    	        	
+    	        	Logger.info("creating account for: " + gtfsAgency.getId() + " -- " + gtfsAgency.getName());	
+        		}
 	    	}
         	
         	for (org.onebusaway.gtfs.model.Route gtfsRoute : store.getAllRoutes()) {

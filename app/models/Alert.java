@@ -53,7 +53,11 @@ public class Alert extends Model {
     public String descriptionText;
     public String commentsText;
     
+    public Date created;
+    public Date lastUpdated;
+    
     public Boolean publiclyVisible;
+    public Boolean deleted;
     
     @JsonCreator
     public static Alert factory(long id) {
@@ -73,7 +77,7 @@ public class Alert extends Model {
     	
     	for(TimeRange tr : timeRanges){
     		
-    		if(!alerts.containsKey(tr.alert.id) && tr.alert.agencyId.equals(agencyId)) {
+    		if(!alerts.containsKey(tr.alert.id) && (agencyId == null || tr.alert.agencyId.equals(agencyId))) {
     			alerts.put(tr.alert.id, tr.alert);
     		}
     	}
@@ -82,7 +86,7 @@ public class Alert extends Model {
     	
     	for(Alert a : alertsWithoutRanges){
     		
-    		if(a.agencyId.equals(agencyId) && a.timeRanges.isEmpty() && !alerts.containsKey(a.id)) {
+    		if((agencyId == null || a.agencyId.equals(agencyId)) && a.timeRanges.isEmpty() && !alerts.containsKey(a.id)) {
     			alerts.put(a.id, a);
     		}
     	}

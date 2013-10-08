@@ -24,22 +24,8 @@ public class Api extends Controller {
 	@Before
 	static void initSession() throws Throwable {
 		
-	    if(Security.isConnected()) {
-	    	renderArgs.put("user", Security.connected());
-	    	
-	    	Account account = Account.find("username = ?", Security.connected()).first();
-	            
-	        renderArgs.put("agencyId", account.agencyId);
-        }
-        else {
-        	
-        	if(Account.count() == 0) {
-        		Account account = new Account("admin", "admin", "admin@test.com", true, null);
-	        	account.save();
-	        }
-        	
-        	Secure.login();
-        }
+		Security.setupSession(false);
+		
     }
 	
 
@@ -79,7 +65,8 @@ public class Api extends Controller {
     }
 
     public static void createAlert() {
-        Alert alert;
+
+    	Alert alert;
         
         String agencyId = renderArgs.get("agencyId").toString();
 
@@ -90,6 +77,7 @@ public class Api extends Controller {
             if(!alert.securityCheck((String)renderArgs.get("agencyId")))
             	badRequest();
             alert.agencyId = agencyId;
+            alert.created = new Date();
             alert.save();
 
             renderJSON(Api.toJson(alert, false));
@@ -99,7 +87,6 @@ public class Api extends Controller {
         }
     
     }
-
 
     public static void updateAlert() {
         Alert alert;
@@ -115,6 +102,7 @@ public class Api extends Controller {
                 badRequest();
 
             Alert updatedAlert = Alert.em().merge(alert);
+            updatedAlert.lastUpdated = new Date();
             updatedAlert.save();
 
             renderJSON(Api.toJson(updatedAlert, false));
@@ -137,14 +125,15 @@ public class Api extends Controller {
         if(!alert.securityCheck((String)renderArgs.get("agencyId")))
         	badRequest();
 
-        alert.delete();
+        alert.lastUpdated = new Date();
+        alert.deleted = true;
+        alert.save();
 
         ok();
     }
     
     // **** InformedEntity controllers ****
     
-
     public static void getInformedEntity(Long id) {
         try {
             if(id != null) {

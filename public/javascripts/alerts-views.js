@@ -46,11 +46,11 @@ G.AffectedTimesView = Backbone.View.extend({
 
 		for(i in  this.model.get('timeRanges')) {
 
-			this.$('#dtFrom_' + i).datetimepicker().data('datetimepicker').setDate(new Date(this.model.get('timeRanges')[i].startTime));
+			this.$('#dtFrom_' + i).datetimepicker({language: 'es'}).data('datetimepicker').setDate(new Date(this.model.get('timeRanges')[i].startTime));
 			
 			this.$('#dtFrom_' + i).on('changeDate', this.dateChange);
 
-			this.$('#dtTo_' + i).datetimepicker().data('datetimepicker').setDate(new Date(this.model.get('timeRanges')[i].endTime));
+			this.$('#dtTo_' + i).datetimepicker({language: 'es'}).data('datetimepicker').setDate(new Date(this.model.get('timeRanges')[i].endTime));
 
 			this.$('#dtTo_' + i).on('changeDate', this.dateChange);
 		}
