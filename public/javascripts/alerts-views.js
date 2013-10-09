@@ -262,6 +262,9 @@ G.AlertEditorView = Backbone.View.extend({
 
 		this.loadRoutes();
 
+		this.$("#createdTime").text(moment(this.model.created).tz(G.config.timeZone).format('llll'));
+		this.$("#lastUpdatedTime").text(moment(this.model.lastUpdated).tz(G.config.timeZone).format('llll'));
+
 		this.$("select#route").change(function(){
 	    	this_.loadStops();
 	    });
