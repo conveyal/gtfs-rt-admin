@@ -4,8 +4,8 @@
 
 # Home page
 GET     /                                       Application.index
-GET     /create                                 Application.create
-GET     /edit/{id}                              Application.edit
+GET     /alert                                  Application.alert
+GET     /alert/{id}                             Application.alert
 
 GET 	/logout									Secure.logout
 GET 	/login									Secure.login

@@ -7,6 +7,7 @@ secure.remember= Recordar detalles
 secure.signin=Entrar
 secure.error=Nombre de usuario o contraseña desconocido.
 secure.logout=Ha cerrado sesión. 
+secure.change-password=Cambiar contraseña
 
 application.name=Transit Database
 
@@ -22,61 +23,12 @@ nav-bar.admin=Administrador
 
 nav-bar.logout=Salir
 
-nav-bar.settings=Settings
+nav-bar.settings=Preferencias
 
 # shared
 
 shared.optional= Opcional
 shared.required= Obligatorio/Requerido
-
-
-shared.monday=Lunes
-shared.tuesday=Martes
-shared.wednesday=Miércoles
-shared.thursday=Jueves
-shared.friday=Viernes
-shared.saturday=Sábado 
-shared.sunday=Domingo
-
-shared.route-type.tram=Tranvía
-shared.route-type.subway=Metro
-shared.route-type.rail=Tren
-shared.route-type.bus=Autobús
-shared.route-type.ferry=Ferry
-shared.route-type.colectivo=Microbús
-shared.route-type.cable-car=Teleférico 
-shared.route-type.gondola=Góndola
-shared.route-type.funicular=Funicular
-
-shared.route-type.hvt.rail=Servicio de tren
-shared.route-type.hvt.rail_hs=Servicio de tren de alta velocidad
-shared.route-type.hvt.rail_ld=Trenes de larga distancia
-shared.route-type.hvt.rail_shuttle=Tren de conexión (dentro de algún complejo)
-shared.route-type.hvt.rail_suburban=Tren suburbano 
-shared.route-type.hvt.coach=Servicio de autobús foráneo 
-shared.route-type.hvt.coach_international=Servicio de autobús foráneo internacional
-shared.route-type.hvt.coach_national=Servicio de autobús foráneo nacional
-shared.route-type.hvt.coach_regional=Servicio de autobús foráneo regional
-shared.route-type.hvt.coach_commuter=Servicio de autobús foráneo metropolitano
-shared.route-type.hvt.urbanrail=Servicio de tren urbano
-shared.route-type.hvt.urbanrail_metro=Servicio de metro
-shared.route-type.hvt.urbanrail_underground=Servicio de subterráneo
-shared.route-type.hvt.urbanrail_monorail=Monoriel
-shared.route-type.hvt.bus=Servicio de autobús
-shared.route-type.hvt.bus_regional=Servicio de autobús regional
-shared.route-type.hvt.bus_express=Servicio de autobús exprés
-shared.route-type.hvt.bus_local=Servicio de autobús local
-shared.route-type.hvt.bus_unscheduled=Servicio de autobús sin programación
-shared.route-type.hvt.trolleybus=Servicio de trolebús
-shared.route-type.hvt.tram=Servicio de tranvía
-shared.route-type.hvt.water=Servicio de transporte acuático
-shared.route-type.hvt.air=Servicio aéreo
-shared.route-type.hvt.telecabin=Servicio de teleférico-cabinas
-shared.route-type.hvt.funicular=Servicio de funicular
-shared.route-type.hvt.miscellaneous= Servicios Misceláneos
-shared.route-type.hvt.miscellaneous_cable_car=Teleférico
-shared.route-type.hvt.miscellaneous_horse_carriage=Carruaje a caballo
-
 
 
 shared.details=Detalles
@@ -94,8 +46,7 @@ shared.button.remove=Quitar
 shared.explore-search-routes=Explorar/Buscar rutas
 shared.new-route=Nueva ruta
 
-shared.stop=Parada
-
+shared.stop=Estaciones/Parada
 shared.route=Ruta
 
 shared.loading=Loading
@@ -105,12 +56,14 @@ shared.loading=Loading
 main.active-alerts=Avisos activos en este momento
 main.future-alerts=Avisos activos en el futuro
 
-main.refresh=Refresh alert data
-
-main.no-active-alerts=No active alerts
-main.no-future-alerts=No future alerts
+main.no-active-alerts=No avisos activos en este momento
+main.no-future-alerts=No avisos activos en el futuro
 
 main.new-alert=Crear nueva aviso
+
+main.no-title=Sin título
+main.no-description=Sin Descripción
+
 
 # create
 
@@ -121,7 +74,7 @@ create.entities=Affected Routes/Stops
 create.times=Affected Time Ranges
 
 create.no-routes-stops=No routes/stops selected.
-create.add-range=Additional Time Range
+create.add-range=Fechas / Horas Adicional
 create.save-failed=Unable to save alert data.
 create.publicly-visible=Visible públicamente
 
@@ -131,11 +84,11 @@ create.comments=Comentarios
 create.cause=Causa
 create.effect=Efecto
 
-create.select_route=Select route
-create.select_stop=Select stop
+create.from=Desde
+create.to=Hasta
 
-create.from=From
-create.to=To
+create.show-map=Mostrar Mapa
+create.hide-map=Ocultar Mapa
 
 create.times=Fechas / Horas Afectados
 

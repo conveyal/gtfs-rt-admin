@@ -6,4 +6,16 @@ require:
     - org.codehaus.jackson -> jackson-core-asl 1.9.5
     - org.codehaus.jackson -> jackson-mapper-asl 1.9.5
     - org.hsqldb -> hsqldb 2.0.0
-    - org.onebusaway -> onebusaway-gtfs -> 1.3.2
+    - org.onebusaway -> onebusaway-gtfs 1.3.2
+    - org.onebusaway -> onebusaway-gtfs 1.3.2
+    - org.geotools -> gt-main 8.0-M4
+    - org.opentripplanner -> opentripplanner-utils 0.9.1
+
+
+repositories:
+
+    - otp: 
+        root:  "http://repo.opengeo.org/"
+        contains: 
+            - org.opentripplanner -> *
+
