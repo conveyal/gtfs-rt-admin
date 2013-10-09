@@ -44,17 +44,8 @@ public class Application extends Controller {
 
     public static void index() {
     	
-    	List<Alert> activeAlerts;
-    	
-    	if(renderArgs.get("agencyId") != null) {
-    	
-    		activeAlerts = Alert.findActiveAlerts(renderArgs.get("agencyId").toString());
-    	}
-    	else {
-    		activeAlerts = Alert.findActiveAlerts(null);
-    	}
-    	
-        render(activeAlerts);
+        render();
+        
     }
     
     public static void alert(Long id) {

@@ -46,3 +46,6 @@ DELETE  /api/tr/{id}                         	Api.deleteTimeRange
 GET  	/api/routes                         	Api.routes
 GET  	/api/stops/{routeId}                    Api.stops
 
+GET 	/api/activeAlerts/						Api.activeAlerts
+GET 	/api/futureAlerts/						Api.futureAlerts
+

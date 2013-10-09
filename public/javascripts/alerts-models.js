@@ -45,6 +45,18 @@ var GtfsRtEditor = GtfsRtEditor || {};
     url: '/api/alert/'
   });
 
+  G.ActiveAlerts = Backbone.Collection.extend({
+    type: 'Alerts',
+    model: G.Alert,
+    url: '/api/activeAlerts/'
+  });
+
+  G.FutureAlerts = Backbone.Collection.extend({
+    type: 'Alerts',
+    model: G.Alert,
+    url: '/api/futureAlerts/'
+  });
+
   G.TimeRange = Backbone.Model.extend({
     urlRoot: '/api/tr/',
 
@@ -69,7 +81,10 @@ var GtfsRtEditor = GtfsRtEditor || {};
       agencyId: null,
       routeId: null,
       stopId: null,
-      description: null
+      description: null,
+      lat: null,
+      lon: null,
+      polyline: null
     }
   });
   

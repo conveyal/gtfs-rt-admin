@@ -44,7 +44,8 @@ public class Api extends Controller {
                 mapper.writeValue(jg, pojo);
                 return sw.toString();
             }
-
+    
+ 
     // **** alert controllers ****
 
     public static void getAlert(Long id) {
@@ -139,7 +140,7 @@ public class Api extends Controller {
     public static void getInformedEntity(Long id) {
         try {
             if(id != null) {
-            	InformedEntity ie = Alert.findById(id);
+            	InformedEntity ie = InformedEntity.findById(id);
                 if(ie != null)
                     renderJSON(Api.toJson(ie, false));
                 else
@@ -160,6 +161,10 @@ public class Api extends Controller {
 
         try {
         	ie = mapper.readValue(params.get("body"), InformedEntity.class);
+        	
+        	if(!ie.alert.securityCheck((String)renderArgs.get("agencyId")))
+            	badRequest();
+        	
             ie.save();
 
             renderJSON(Api.toJson(ie, false));
@@ -175,9 +180,14 @@ public class Api extends Controller {
         try {
         	ie = mapper.readValue(params.get("body"), InformedEntity.class);
 
-            if(ie.id == null || Alert.findById(ie.id) == null)
+            if(ie.id == null || InformedEntity.findById(ie.id) == null)
                 badRequest();
+            
+            InformedEntity checkIe = InformedEntity.findById(ie.id);
 
+            if(!checkIe.alert.securityCheck((String)renderArgs.get("agencyId")))
+            	badRequest();
+            
             InformedEntity updatedInformedEntity = InformedEntity.em().merge(ie);
             updatedInformedEntity.save();
 
@@ -270,6 +280,22 @@ public class Api extends Controller {
 
         ok();
     }
+    
+    // active/future alerts
+    
+    
+    public static void activeAlerts() throws JsonMappingException, JsonGenerationException, IOException {
+    	
+    	renderJSON(toJson(Alert.findActiveAlerts(null), false));
+    }
+    
+    public static void futureAlerts() throws JsonMappingException, JsonGenerationException, IOException {
+    	
+    	renderJSON(toJson(Alert.findFutureAlerts(null), false));
+    }
+    
+    // gtfs cache data
+    
     
     
     public static void routes() throws JsonMappingException, JsonGenerationException, IOException {

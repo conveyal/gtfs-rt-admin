@@ -4,6 +4,7 @@ import java.security.MessageDigest;
 import java.util.Date;
 import java.util.UUID;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 
@@ -36,6 +37,12 @@ public class InformedEntity extends Model {
 	public String routeId;
 	public String stopId;
 	public String description;
+	
+	@Column(length = 8000,columnDefinition="TEXT")
+	public String polyline;
+	
+	public Double lat;
+	public Double lon;
 
 	// trip descriptor TBD !!! 
 	

@@ -1,4 +1,4 @@
-#
+# auth
 
 secure.title=
 secure.username=Usuario
@@ -9,7 +9,10 @@ secure.error=Nombre de usuario o contraseña desconocido.
 secure.logout=Ha cerrado sesión. 
 secure.change-password=Cambiar contraseña
 
-application.name=Transit Database
+
+# app 
+
+application.name=Avisos de Transporte Público
 
 # nav-bar
 
@@ -24,6 +27,8 @@ nav-bar.admin=Administrador
 nav-bar.logout=Salir
 
 nav-bar.settings=Preferencias
+
+nav-bar.manage-users=Manage Users
 
 # shared
 
@@ -70,10 +75,10 @@ main.no-description=Sin Descripción
 create-alert.title=Crear/editar aviso
 
 create.general-info=Información General
-create.entities=Affected Routes/Stops
-create.times=Affected Time Ranges
+create.times=Fechas / Horas Afectados
+create.entities=Servicios de Transporte Público Afectados
 
-create.no-routes-stops=No routes/stops selected.
+create.no-routes-stops=No hay rutas / paradas seleccionadas.
 create.add-range=Fechas / Horas Adicional
 create.save-failed=Unable to save alert data.
 create.publicly-visible=Visible públicamente
@@ -97,3 +102,6 @@ create.entities=Servicios de Transporte Público Afectados
 create.add-route=Agregar ruta
 
 create.add-stop=Agregar parada
+
+create.created-at=Creado
+create.updated-at=Actualizado

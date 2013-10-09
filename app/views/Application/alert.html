@@ -17,8 +17,9 @@
 			{{/if}}
 
 		</div>
-	{{else}}
-		<div class="alert alert-info">&{'create.no-routes-stops'}</div>
+		{{else}}
+		
+			<div class="alert alert-info">&{'create.no-routes-stops'}</div>
 	{{/each}}
 
 </script>
@@ -82,6 +83,10 @@
 			
 			<h4>&{'create.general-info'}</h4>
 			
+				<hr/>
+				<p><strong>&{'create.created-at'}</strong> <span id="createdTime"></span> <strong>&{'create.updated-at'}</strong> <span id="lastUpdatedTime"></span></p>
+				
+
 			  <div class="form-group">
 			    <label for="title">&{'create.title'}</label>
 			    <input type="text" class="form-control" name="title" id="title" placeholder="&{'create.title'}">

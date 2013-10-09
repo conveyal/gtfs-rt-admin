@@ -1,10 +1,21 @@
 #{extends 'main.html' /}
 #{set title:'Home' /}
 
+<script id="alertListItemTemplate" type="text/x-handlebars-template">
+	<div class="well">
+		<a href="#" data-id="{{ id }}" class="editAlert pull-right" style="font-size: 30px;"><span class="glyphicon glyphicon-list-alt"></span></a>
+		<a href="#" data-id="{{ id }}" class="editAlert"><h4>{{ agencyId }} {{#if headerText}}{{headerText}}{{else}}&{'main.no-title'}{{/if}} {{#if publiclyVisible}}<span class="glyphicon glyphicon-eye-open"></span>{{/if}}</h4></a>
+		<p>{{#if descriptionText}}{{descriptionText}}{{else}}&{'main.no-description'}{{/if}}</p>
+
+
+	</div>
+</script>
+
+
 <div class="container">
 	<div class="row">
 		<div class="col-xs-6">
-			<a href="@{Application.index}" type="button" class="btn btn-default col-xs-12"><span class="glyphicon glyphicon-refresh"></span> &{'shared.button.update'}</a>
+			<a type="button" class="btn btn-default col-xs-12" id="refreshData"><span class="glyphicon glyphicon-refresh"></span> &{'shared.button.update'}</a>
 		</div>
 		<div class="col-xs-6">
 			<a href="@{Application.alert}" type="button" class="btn btn-primary col-xs-12">&{'main.new-alert'}</a>
@@ -15,20 +26,10 @@
 		<div class="col-xs-12">
 
 			<h3>&{'main.active-alerts'}</h3>
-			#{if activeAlerts}
-				#{list items:activeAlerts, as:'alert' }
+			
+			<div id="activeAlerts"></div>
 
-					<div class="well">
-						<a href="@{Application.alert(alert.id)}" class="pull-right" style="font-size: 30px;"><span class="glyphicon glyphicon-list-alt"></span></a>
-						<a href="@{Application.alert(alert.id)}"><h4>#{if alert.headerText}&{alert.headerText}#{/if}#{else}&{'main.no-title'}#{/else} #{if alert.publiclyVisible}<span class="glyphicon glyphicon-eye-open"></span>#{/if}</h4></a>
-						<p>#{if alert.descriptionText}&{alert.descriptionText}#{/if}#{else}&{'main.no-description'}#{/else}</p>
-					</div>
-
-				#{/list}
-			#{/if}
-			#{else}
-				<div class="alert alert-info">&{'main.no-active-alerts'}</div>
-			#{/else}
+			<div id="noActiveAlerts" class="alert alert-info">&{'main.no-active-alerts'}</div>
 			
 		</div>
 	</div>
@@ -37,9 +38,43 @@
 		<div class="col-xs-12">
 			<h3>&{'main.future-alerts'}</h3>
 
-			<div class="alert alert-info">&{'main.no-future-alerts'}</div>
+			<div id="futureAlerts"></div>
 
+			<div id="noFutureAlerts" class="alert alert-info">&{'main.no-future-alerts'}</div>
 
 		</div>
 	</div>
 </div>
+
+
+<script>
+
+$( document ).ready(function() {
+
+	var activeCollection = new GtfsRtEditor.ActiveAlerts();		
+	var futureCollection = new GtfsRtEditor.FutureAlerts();
+
+	$('#refreshData').on('click', function(evt) {
+
+		activeCollection.fetch({reset: true});
+		futureCollection.fetch({reset: true});
+
+	});
+
+	var activeView = new GtfsRtEditor.AlertsList({
+		collection: activeCollection,
+		el: $('#activeAlerts'),
+		emptyMessage: $('#noActiveAlerts'),
+		alertEditPath: '@{Application.alert}'
+	});
+
+	var futureView = new GtfsRtEditor.AlertsList({
+		collection: futureCollection,
+		el: $('#futureAlerts'),
+		emptyMessage: $('#noFutureAlerts'),
+		alertEditPath: '@{Application.alert}'
+	});
+
+});
+
+</script>

@@ -5,6 +5,63 @@ var GtfsRtEditor = GtfsRtEditor || {};
 (function(G, $) {
 
 
+G.AlertsList = Backbone.View.extend({
+
+	events : {    
+		'click .editAlert' : 'editAlert'
+	},
+
+
+	initialize: function(options) {
+
+		_.bindAll(this, 'editAlert');
+
+		this.emptyMessage = options.emptyMessage;		
+		this.alertEditPath = options.alertEditPath;
+
+		this.listenTo(this.collection, "reset", this.render);
+
+		var source   = $("#alertListItemTemplate").html();
+		this.itemTemplate = Handlebars.compile(source);
+
+		this.collection.fetch({reset: true});
+
+	},
+
+	render : function(){
+
+		if(this.collection.length > 0) {
+
+			this.emptyMessage.hide();
+
+			var this_ = this;
+
+			this_.$el.html("");
+
+			this.collection.forEach(function(data) {
+
+					var html = this_.itemTemplate(data.attributes);
+
+					this_.$el.append(html);
+
+			});
+
+		}
+		else {
+
+			this.emptyMessage.show();
+
+		}
+	},
+
+	editAlert : function(evt) {
+
+		window.location = this.alertEditPath + '?id=' + $(evt.currentTarget).data("id") 
+	}
+
+});
+
+
 G.AffectedTimesView = Backbone.View.extend({
 
 	events : {    
@@ -161,9 +218,9 @@ G.SelectedEntityView = Backbone.View.extend({
 		this.model.set('informedEntities', entities);
 	},
 
-	addStop : function(stopId, stopName) {
+	addStop : function(stopId, stopName, lat, lon) {
 		
-		var entity = {stopId: stopId, description: stopName};
+		var entity = {stopId: stopId, description: stopName, lat: lat, lon: lon};
 
 		var existingEntities = this.model.get('informedEntities');
 
@@ -179,9 +236,9 @@ G.SelectedEntityView = Backbone.View.extend({
 
 	},
 
-	addRoute : function(routeId, routeName) {
+	addRoute : function(routeId, routeName, polyline) {
 	
-		var entity = {routeId: routeId, description: routeName};
+		var entity = {routeId: routeId, description: routeName, polyline: polyline};
 
 		var existingEntities = this.model.get('informedEntities');
 
@@ -301,7 +358,7 @@ G.AlertEditorView = Backbone.View.extend({
 	      var options = '';
 	      this_.routes = routes;
 	      for (var i = 0; i < routes.length; i++) {
-	        options += '<option value="' + routes[i].id + '">' + routes[i].value.shortName + ' ' + routes[i].value.longName + '</option>';
+	        options += '<option data-polyline="' +  routes[i].value.polyline + '"  value="' + routes[i].id + '">' + routes[i].value.shortName + ' ' + routes[i].value.longName + '</option>';
 	      }
 	      this_.$("select#route").html(options);
 	      
@@ -321,7 +378,7 @@ G.AlertEditorView = Backbone.View.extend({
 	      this_.stops = stops;
 	      
 	      for (var i = 0; i < stops.length; i++) {
-	        options += '<option value="' + stops[i].id + '">' + stops[i].value.name + '</option>';
+	        options += '<option data-lon="' +  stops[i].value.lon + '" data-lat="' +  stops[i].value.lat + '" value="' + stops[i].id + '">' + stops[i].value.name + '</option>';
 	      }
 	      this_.$("select#stop").html(options);
 	      this_.updateOverlay(false);
@@ -332,16 +389,19 @@ G.AlertEditorView = Backbone.View.extend({
 	addStop : function() {
 		var stopId = this.$("select#stop").val();
 		var stopName = this.$("select#stop option:selected").text();
+		var lat = this.$("select#stop option:selected").data('lat');
+		var lon = this.$("select#stop option:selected").data('lon');
 		
-		this.entityView.addStop(stopId, stopName);
+		this.entityView.addStop(stopId, stopName, lat, lon);
 
 	},
 
 	addRoute : function() {
 		var routeId = this.$("select#route").val();
 		var routeName = this.$("select#route option:selected").text();
+		var polyline = this.$("select#route option:selected").data('polyline');
 		
-		this.entityView.addRoute(routeId, routeName);
+		this.entityView.addRoute(routeId, routeName, polyline);
 	},
 
 	setFields : function(evt) {
