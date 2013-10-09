@@ -209,10 +209,34 @@ G.AlertEditorView = Backbone.View.extend({
 		'change #comments' : 'onFieldChange',
 		'change #cause' : 'onFieldChange',
 		'change #effect' : 'onFieldChange',
-		'change #publiclyVisible' : 'onFieldChange'
+		'change #publiclyVisible' : 'onFieldChange',
+		'click #showMap' : 'showMap',
+		'click #hideMap' : 'hideMap',
+		'change select#route' : 'changeRoute',
+		'change select#stop' : 'changeStop'
     },
 
 	initialize: function() {
+
+	  this.agencySelectedStopIcon = L.icon({
+        iconUrl: '/public/leaflet/images/marker-icon.png',
+        iconSize: [25, 41],
+        iconAnchor: [12, 41],
+        popupAnchor: [1, -34],
+        shadowUrl: '/public/leaflet/images/marker-shadow.png',
+        shadowSize: [41, 41]
+      });
+
+      // Custom icons
+      this.agencyStopIcon = L.icon({
+        iconUrl: '/public/leaflet/images/marker-gray.png',
+        iconSize: [25, 41],
+        iconAnchor: [12, 41],
+        popupAnchor: [1, -34],
+        shadowUrl: '/public/leaflet/images/marker-shadow.png',
+        shadowSize: [41, 41]
+      });
+
 
 		var source   = $("#alertFromTemplate").html();
 		this.template = Handlebars.compile(source);
@@ -222,7 +246,7 @@ G.AlertEditorView = Backbone.View.extend({
 		this.listenTo(this.model, "dateChange", this.enableSave);
 		this.listenTo(this.model, "change", this.enableSave);
 
-		_.bindAll(this, 'loadRoutes', 'loadStops', 'addRoute', 'addStop', 'saveAlert', 'onFieldChange', 'enableSave')
+		_.bindAll(this, 'loadRoutes', 'loadStops', 'addRoute', 'addStop', 'saveAlert', 'onFieldChange', 'enableSave', 'showMap', 'hideMap', 'changeStop', 'changeRoute')
 
 	},
 
@@ -233,6 +257,8 @@ G.AlertEditorView = Backbone.View.extend({
 		this.$el.html(this.template());
 
 		this.$('#save-warning').hide();
+
+		this.hideMap();
 
 		this.loadRoutes();
 
@@ -268,14 +294,16 @@ G.AlertEditorView = Backbone.View.extend({
 
 		var this_ = this;
 
-		$.getJSON("/api/routes", function(j){
+		$.getJSON("/api/routes", function(routes){
 	      var options = '';
-	      for (var i = 0; i < j.length; i++) {
-	        options += '<option value="' + j[i].id + '">' + j[i].value + '</option>';
+	      this_.routes = routes;
+	      for (var i = 0; i < routes.length; i++) {
+	        options += '<option value="' + routes[i].id + '">' + routes[i].value.shortName + ' ' + routes[i].value.longName + '</option>';
 	      }
 	      this_.$("select#route").html(options);
 	      
 	      this_.loadStops();
+	      this_.updateOverlay(false);
 	    });
 
 	},
@@ -284,12 +312,16 @@ G.AlertEditorView = Backbone.View.extend({
 
 		var this_ = this;
 
-		$.getJSON("/api/stops/" + this_.$("select#route").val(), function(j){
+		$.getJSON("/api/stops/" + this_.$("select#route").val(), function(stops){
+	      
 	      var options = '';
-	      for (var i = 0; i < j.length; i++) {
-	        options += '<option value="' + j[i].id + '">' + j[i].value + '</option>';
+	      this_.stops = stops;
+	      
+	      for (var i = 0; i < stops.length; i++) {
+	        options += '<option value="' + stops[i].id + '">' + stops[i].value.name + '</option>';
 	      }
 	      this_.$("select#stop").html(options);
+	      this_.updateOverlay(false);
 	    });
 
 	},
@@ -321,7 +353,7 @@ G.AlertEditorView = Backbone.View.extend({
 		if(this.model.get('effect'))
 			this.$('#effect').val(this.model.get('effect'));
 
-		if(this.model.get('publiclyVisible') == 'true')
+		if(this.model.get('publiclyVisible') == true)
 			this.$('#publiclyVisible').prop('checked', true);
 
 
@@ -357,6 +389,99 @@ G.AlertEditorView = Backbone.View.extend({
 			}
 
 		});
+	},
+
+	initMap : function() {
+
+		if(!this.entitiesMap) {
+			this.entitiesMap = L.map('entitiesMap').setView([51.505, -0.09], 13);
+			
+
+			this.entitiesLayer = L.tileLayer('http://{s}.tiles.mapbox.com/v3/' + G.config.mapKey + '/{z}/{x}/{y}.png', {
+	    		attribution: '<a href="http://mapbox.com/about/maps">Terms & Feedback</a>'
+				}).addTo(this.entitiesMap);
+
+			this.updateOverlay();
+		}
+
+	},
+
+
+	updateOverlay : function(centerStop) {
+		if(this.entitiesMap) {
+
+			if(!this.entitiesOverlay) {
+				this.entitiesOverlay = L.featureGroup().addTo(this.entitiesMap)
+			}
+
+			this.entitiesOverlay.clearLayers()
+
+			for(r in this.routes) {
+
+				var route = this.routes[r];
+
+				if(route.id == this.$("select#route").val()) {
+					
+					var polyline = L.Polyline.fromEncoded(route.value.polyline);
+					polyline.addTo(this.entitiesOverlay);
+				}
+			}
+
+			var selectedStop = null
+
+			var this_ = this;
+
+			for(s in this.stops) {
+				
+				var stop = this.stops[s];
+
+				marker = this.agencyStopIcon;
+
+				if(stop.id == this.$("select#stop").val()) {
+					selectedStop = stop;					
+					marker = this.agencySelectedStopIcon
+				}
+					
+
+				var m = L.marker([stop.value.lat, stop.value.lon], {riseOnHover: true, icon: marker})
+					.on('click', function(evt) {  
+						this_.$("select#stop").val(evt.target.stopId);
+						this_.changeStop();
+						})
+					.bindLabel(stop.value.name).addTo(this.entitiesOverlay);
+
+				m.stopId = stop.id;
+			}
+
+			if(centerStop)
+				this.entitiesMap.setView([selectedStop.value.lat, selectedStop.value.lon], 17)
+			else
+				this.entitiesMap.fitBounds(this.entitiesOverlay.getBounds());
+		}
+	},
+
+	showMap : function() {
+
+		$('#mapRow').show();
+		$('#hideMap').show();
+		$('#showMap').hide();
+
+		this.initMap();
+	},
+
+	hideMap : function() {
+
+		$('#mapRow').hide();
+		$('#hideMap').hide();
+		$('#showMap').show();
+	},
+
+	changeStop : function() {
+		this.updateOverlay(true);
+	},
+
+	changeRoute : function() {
+		this.updateOverlay(false);
 	}
 
 });

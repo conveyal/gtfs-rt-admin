@@ -1,0 +1,9 @@
+	
+var GtfsRtEditor = GtfsRtEditor || {};
+
+
+(function(G, $) {
+
+	G.config.mapKey = '';
+
+})(GtfsRtEditor, jQuery);

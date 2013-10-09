@@ -3,6 +3,8 @@ package controllers;
 import play.*;
 import play.mvc.*;
 import utils.IdValuePair;
+import utils.SerializedRoute;
+import utils.SerializedStop;
 
 import java.io.IOException;
 import java.io.StringWriter;
@@ -277,7 +279,7 @@ public class Api extends Controller {
     	
     	List<String> routes = Application.entities.agencyRouteMap.get(agencyId);
        	for(String routeId : routes) {
-       		IdValuePair pair = new IdValuePair(routeId, Application.entities.routeMap.get(routeId));
+       		IdValuePair<SerializedRoute> pair = new IdValuePair<SerializedRoute>(routeId, Application.entities.routeMap.get(routeId));
     		pairs.add(pair);
     	}
        	Collections.sort(pairs);
@@ -289,10 +291,12 @@ public class Api extends Controller {
     	List<IdValuePair> pairs = new ArrayList<IdValuePair>();
     	
     	List<String> stops = Application.entities.routeStopMap.get(routeId);
-       	for(String stopId : stops) {
-       		IdValuePair pair = new IdValuePair(stopId, Application.entities.stopMap.get(stopId));
+       	
+    	for(String stopId : stops) {
+       		IdValuePair<SerializedStop> pair = new IdValuePair<SerializedStop>(stopId, Application.entities.stopMap.get(stopId));
     		pairs.add(pair);
     	}
+       	
     	Collections.sort(pairs);
         renderJSON(toJson(pairs, false));
     }

@@ -4,10 +4,10 @@
 <div class="container">
 	<div class="row">
 		<div class="col-xs-6">
-			<a href="@{Application.index}" type="button" class="btn btn-default col-xs-12"><span class="glyphicon glyphicon-refresh"></span> &{'main.refresh'}</a>
+			<a href="@{Application.index}" type="button" class="btn btn-default col-xs-12"><span class="glyphicon glyphicon-refresh"></span> &{'shared.button.update'}</a>
 		</div>
 		<div class="col-xs-6">
-			<a href="@{Application.create}" type="button" class="btn btn-primary col-xs-12">&{'main.new-alert'}</a>
+			<a href="@{Application.alert}" type="button" class="btn btn-primary col-xs-12">&{'main.new-alert'}</a>
 		</div>
 	</div>
 	<hr/>
@@ -19,9 +19,9 @@
 				#{list items:activeAlerts, as:'alert' }
 
 					<div class="well">
-						<a href="@{Application.edit(alert.id)}" class="pull-right" style="font-size: 30px;"><span class="glyphicon glyphicon-list-alt"></span></a>
-						<a href="@{Application.edit(alert.id)}"><h4>&{alert.headerText}</h4></a>
-						<p>&{alert.descriptionText}</p>
+						<a href="@{Application.alert(alert.id)}" class="pull-right" style="font-size: 30px;"><span class="glyphicon glyphicon-list-alt"></span></a>
+						<a href="@{Application.alert(alert.id)}"><h4>#{if alert.headerText}&{alert.headerText}#{/if}#{else}&{'main.no-title'}#{/else} #{if alert.publiclyVisible}<span class="glyphicon glyphicon-eye-open"></span>#{/if}</h4></a>
+						<p>#{if alert.descriptionText}&{alert.descriptionText}#{/if}#{else}&{'main.no-description'}#{/else}</p>
 					</div>
 
 				#{/list}

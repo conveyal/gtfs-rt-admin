@@ -57,11 +57,7 @@ public class Application extends Controller {
         render(activeAlerts);
     }
     
-    public static void create() {
-        render();
-    }
-    
-    public static void edit(Long id) {
+    public static void alert(Long id) {
         render(id);
     }
     

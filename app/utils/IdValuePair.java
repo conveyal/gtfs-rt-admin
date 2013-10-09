@@ -1,17 +1,17 @@
 package utils;
 
-public class IdValuePair implements Comparable<IdValuePair> {
+public class IdValuePair<T> implements Comparable<IdValuePair> {
 	
 	public String id;
-	public String value;
+	public T value;
 	
-	public IdValuePair(String i, String v) {
+	public IdValuePair(String i, T v) {
 		id = i;
 		value = v;
 	}
 
 	@Override
 	public int compareTo(IdValuePair arg0) {
-		return value.compareTo(arg0.value);
+		return ((Comparable)value).compareTo((Comparable)arg0.value);
 	}
 }
