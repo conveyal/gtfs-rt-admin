@@ -4,9 +4,16 @@
 <script id="alertListItemTemplate" type="text/x-handlebars-template">
 	<div class="well">
 		<a href="#" data-id="{{ id }}" class="editAlert pull-right" style="font-size: 30px;"><span class="glyphicon glyphicon-list-alt"></span></a>
-		<a href="#" data-id="{{ id }}" class="editAlert"><h4>{{ agencyId }} {{#if headerText}}{{headerText}}{{else}}&{'main.no-title'}{{/if}} {{#if publiclyVisible}}<span class="glyphicon glyphicon-eye-open"></span>{{/if}}</h4></a>
+		<a href="#" data-id="{{ id }}" class="editAlert"><h4>{{ agencyId }}: {{#if headerText}}{{headerText}}{{else}}&{'main.no-title'}{{/if}} {{#if publiclyVisible}}<span class="glyphicon glyphicon-eye-open"></span>{{/if}}</h4></a>
 		<p>{{#if descriptionText}}{{descriptionText}}{{else}}&{'main.no-description'}{{/if}}</p>
-
+		<p><strong>&{'main.entities'}</strong> {{#each informedEntities}}{{ description }}, {{/each}}</p>
+		<p><strong>&{'create.times'}</strong> 
+			<ul>
+				{{#each timeRanges}}
+					<li>{{timefmt startTime }} - {{timefmt endTime }} </li>
+				{{/each}}
+			</ul>
+		</p>
 
 	</div>
 </script>

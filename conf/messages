@@ -69,6 +69,8 @@ main.new-alert=Crear nueva aviso
 main.no-title=Sin título
 main.no-description=Sin Descripción
 
+main.entities=Servicios Afectados:
+
 
 # create
 

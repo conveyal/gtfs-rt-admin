@@ -4,6 +4,13 @@ var GtfsRtEditor = GtfsRtEditor || {};
 
 (function(G, $) {
 
+	Handlebars.registerHelper('timefmt', function(date) {
+		if(date)
+	  		return new Handlebars.SafeString(moment(date).tz(G.config.timeZone).format('llll'));
+	  	else 
+	  		return new Handlebars.SafeString('');
+	});
+
 
 G.AlertsList = Backbone.View.extend({
 
