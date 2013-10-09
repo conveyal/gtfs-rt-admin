@@ -76,7 +76,7 @@ public class Alert extends Model {
 
     static public List<Alert> findActiveAlerts(String agencyId) {
     	
-    	List<TimeRange> timeRanges = TimeRange.find("(startTime < now() or startTime is null) and (endTime > now() or endTime is null)").fetch();
+    	List<TimeRange> timeRanges = TimeRange.find("(startTime < now() or startTime is null) and (endTime > now() or endTime is null) order by startTime, endTime").fetch();
     	
     	HashMap<Long, Alert> alerts = new HashMap<Long, Alert>();
     	
@@ -101,7 +101,7 @@ public class Alert extends Model {
     
     static public List<Alert> findFutureAlerts(String agencyId) {
     	
-    	List<TimeRange> timeRanges = TimeRange.find("startTime > now()").fetch();
+    	List<TimeRange> timeRanges = TimeRange.find("startTime > now() order by startTime, endTime").fetch();
     	
     	HashMap<Long, Alert> alerts = new HashMap<Long, Alert>();
     	

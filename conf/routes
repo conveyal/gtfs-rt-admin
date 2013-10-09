@@ -7,6 +7,9 @@ GET     /                                       Application.index
 GET     /alert                                  Application.alert
 GET     /alert/{id}                             Application.alert
 
+GET 	/all									Application.all
+GET 	/map									Application.map
+
 GET 	/logout									Secure.logout
 GET 	/login									Secure.login
 GET 	/authenticate							Secure.authenticate

@@ -12,6 +12,90 @@ var GtfsRtEditor = GtfsRtEditor || {};
 	});
 
 
+G.AlertsMap = Backbone.View.extend({
+
+	initialize: function(options) {
+
+		_.bindAll(this, 'refresh', 'sizeContent');
+
+		var source   = $("#alertMapPopupTemplate").html();
+		this.popupTemplate = Handlebars.compile(source);
+
+		this.mapContainer = options.mapContainer;		
+		this.agencyFilter = options.agencyFilter;
+
+		this.listenTo(this.collection, "reset", this.render);
+
+		this.entitiesMap = L.map(this.mapContainer).setView([51.505, -0.09], 13);	
+
+		this.entitiesLayer = L.tileLayer('http://{s}.tiles.mapbox.com/v3/' + G.config.mapKey + '/{z}/{x}/{y}.png', {
+    		attribution: '<a href="http://mapbox.com/about/maps">Terms & Feedback</a>'
+			}).addTo(this.entitiesMap);
+
+		$(window).resize(this.sizeContent);
+
+		this.sizeContent();
+
+		this.refresh();
+	},
+
+	sizeContent : function() {
+	  var newHeight = $(window).height() - 200 + "px";
+	  $('#' + this.mapContainer).css("height", newHeight);
+
+	  if(this.entitiesMap)
+	  	this.entitiesMap.invalidateSize();
+	},
+
+	refresh : function(){
+
+		this.collection.fetch({reset: true});
+
+	},
+
+	render : function(){
+
+		var this_ = this;
+
+		if(this.entitiesMap) {
+
+			if(!this.entitiesOverlay) {
+				this.entitiesOverlay = L.featureGroup().addTo(this.entitiesMap)
+			}
+
+			this.entitiesOverlay.clearLayers()
+
+			this.collection.forEach(function(data) {
+
+				var informedEntities = data.get('informedEntities');
+
+				for(var i in informedEntities) {
+
+					if(informedEntities[i].polyline) {
+						var polyline = L.Polyline.fromEncoded(informedEntities[i].polyline);
+
+						var html = this_.popupTemplate(data.attributes);
+						polyline.bindPopup(html);
+
+						polyline.addTo(this_.entitiesOverlay);
+					}
+
+					if(informedEntities[i].lat && informedEntities[i].lon) {
+
+						var html = this_.popupTemplate(data.attributes);
+						L.marker([informedEntities[i].lat, informedEntities[i].lon], {riseOnHover: true}).bindPopup(html).addTo(this_.entitiesOverlay);
+					}
+				}
+			});
+
+			this.entitiesMap.fitBounds(this.entitiesOverlay.getBounds());
+				
+		}
+	}
+
+});
+
+
 G.AlertsList = Backbone.View.extend({
 
 	events : {    
@@ -77,7 +161,8 @@ G.AlertsList = Backbone.View.extend({
 
 	editAlert : function(evt) {
 
-		window.location = this.alertEditPath + '?id=' + $(evt.currentTarget).data("id") 
+		if(this.alertEditPath)
+			window.location = this.alertEditPath + '?id=' + $(evt.currentTarget).data("id");
 	}
 
 });

@@ -24,6 +24,9 @@ nav-bar.user-greeting=¡Bienvenido!
 nav-bar.export=Exportar
 nav-bar.admin=Administrador
 
+nav-bar.map=Mapa de Avisos
+nav-bar.all=Todos los Avisos
+
 nav-bar.logout=Salir
 
 nav-bar.settings=Preferencias
@@ -35,6 +38,7 @@ nav-bar.manage-users=Manage Users
 shared.optional= Opcional
 shared.required= Obligatorio/Requerido
 
+shared.alerts=Avisos
 
 shared.details=Detalles
 

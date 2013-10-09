@@ -48,6 +48,20 @@ public class Application extends Controller {
         
     }
     
+    public static void all() {
+    	
+        render();
+        
+    }
+    
+    public static void map() {
+    	
+        render();
+        
+    }
+    
+    
+    
     public static void alert(Long id) {
         render(id);
     }
