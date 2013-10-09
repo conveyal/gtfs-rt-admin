@@ -14,17 +14,31 @@ G.AlertsList = Backbone.View.extend({
 
 	initialize: function(options) {
 
-		_.bindAll(this, 'editAlert');
+		_.bindAll(this, 'editAlert', 'refresh');
 
 		this.emptyMessage = options.emptyMessage;		
 		this.alertEditPath = options.alertEditPath;
+		this.agencyFilter = options.agencyFilter;
 
 		this.listenTo(this.collection, "reset", this.render);
 
 		var source   = $("#alertListItemTemplate").html();
 		this.itemTemplate = Handlebars.compile(source);
 
-		this.collection.fetch({reset: true});
+		this.refresh();
+	},
+
+	refresh : function(){
+
+		var data = {};
+
+		if(this.agencyFilter) {
+
+			data.agencyId = this.agencyFilter;
+
+		}
+
+		this.collection.fetch({reset: true, data: data});
 
 	},
 

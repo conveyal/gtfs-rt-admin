@@ -54,25 +54,27 @@ $( document ).ready(function() {
 	var activeCollection = new GtfsRtEditor.ActiveAlerts();		
 	var futureCollection = new GtfsRtEditor.FutureAlerts();
 
-	$('#refreshData').on('click', function(evt) {
-
-		activeCollection.fetch({reset: true});
-		futureCollection.fetch({reset: true});
-
-	});
-
 	var activeView = new GtfsRtEditor.AlertsList({
 		collection: activeCollection,
 		el: $('#activeAlerts'),
 		emptyMessage: $('#noActiveAlerts'),
-		alertEditPath: '@{Application.alert}'
+		alertEditPath: '@{Application.alert}',
+		agencyFilter: '${agencyId}'
 	});
 
 	var futureView = new GtfsRtEditor.AlertsList({
 		collection: futureCollection,
 		el: $('#futureAlerts'),
 		emptyMessage: $('#noFutureAlerts'),
-		alertEditPath: '@{Application.alert}'
+		alertEditPath: '@{Application.alert}',
+		agencyFilter: '${agencyId}'
+	});
+
+	$('#refreshData').on('click', function(evt) {
+
+		activeView.refresh();
+		futureView.refresh();
+
 	});
 
 });

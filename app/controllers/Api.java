@@ -284,14 +284,14 @@ public class Api extends Controller {
     // active/future alerts
     
     
-    public static void activeAlerts() throws JsonMappingException, JsonGenerationException, IOException {
+    public static void activeAlerts(String agencyId) throws JsonMappingException, JsonGenerationException, IOException {
     	
-    	renderJSON(toJson(Alert.findActiveAlerts(null), false));
+    	renderJSON(toJson(Alert.findActiveAlerts(agencyId), false));
     }
     
-    public static void futureAlerts() throws JsonMappingException, JsonGenerationException, IOException {
+    public static void futureAlerts(String agencyId) throws JsonMappingException, JsonGenerationException, IOException {
     	
-    	renderJSON(toJson(Alert.findFutureAlerts(null), false));
+    	renderJSON(toJson(Alert.findFutureAlerts(agencyId), false));
     }
     
     // gtfs cache data
