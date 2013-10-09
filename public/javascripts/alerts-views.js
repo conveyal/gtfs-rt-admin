@@ -26,7 +26,7 @@ G.AlertsMap = Backbone.View.extend({
 
 		this.listenTo(this.collection, "reset", this.render);
 
-		this.entitiesMap = L.map(this.mapContainer).setView([G.config.defaultLat, defaultLon], 13);	
+		this.entitiesMap = L.map(this.mapContainer).setView([G.config.defaultLat, G.config.defaultLon], 13);	
 
 		this.entitiesLayer = L.tileLayer('http://{s}.tiles.mapbox.com/v3/' + G.config.mapKey + '/{z}/{x}/{y}.png', {
     		attribution: '<a href="http://mapbox.com/about/maps">Terms & Feedback</a>'
@@ -563,7 +563,7 @@ G.AlertEditorView = Backbone.View.extend({
 	initMap : function() {
 
 		if(!this.entitiesMap) {
-			this.entitiesMap = L.map('entitiesMap').setView([G.config.defaultLat, defaultLon], 13);
+			this.entitiesMap = L.map('entitiesMap').setView([G.config.defaultLat, G.config.defaultLon], 13);
 			
 
 			this.entitiesLayer = L.tileLayer('http://{s}.tiles.mapbox.com/v3/' + G.config.mapKey + '/{z}/{x}/{y}.png', {
