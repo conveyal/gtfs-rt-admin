@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.UUID;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -21,7 +22,7 @@ import org.hsqldb.lib.MD5;
 import play.Play;
 import play.db.jpa.Model;
 
-@JsonIgnoreProperties({"entityId", "persistent"})
+@JsonIgnoreProperties({"entityId", "persistent", "pos"})
 @Entity
 public class Alert extends Model {
 
@@ -50,10 +51,18 @@ public class Alert extends Model {
 	
     public String url;
     public String headerText;
+    
+    @Column(length = 8000,columnDefinition="TEXT")
     public String descriptionText;
+    
+    @Column(length = 8000,columnDefinition="TEXT")
     public String commentsText;
     
+    public Date created;
+    public Date lastUpdated;
+    
     public Boolean publiclyVisible;
+    public Boolean deleted;
     
     @JsonCreator
     public static Alert factory(long id) {
@@ -65,15 +74,15 @@ public class Alert extends Model {
       return Alert.findById(Long.parseLong(id));
     }
 
-    static public List<Alert> findActiveAlerts() {
+    static public List<Alert> findActiveAlerts(String agencyId) {
     	
-    	List<TimeRange> timeRanges = TimeRange.find("endTime > now() or endTime is null").fetch();
+    	List<TimeRange> timeRanges = TimeRange.find("(startTime < now() or startTime is null) and (endTime > now() or endTime is null) order by startTime, endTime").fetch();
     	
     	HashMap<Long, Alert> alerts = new HashMap<Long, Alert>();
     	
     	for(TimeRange tr : timeRanges){
     		
-    		if(!alerts.containsKey(tr.alert.id)) {
+    		if(!alerts.containsKey(tr.alert.id) && (agencyId == null || tr.alert.agencyId.equals(agencyId))) {
     			alerts.put(tr.alert.id, tr.alert);
     		}
     	}
@@ -82,7 +91,32 @@ public class Alert extends Model {
     	
     	for(Alert a : alertsWithoutRanges){
     		
-    		if(a.timeRanges.isEmpty() && !alerts.containsKey(a.id)) {
+    		if((agencyId == null || a.agencyId.equals(agencyId)) && a.timeRanges.isEmpty() && !alerts.containsKey(a.id)) {
+    			alerts.put(a.id, a);
+    		}
+    	}
+ 
+    	return new ArrayList<Alert>(alerts.values());
+    }
+    
+    static public List<Alert> findFutureAlerts(String agencyId) {
+    	
+    	List<TimeRange> timeRanges = TimeRange.find("startTime > now() order by startTime, endTime").fetch();
+    	
+    	HashMap<Long, Alert> alerts = new HashMap<Long, Alert>();
+    	
+    	for(TimeRange tr : timeRanges){
+    		
+    		if(!alerts.containsKey(tr.alert.id) && (agencyId == null || tr.alert.agencyId.equals(agencyId))) {
+    			alerts.put(tr.alert.id, tr.alert);
+    		}
+    	}
+    	
+    	List<Alert> alertsWithoutRanges = Alert.findAll();
+    	
+    	for(Alert a : alertsWithoutRanges){
+    		
+    		if((agencyId == null || a.agencyId.equals(agencyId)) && a.timeRanges.isEmpty() && !alerts.containsKey(a.id)) {
     			alerts.put(a.id, a);
     		}
     	}
@@ -107,18 +141,6 @@ public class Alert extends Model {
     	if(!agencyId.equals(agencyId))
          	return false;
     	
-    	
-    	// need to download  IEs list from transit index and validate requests aginst that...
-    	
-    	/* List<InformedEntity> ies = InformedEntity.find("alert = ?", this).fetch();
-    	
-    	for(InformedEntity ie : ies) {
-    		
-    		if(!ie.agencyId.equals(agencyId)) 
-    			return false;
-    		
-    	} */
-  
     	return true;
     }
     

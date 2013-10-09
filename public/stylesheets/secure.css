@@ -3,6 +3,12 @@ html, body {
     font-family: 'Lucida grande', verdana, sans-serif;
 }
 
+#signinForm {
+    max-width: 330px;
+    padding: 15px;
+    margin: 0 auto;
+}
+
 #login {
     width: 500px;
     margin: 50px auto;

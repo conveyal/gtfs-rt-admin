@@ -17,7 +17,7 @@ import org.hsqldb.lib.MD5;
 import play.Play;
 import play.db.jpa.Model;
 
-@JsonIgnoreProperties({"entityId", "persistent"})
+@JsonIgnoreProperties({"entityId", "persistent", "pos"})
 @Entity
 public class TimeRange extends Model {
 

@@ -29,23 +29,32 @@ public class Account extends Model {
        
     public Boolean admin;
     
-    public String agencyId;
+    public Boolean agencyAdmin;
+    
+    @ManyToOne
+    public Agency agency;
    
     
-    public Account(String username, String password, String email, Boolean admin, Long agencyId)
+    public Account(String username, String password, String email, Boolean admin, Agency agency)
     {
     	this.username = username;
     	this.email = email;
     	
     	this.active = true;
-    	this.admin = admin;
+    	
+    	if(agency != null) {
+    		this.agency = agency;
+    		this.agencyAdmin = admin;
+    	}
+    	else
+    		this.admin = admin;
     	
     	this.password = Account.hash(password);
     	
     	this.save();
     }
     
-    public static void update(String username, String email, Boolean active, Boolean admin, Long agencyId)
+    public static void update(String username, String email, Boolean active, Boolean admin, Agency agency)
     {
     	Account account = Account.find("username = ?", username).first(); 
     	
@@ -53,7 +62,34 @@ public class Account extends Model {
     	account.email = email;
     	
     	account.active = active;
-    	account.admin = admin;
+    	
+    	if(agency != null) {
+    		account.agency = agency;
+    		account.agencyAdmin = admin;
+    	}
+    	else
+    		account.admin = admin;
+    	
+    	account.save();
+    }
+    
+    public static void update(String username, String password, String email, Boolean active, Boolean admin, Agency agency)
+    {
+    	Account account = Account.find("username = ?", username).first(); 
+    	
+    	account.username = username;
+    	account.email = email;
+    	
+    	account.active = active;
+    	
+    	account.password = Account.hash(password);
+    	
+    	if(agency != null) {
+    		account.agency = agency;
+    		account.agencyAdmin = admin;
+    	}
+    	else
+    		account.admin = admin;
     	
     	account.save();
     }
@@ -72,6 +108,14 @@ public class Account extends Model {
     		return false;
     }
    
+    
+    public Boolean isAgencyAdmin() {
+    	
+    	if(this.agencyAdmin != null && this.agencyAdmin)
+    		return true;
+    	else
+    		return false;
+    }
     
     public static String hash(String password)
     {
@@ -181,14 +225,13 @@ public class Account extends Model {
     	String hashedPassword = Account.hash(password); 
     	Account user = Account.find("username = ? and password = ?", username, hashedPassword).first();
     	
-    	if(user != null && user.active)
+    	if(user != null && user.active != null && user.active)
     	{
     		user.login();
     		return true;
     	}
     	else
     		return false;
-    
     }
     
 }
