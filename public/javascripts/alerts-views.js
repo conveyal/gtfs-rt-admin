@@ -568,7 +568,7 @@ G.AlertEditorView = Backbone.View.extend({
 	initMap : function() {
 
 		if(!this.entitiesMap) {
-			this.entitiesMap = L.map('entitiesMap').setView([G.config.defaultLat, G.config.defaultLon], 13);
+			this.entitiesMap = L.map('entitiesMap');
 		
 			
 
@@ -576,14 +576,14 @@ G.AlertEditorView = Backbone.View.extend({
 	    		attribution: '<a href="http://mapbox.com/about/maps">Terms & Feedback</a>'
 			}).addTo(this.entitiesMap);
 
-			this.updateOverlay(false, true);
+			this.updateOverlay();
 
 		}
 
 	},
 
 
-	updateOverlay : function(centerStop, skipCenter) {
+	updateOverlay : function(centerStop) {
 		if(this.entitiesMap) {
 
 			if(!this.entitiesOverlay) {
@@ -630,10 +630,6 @@ G.AlertEditorView = Backbone.View.extend({
 
 				m.stopId = stop.id;
 			}
-
-			// huge hack of a workaround b/c of https://github.com/Leaflet/Leaflet/issues/2085
-			if(skipCenter)
-				return;
 
 			if(centerStop)
 				this.entitiesMap.setView([selectedStop.value.lat, selectedStop.value.lon], 17)
