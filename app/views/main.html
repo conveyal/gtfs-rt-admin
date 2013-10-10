@@ -51,10 +51,34 @@
 
                 <div class="collapse navbar-collapse navbar-ex1-collapse">
                     <ul class="nav navbar-nav navbar-right">
-                        <li><a href="@{Application.index()}">${agencyId} &{'shared.alerts'}</a></li>
+
+                        #{if agencyId} 
+                            <li><a href="@{Application.index()}">${agencyId} &{'shared.alerts'}</a></li>
+                        #{/if}
+
+                        #{if availableAgencies}
+
+                            <li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">&{'nav-bar.select-agency'}
+                                <b class="caret"></b></a>                
+
+                                <ul class="dropdown-menu">
+
+                                    #{list availableAgencies, as:'agency'}
+
+                                        <li><a href="@{Admin.setAgency(agency.gtfsAgencyId)}">${agency.name}</a></li>
+
+                                    #{/list}
+                                        
+                                </ul>
+
+                            </li>
+
+                        #{/if}
+
+
                         <li><a href="@{Application.all()}">&{'nav-bar.all'}</a></li>
                         <li><a href="@{Application.map()}">&{'nav-bar.map'}</a></li>
-                        <li><a href="@{Secure.logout()}">&{'nav-bar.logout'} (${user})</a></li>
+                        
                         <li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">&{'nav-bar.settings'} 
                             <b class="caret"></b></a>                
                             <ul class="dropdown-menu">
@@ -63,6 +87,9 @@
                                 <!--<li><a href="#">Update GTFS</a></li>-->
                             </ul>
                         </li>
+
+                        <li><a href="@{Secure.logout()}">&{'nav-bar.logout'} (${user})</a></li>
+
                     </ul>
                 </div>
 

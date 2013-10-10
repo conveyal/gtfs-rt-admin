@@ -23,7 +23,7 @@ public class Application extends Controller {
 	@Before
 	static void initSession() throws Throwable {
 		
-	   Security.setupSession(false);
+	   Security.setupSession();
     }
 	
 	public static GtfsEntitiesCache entities = new GtfsEntitiesCache();
@@ -44,6 +44,9 @@ public class Application extends Controller {
 
     public static void index() {
     	
+    	if(renderArgs.get("agencyId") == null || renderArgs.get("agencyId") == "")
+    		all();
+    	
         render();
         
     }
@@ -60,10 +63,12 @@ public class Application extends Controller {
         
     }
     
-    
-    
     public static void alert(Long id) {
-        render(id);
+    	
+    	if(renderArgs.get("agencyId") == null || renderArgs.get("agencyId") == "")
+    		all();
+    	    	
+    	render(id);
     }
     
     public static void changePassword(String currentPassword, String newPassword) {

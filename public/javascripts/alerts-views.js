@@ -545,15 +545,20 @@ G.AlertEditorView = Backbone.View.extend({
 
 		this.$('#save-warning').hide();
 
-		this.model.save({}, {success : function() {
+		this.model.save({}, {
+			success : function() {
 
 				this_.$('#saveAlert').prop('disabled', true);
+
+				location.href = "/";
 
 			}, 
 			error: function() {
 
 				this.$('#save-warning').show();
 				this_.$('#saveAlert').prop('disabled', false);
+
+				window.scrollTo(0,0);
 
 			}
 

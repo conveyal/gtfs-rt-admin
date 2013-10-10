@@ -22,7 +22,7 @@ public class Admin extends Controller {
 	@Before
     static void setConnectedUser() throws Throwable {
 		
-		 Security.setupSession(true);
+		 Security.setupSession();
 		 
 		 Account account = Account.find("username = ?", Security.connected()).first();
 		 
@@ -123,6 +123,17 @@ public class Admin extends Controller {
 	
 	public static void resetPassword(String username, String newPassword) {
 		Account.resetPassword(username, newPassword);
+	}
+	
+	public static void setAgency(String agencyId) {
+		Account account = Account.find("username = ?", Security.connected()).first();
+		
+		if(account.isAdmin() && Application.entities.agencyMap.get(agencyId) != null) {
+			session.put("selectedAgency", agencyId);
+			Application.index();
+		}
+			
+		
 	}
 	
 	

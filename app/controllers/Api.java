@@ -26,7 +26,7 @@ public class Api extends Controller {
 	@Before
 	static void initSession() throws Throwable {
 		
-		Security.setupSession(false);
+		Security.setupSession();
 		
     }
 	
