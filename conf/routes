@@ -20,7 +20,6 @@ GET 	/passwordChanged						Application.passwordChanged
 
 *		/admin/{action}							Admin.{action}
 
-
 # Ignore favicon requests
 GET     /favicon.ico                            404
 

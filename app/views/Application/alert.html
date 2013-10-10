@@ -77,7 +77,7 @@
 
 			<div class="form-group pull-right">
 			    <label>
-			      <input type="checkbox" id="publiclyVisible"> &{'create.publicly-visible'} <span class="glyphicon glyphicon-eye-open"></span>
+			    	<input type="checkbox" id="publiclyVisible" #{if !admin}disabled#{/if}> &{'create.publicly-visible'} <span class="glyphicon glyphicon-eye-open"></span>
 			    </label>
 			 </div>
 			

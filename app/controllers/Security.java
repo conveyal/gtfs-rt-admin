@@ -16,7 +16,7 @@ public class Security extends Secure.Security {
         return false;
     }
  
-    static void setupSession(Boolean allowAdmins) throws Throwable {
+    static void setupSession() throws Throwable {
     	
 	    if(Security.isConnected()) {
 	    	renderArgs.put("user", Security.connected());
@@ -27,11 +27,13 @@ public class Security extends Secure.Security {
 	    		renderArgs.put("admin", true);
 	    	}
 	    	
-	    	if(account.isAdmin() && !allowAdmins) {
+	    	if(account.isAdmin()) {
+	    		if(session.get("selectedAgency") != null && !session.get("selectedAgency").isEmpty()) {
+		    		renderArgs.put("agencyName", Application.entities.agencyMap.get(session.get("selectedAgency")));
+			        renderArgs.put("agencyId", session.get("selectedAgency"));
+	    		}
 	    		
-	    		// for admin accounts -- redirect to admin index page if not allowed
-	    		
-	    		Admin.accounts();
+	    		renderArgs.put("availableAgencies", Agency.find("order by name").fetch());
 	    	}
 	    	else if(account.agency != null) {
 	    		renderArgs.put("agencyName", Application.entities.agencyMap.get(account.agency.gtfsAgencyId));

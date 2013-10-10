@@ -138,7 +138,7 @@ public class Alert extends Model {
 
     public Boolean securityCheck(String agencyId) {
     	
-    	if(!agencyId.equals(agencyId))
+    	if(agencyId == null || agencyId.isEmpty() || !agencyId.equals(agencyId))
          	return false;
     	
     	return true;

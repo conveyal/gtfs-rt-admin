@@ -545,15 +545,20 @@ G.AlertEditorView = Backbone.View.extend({
 
 		this.$('#save-warning').hide();
 
-		this.model.save({}, {success : function() {
+		this.model.save({}, {
+			success : function() {
 
 				this_.$('#saveAlert').prop('disabled', true);
+
+				location.href = "/";
 
 			}, 
 			error: function() {
 
 				this.$('#save-warning').show();
 				this_.$('#saveAlert').prop('disabled', false);
+
+				window.scrollTo(0,0);
 
 			}
 
@@ -564,19 +569,21 @@ G.AlertEditorView = Backbone.View.extend({
 
 		if(!this.entitiesMap) {
 			this.entitiesMap = L.map('entitiesMap').setView([G.config.defaultLat, G.config.defaultLon], 13);
+		
 			
 
 			this.entitiesLayer = L.tileLayer('http://{s}.tiles.mapbox.com/v3/' + G.config.mapKey + '/{z}/{x}/{y}.png', {
 	    		attribution: '<a href="http://mapbox.com/about/maps">Terms & Feedback</a>'
-				}).addTo(this.entitiesMap);
+			}).addTo(this.entitiesMap);
 
-			this.updateOverlay();
+			this.updateOverlay(false, true);
+
 		}
 
 	},
 
 
-	updateOverlay : function(centerStop) {
+	updateOverlay : function(centerStop, skipCenter) {
 		if(this.entitiesMap) {
 
 			if(!this.entitiesOverlay) {
@@ -597,6 +604,7 @@ G.AlertEditorView = Backbone.View.extend({
 			}
 
 			var selectedStop = null
+			var lastStop = null;
 
 			var this_ = this;
 
@@ -610,7 +618,8 @@ G.AlertEditorView = Backbone.View.extend({
 					selectedStop = stop;					
 					marker = this.agencySelectedStopIcon
 				}
-					
+				
+				lastStop = stop;
 
 				var m = L.marker([stop.value.lat, stop.value.lon], {riseOnHover: true, icon: marker})
 					.on('click', function(evt) {  
@@ -622,10 +631,15 @@ G.AlertEditorView = Backbone.View.extend({
 				m.stopId = stop.id;
 			}
 
+			// huge hack of a workaround b/c of https://github.com/Leaflet/Leaflet/issues/2085
+			if(skipCenter)
+				return;
+
 			if(centerStop)
 				this.entitiesMap.setView([selectedStop.value.lat, selectedStop.value.lon], 17)
 			else
-				this.entitiesMap.fitBounds(this.entitiesOverlay.getBounds());
+				
+			 	this.entitiesMap.fitBounds(this.entitiesOverlay.getBounds());
 		}
 	},
 
