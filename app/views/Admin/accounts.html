@@ -9,30 +9,30 @@
 <script id="createAccount" type="text/html">
 	<form method="POST" id="createAccountForm" action="@{Admin.createAccount()}">
 	  <div class="form-group">
-	    <label for="username">Username</label>
-	    <input onchange="validateUsername();"  class="form-control"  type="text" id="username" name="username" placeholder="Username"/>
-		<span id="badUsername" style="display: none;" class="alert-block alert-danger"><strong>Username alreday taken.</strong></span>
+	    <label for="username">&{'user-mgmt.username'}</label>
+	    <input onchange="validateUsername();"  class="form-control"  type="text" id="username" name="username" placeholder="&{'user-mgmt.username'}"/>
+		<span id="badUsername" style="display: none;" class="alert-block alert-danger"><strong>&{'user-mgmt-username-already-in-use'}</strong></span>
 	    </div>
 	  </div>
 	  <div class="form-group">
-	    <label for="email">Email</label>
-	    <input class="form-control" onchange="validateCreateUser();" type="text" id="email" name="email" placeholder="Email">
-		<span id="badEmail" style="display: none;" class="alert-block alert-danger"><strong>Invalid email address.</strong></span>
+	    <label for="email">&{'user-mgmt.email'}</label>
+	    <input class="form-control" onchange="validateCreateUser();" type="text" id="email" name="email" placeholder="&{'user-mgmt.email'}">
+		<span id="badEmail" style="display: none;" class="alert-block alert-danger"><strong>&{'user-mgmt-invalid-email'}</strong></span>
 	    
 	  </div>
 	  <div class="form-group">
-	    <label for="password">Password</label>
-	    <input onchange="validateCreateUser();"  class="form-control" type="password" id="password" name="password" placeholder="Password"/>
+	    <label for="password">&{'user-mgmt.password'}</label>
+	    <input onchange="validateCreateUser();"  class="form-control" type="password" id="password" name="password" placeholder="&{'user-mgmt.password'}"/>
 	    
 	  </div>
 	  <div class="form-group">
-	    <label for="passwordRetry">Password (again)</label>
-	    <input onchange="validateCreateUser();" class="form-control"  type="password" id="passwordRetry" name="passwordRetry" placeholder="Password (again)"/>
-		<span id="badPassword" style="display: none;" class="alert-block alert-danger"><strong>Passwords dont match.</strong></span>
+	    <label for="passwordRetry">&{'user-mgmt.password-again'}</label>
+	    <input onchange="validateCreateUser();" class="form-control"  type="password" id="passwordRetry" name="passwordRetry" placeholder="&{'user-mgmt.password-again'}"/>
+		<span id="badPassword" style="display: none;" class="alert-block alert-danger"><strong>&{'user-mgmt.passwords-dont-match'}</strong></span>
 	  </div>
 	  
 	  <div class="form-group">
-			<label class="control-label" for="inputAgency">Agency</label>
+			<label class="control-label" for="inputAgency">&{'user-mgmt.agency'}</label>
 	     
 	        <select  class="form-control" name="agencyId" id="agencyId">
 				#{list items:agencies, as:'agency'}
@@ -44,8 +44,8 @@
 
 	  <div class="checkbox">
 	   	<label >
-	        <input type="checkbox" name="admin" id="admin"> Admin Access
-	      </label> 
+	        <input type="checkbox" name="admin" id="admin"> &{'user-mgmt.agency-admin'}
+	    </label> 
 	  </div>
 
 	</form>
@@ -54,35 +54,35 @@
 <script id="editAccount" type="text/html">
 	<form method="POST" id="editAccountForm" action="@{Admin.updateAccount()}">
 	  <div class="form-group">
-	    <label for="username">Username</label>
+	    <label for="username">&{'user-mgmt.username'}</label>
 	    <input type="hidden" id="username" name="username" value="{{ username }}"/>:
 		<strong>{{ username }}</strong>
 	  </div>
 	  <div class="form-group">
-	    <label for="email">Email</label>
-	    <input class="form-control" onchange="validateCreateUser();" type="text" id="email" name="email" placeholder="Email" value="{{ email }}">
+	    <label for="email">&{'user-mgmt.email'}</label>
+	    <input class="form-control" onchange="validateCreateUser();" type="text" id="email" name="email" placeholder="&{'user-mgmt.email'}" value="{{ email }}">
 		<span id="badEmail" style="display: none;" class="alert-block alert-danger"><strong>Invalid email address.</strong></span>
 	    
 	  </div>
 	  <div class="form-group">
-	    <label for="password">Password</label>
-	    <input onchange="validateCreateUser();"  class="form-control" type="password" id="password" name="password" placeholder="Password"/>
+	    <label for="password">&{'user-mgmt.password'}</label>
+	    <input onchange="validateCreateUser();"  class="form-control" type="password" id="password" name="password" placeholder="&{'user-mgmt.password'}"/>
 	    
 	  </div>
 	  <div class="form-group">
-	    <label for="passwordRetry">Password (again)</label>
-	    <input onchange="validateCreateUser();" class="form-control"  type="password" id="passwordRetry" name="passwordRetry" placeholder="Password (again)"/>
-		<span id="badPassword" style="display: none;" class="alert-block alert-danger"><strong>Passwords dont match.</strong></span>
+	    <label for="passwordRetry">&{'user-mgmt.password-again'}</label>
+	    <input onchange="validateCreateUser();" class="form-control"  type="password" id="passwordRetry" name="passwordRetry" placeholder="&{'user-mgmt.password-again'}"/>
+		<span id="badPassword" style="display: none;" class="alert-block alert-danger"><strong>&{'user-mgmt.passwords-dont-match'}</strong></span>
 	  </div>
 	
 	  {{#if admin}}
-	  	  <label>Access to all agencies</label>
+	  	  <label>&{'user-mgmt.admin-access'}</label>
 	  	  <input type="hidden" name="admin" value="true"/>
 	  	  <input type="hidden" name="active" value="true"/>
 	  {{ else }}
 
 	  	  <div class="form-group">
-				<label class="control-label" for="inputAgency">Agency</label>
+				<label class="control-label" for="inputAgency">&{'user-mgmt.agency'}</label>
 		        <select class="form-control" name="agencyId" id="agencyId">
 					#{list items:agencies, as:'agency'}
 						<option value="${agency.id}" {{#ifeq agency.id '${agency.id}'}} selected="selected"{{/ifeq}}>${agency.name}</option>
@@ -96,13 +96,13 @@
 
 		  <div class="checkbox">
 		   	<label >
-		        <input type="checkbox" name="admin" id="admin" {{#if agencyAdmin}}checked{{/if}}> Admin Access
+		        <input type="checkbox" name="admin" id="admin" {{#if agencyAdmin}}checked{{/if}}> &{'user-mgmt.agency-admin'}
 		    </label> 
 		  </div>
 
 		  <div class="checkbox">
 		   	<label >
-		        <input type="checkbox" name="active" id="active" {{#if active}}checked{{/if}}> Active
+		        <input type="checkbox" name="active" id="active" {{#if active}}checked{{/if}}> &{'user-mgmt.active'}
 		      </label> 
 		  </div>
 
@@ -139,13 +139,13 @@
 
 <div class="container">
 
-	<h3>Account Management</h3>
+	<h3>&{'user-mgmt.account-management'}</h3>
 	
-	<p><a href="#createAccountModal" onclick="createAccount();">Create Account</a></p>
+	<p><a href="#createAccountModal" onclick="createAccount();">&{'user-mgmt.create-account'}</a></p>
 	
 	<table class="table">
 	 
-	 <tr><th>username</th><th>email</th><th>last login</th><th>agency</th><th>agency admin</th><th>active</th><th></th></tr>
+	 <tr><th>&{'user-mgmt.username'}</th><th>&{'user-mgmt.email'}</th><th>&{'user-mgmt.last-login'}</th><th>&{'user-mgmt.agency'}</th><th>&{'user-mgmt.agency-admin'}</th><th>&{'user-mgmt.active'}</th><th></th></tr>
 	 
 	 #{list items:accounts, as:'account'}
 	 	<tr><td>${account.username}</td><td>${account.email}</td>
@@ -153,7 +153,7 @@
 	 		<td>#{if account.agency}${account.agency.gtfsAgencyId}#{/if}</td>	 	
 	 		<td>#{if account.agencyAdmin}<span class="glyphicon glyphicon-ok-sign"></span>#{/if}#{else}--#{/else}</td>
 	 		<td>#{if account.active}<span class="glyphicon glyphicon-ok-sign"></span>#{/if}</td>
-	 		<td><a href="#editAccountModal" onclick="editAccount('${account.username}');">Edit</a></td>
+	 		<td><a href="#editAccountModal" onclick="editAccount('${account.username}');">&{'shared.button.edit'}</a></td>
 	 	</tr>
 	 #{/list }
 	 
@@ -164,14 +164,14 @@
 	   <div class="modal-content">
 	 	  <div class="modal-header">
 		    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-		    <h3 id="accountModalLabel">Create Account</h3>
+		    <h3 id="accountModalLabel">&{'user-mgmt.create-account'}</h3>
 		  </div>
 		  <div class="modal-body">
 		    <p></p>
 		  </div>
 		  <div class="modal-footer">
-		    <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-		    <button id="createAccountButton" class="btn btn-primary disabled">Save</button>
+		    <button class="btn" data-dismiss="modal" aria-hidden="true">&{'shared.button.close'}</button>
+		    <button id="createAccountButton" class="btn btn-primary disabled">&{'shared.button.save'}</button>
 		  </div>
 	   </div>
 	 </div>
@@ -188,8 +188,8 @@
 	        <p></p>
 	      </div>
 	      <div class="modal-footer">
-	        <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-	    	<button id="editAccountButton" class="btn btn-primary">Save</button>
+	        <button class="btn" data-dismiss="modal" aria-hidden="true">&{'shared.button.close'}</button>
+	    	<button id="editAccountButton" class="btn btn-primary">&{'shared.button.save'}</button>
 	      </div>
 	    </div><!-- /.modal-content -->
 	  </div><!-- /.modal-dialog -->
