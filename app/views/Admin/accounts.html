@@ -365,8 +365,13 @@
 		}
 		else
 		{
-			$('#badPassword').hide();
-			validData = false;
+			if($('#password').val() == '' && $('#passwordRetry').val() == '') {
+				$('#badPassword').hide();	
+			} 
+			else {
+				$('#badPassword').show();
+				validData = false;
+			}
 		}	
 		
 		validEditAccount = validData;
