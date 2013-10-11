@@ -82,7 +82,8 @@ public class Account extends Model {
     	
     	account.active = active;
     	
-    	account.password = Account.hash(password);
+        if(password != null && !password.isEmpty())
+    	   account.password = Account.hash(password);
     	
     	if(agency != null) {
     		account.agency = agency;
