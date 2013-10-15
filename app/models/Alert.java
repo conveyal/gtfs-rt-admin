@@ -1,6 +1,7 @@
 package models;
 
 import java.security.MessageDigest;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -24,7 +25,7 @@ import play.db.jpa.Model;
 
 @JsonIgnoreProperties({"entityId", "persistent", "pos"})
 @Entity
-public class Alert extends Model {
+public class Alert extends Model implements Comparable {
 
 	/*
 	active_period		TimeRange			repeated	 Time when the alert should be shown to the user. If missing, the alert will be shown as long as it appears in the feed. If multiple ranges are given, the alert will be shown during all of them.
@@ -74,7 +75,7 @@ public class Alert extends Model {
       return Alert.findById(Long.parseLong(id));
     }
 
-    static public List<Alert> findActiveAlerts(String agencyId) {
+    static public List<Alert> findActiveAlerts(String agencyId, Boolean publiclyVisible) {
     	
     	List<TimeRange> timeRanges = TimeRange.find("(startTime < now() or startTime is null) and (endTime > now() or endTime is null) order by startTime, endTime").fetch();
     	
@@ -83,7 +84,9 @@ public class Alert extends Model {
     	for(TimeRange tr : timeRanges){
     		
     		if(!alerts.containsKey(tr.alert.id) && (agencyId == null || tr.alert.agencyId.equals(agencyId))) {
-    			alerts.put(tr.alert.id, tr.alert);
+    			
+    			if(publiclyVisible == null || publiclyVisible == false || publiclyVisible == tr.alert.publiclyVisible)
+    				alerts.put(tr.alert.id, tr.alert);
     		}
     	}
     	
@@ -92,11 +95,17 @@ public class Alert extends Model {
     	for(Alert a : alertsWithoutRanges){
     		
     		if((agencyId == null || a.agencyId.equals(agencyId)) && a.timeRanges.isEmpty() && !alerts.containsKey(a.id)) {
-    			alerts.put(a.id, a);
+    			
+    			if(publiclyVisible == null || publiclyVisible == false || publiclyVisible == a.publiclyVisible)
+    				alerts.put(a.id, a);
     		}
     	}
  
-    	return new ArrayList<Alert>(alerts.values());
+    	ArrayList alertList = new ArrayList<Alert>(alerts.values());
+    	
+    	Collections.sort(alertList);
+    	
+    	return alertList;
     }
     
     static public List<Alert> findFutureAlerts(String agencyId) {
@@ -110,6 +119,7 @@ public class Alert extends Model {
     		if(!alerts.containsKey(tr.alert.id) && (agencyId == null || tr.alert.agencyId.equals(agencyId))) {
     			alerts.put(tr.alert.id, tr.alert);
     		}
+    		
     	}
     	
     	List<Alert> alertsWithoutRanges = Alert.findAll();
@@ -119,9 +129,14 @@ public class Alert extends Model {
     		if((agencyId == null || a.agencyId.equals(agencyId)) && a.timeRanges.isEmpty() && !alerts.containsKey(a.id)) {
     			alerts.put(a.id, a);
     		}
+    		
     	}
  
-    	return new ArrayList<Alert>(alerts.values());
+    	ArrayList alertList = new ArrayList<Alert>(alerts.values());
+    	
+    	Collections.sort(alertList);
+    	
+    	return alertList;
     }
     
     public Alert delete() {
@@ -143,6 +158,12 @@ public class Alert extends Model {
     	
     	return true;
     }
+
+	@Override
+	public int compareTo(Object o) {
+		
+		return -(this.lastUpdated.compareTo(((Alert)o).lastUpdated));
+	}
     
 
 }
