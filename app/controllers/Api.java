@@ -286,7 +286,7 @@ public class Api extends Controller {
     
     public static void activeAlerts(String agencyId) throws JsonMappingException, JsonGenerationException, IOException {
     	
-    	renderJSON(toJson(Alert.findActiveAlerts(agencyId), false));
+    	renderJSON(toJson(Alert.findActiveAlerts(agencyId, false), false));
     }
     
     public static void futureAlerts(String agencyId) throws JsonMappingException, JsonGenerationException, IOException {

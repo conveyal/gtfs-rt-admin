@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+ <meta charset="UTF-8">
+ <title></title>
+ <link href="styles/bootstrap.min.css" rel="stylesheet" media="screen">
+</head>
+<body style="padding: 10px;">
+
+<center><img src="images/setravi_logo.png"/></center>
+
+<hr/>
+
+#{list alerts, as:'alert' }
+<h4>${alert.agencyId}:  ${alert.headerText}</h4>
+<p>${alert.descriptionText}</p>
+<p><em>&{'rt.last-update'}: ${alert.lastUpdated.format('dd/MM/yy HH:mm')}</em></p>
+
+
+<hr/>
+#{/list}
+
+
+
+</body>
+</html>

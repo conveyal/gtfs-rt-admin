@@ -36,6 +36,10 @@ nav-bar.manage-users=Administrar cuentas
 nav-bar.select-agency=Organismos
 
 
+# rt format
+
+rt.last-update=Ultima actualización
+
 # shared
 
 shared.optional= Opcional
