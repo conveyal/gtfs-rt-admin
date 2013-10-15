@@ -15,8 +15,9 @@
 #{list alerts, as:'alert' }
 <h4>${alert.agencyId}:  ${alert.headerText}</h4>
 <p>${alert.descriptionText}</p>
+#{if alert.lastUpdated}
 <p><em>&{'rt.last-update'}: ${alert.lastUpdated.format('dd/MM/yy HH:mm')}</em></p>
-
+#{/if}
 
 <hr/>
 #{/list}
