@@ -162,7 +162,10 @@ public class Alert extends Model implements Comparable {
 	@Override
 	public int compareTo(Object o) {
 		
-		return -(this.lastUpdated.compareTo(((Alert)o).lastUpdated));
+		if(this.lastUpdated != null && ((Alert)o).lastUpdated != null)
+			return -(this.lastUpdated.compareTo(((Alert)o).lastUpdated));
+		else
+			return 0;
 	}
     
 
