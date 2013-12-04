@@ -6,7 +6,7 @@ var GtfsRtEditor = GtfsRtEditor || {};
 
 	Handlebars.registerHelper('timefmt', function(date) {
 		if(date)
-	  		return new Handlebars.SafeString(moment(date).tz(G.config.timeZone).format('llll'));
+	  		return new Handlebars.SafeString(moment(date).lang(G.config.lang).tz(G.config.timeZone).format('L') + ' ' + moment(date).lang('es').tz(G.config.timeZone).format('LT'));
 	  	else 
 	  		return new Handlebars.SafeString('');
 	});
@@ -207,13 +207,28 @@ G.AffectedTimesView = Backbone.View.extend({
 
 		this.$el.html(this.template({ranges: data}));
 
+		var zoneOffset = moment().tz(GtfsRtEditor.config.timeZone).zone();
+
 		for(i in  this.model.get('timeRanges')) {
 
-			this.$('#dtFrom_' + i).datetimepicker({language: 'es'}).data('datetimepicker').setDate(new Date(this.model.get('timeRanges')[i].startTime));
+			var startTime;
+			if(this.model.get('timeRanges')[i].startTime)
+				startTime = moment.unix(this.model.get('timeRanges')[i].startTime/1000).subtract('m', zoneOffset).toDate();
+			else
+				startTime = new Date(this.model.get('timeRanges')[i].startTime);
+
+			this.$('#dtFrom_' + i).datetimepicker({language: G.config.lang, format:G.config.dateTimeFormat}).data('datetimepicker').setDate(startTime);
 			
 			this.$('#dtFrom_' + i).on('changeDate', this.dateChange);
 
-			this.$('#dtTo_' + i).datetimepicker({language: 'es'}).data('datetimepicker').setDate(new Date(this.model.get('timeRanges')[i].endTime));
+			var endTime;
+
+			if(this.model.get('timeRanges')[i].endTime)
+				endTime = moment.unix(this.model.get('timeRanges')[i].endTime/1000).subtract('m', zoneOffset).toDate();
+			else
+				endTime = new Date(this.model.get('timeRanges')[i].endTime);
+
+			this.$('#dtTo_' + i).datetimepicker({language: G.config.lang, format:G.config.dateTimeFormat}).data('datetimepicker').setDate(endTime);
 
 			this.$('#dtTo_' + i).on('changeDate', this.dateChange);
 		}
@@ -221,16 +236,19 @@ G.AffectedTimesView = Backbone.View.extend({
 	},
 
 	dateChange : function(evt) {
+
+		var zoneOffset = moment().tz(GtfsRtEditor.config.timeZone).zone();
+
 		var pos = $(evt.target).data('position');
 		var fromto = $(evt.target).data('fromto');
 
 		var existingRanges = this.model.get('timeRanges');
 
 		if(fromto == 'from') {
-			existingRanges[pos].startTime = evt.date.getTime();
+			existingRanges[pos].startTime = moment(evt.date).add('m', zoneOffset);
 		}
 		else if(fromto == 'to') {
-			existingRanges[pos].endTime = evt.date.getTime();
+			existingRanges[pos].endTime = moment(evt.date).add('m', zoneOffset);
 		}
 
 		this.model.set('timeRanges', existingRanges);
@@ -425,8 +443,8 @@ G.AlertEditorView = Backbone.View.extend({
 
 		this.loadRoutes();
 
-		this.$("#createdTime").text(moment(this.model.created).tz(G.config.timeZone).format('llll'));
-		this.$("#lastUpdatedTime").text(moment(this.model.lastUpdated).tz(G.config.timeZone).format('llll'));
+		this.$("#createdTime").text(moment(this.model.created).lang(G.config.lang).tz(G.config.timeZone).format('L') + ' ' + moment(this.model.created).lang('es').tz(G.config.timeZone).format('LT'));
+		this.$("#lastUpdatedTime").text(moment(this.model.lastUpdated).lang(G.config.lang).tz(G.config.timeZone).format('L') + ' ' + moment(this.model.lastUpdated).lang('es').tz(G.config.timeZone).format('LT'));
 
 		this.$("select#route").change(function(){
 	    	this_.loadStops();
