@@ -8,7 +8,9 @@ var GtfsRtEditor = GtfsRtEditor || {};
         mapKey : 'map.key-abc123',
         timeZone : 'America/Mexico_City',
         lang: 'es',
-        dateTimeFormat : 'dd/MM/yyyy hh:mm'
+        dateTimeFormat : 'dd/MM/yyyy hh:mm',
+        defaultLat: 19.434,
+        defaultLon: -99.133
     };
 
 })(GtfsRtEditor, jQuery);
