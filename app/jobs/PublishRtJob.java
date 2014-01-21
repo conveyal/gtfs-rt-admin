@@ -1,6 +1,8 @@
 package jobs;
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
@@ -42,80 +44,86 @@ public class PublishRtJob extends Job {
 	static HashMap<String,String> agencyHashes = new HashMap<String, String>();
 		
 	public void doJob() throws UnsupportedEncodingException {
+
+		SimpleDateFormat formatNow = 
+		    new SimpleDateFormat("EEEE d 'de' MMMM 'de' yyyy", new Locale("es", "ES"));
+		String now = formatNow.format(new Date());
+				
+		AmazonS3 conn = null;
 		
-		if(Play.configuration.getProperty("aws.key") != null && Play.configuration.getProperty("aws.secret") != null)
-		{
-			
+		if(Play.configuration.getProperty("aws.key") != null && Play.configuration.getProperty("aws.secret") != null) {
 			AWSCredentials credentials = new BasicAWSCredentials(Play.configuration.getProperty("aws.key"), Play.configuration.getProperty("aws.secret"));
-			AmazonS3 conn = new AmazonS3Client(credentials);
+			conn = new AmazonS3Client(credentials);
 			conn.setEndpoint("s3.amazonaws.com");
+		}
+		
+		Map<String, Object> args = new HashMap<String, Object>();
+		
+		try {
 			
-			Map<String, Object> args = new HashMap<String, Object>();
+			// generate full html template 
 			
-			try {
-				
-				// generate full html template 
-				
-				List<Alert> alerts = Alert.findActiveAlerts(null, true);
-				args.put("alerts", alerts);
-				
-				String newHash = publishHtml("pub/gtfs-rt.html", args, fullHtmlHash, conn, "setravi", "gtfs-rt.html"); 
-				
-				if(!newHash.equals(fullHtmlHash)) {
-					synchronized(fullHtmlHash) {
-						fullHtmlHash = newHash;
-					}
-				}
+			List<Alert> alerts = Alert.findActiveAlerts(null, true);
+			args.put("alerts", alerts);
+			args.put("now", now);
 			
-				List<Agency> agencies = Agency.findAll();
-				
-				for(Agency agency : agencies) {
-					
-					String agencyId = agency.gtfsAgencyId;
-					
-					synchronized(agencyHashes) {
-						if(!agencyHashes.containsKey(agencyId)) {
-							agencyHashes.put(agencyId, "");
-						}	
-					}
-					
-					List<Alert> agencyAlerts = Alert.findActiveAlerts(agencyId, true);
-					args.put("alerts", agencyAlerts);
-					
-					String newAgencyHash = publishHtml("pub/gtfs-rt.html", args, agencyHashes.get(agencyId), conn, "setravi", "gtfs-rt-" + agencyId + ".html"); 
-					
-					if(!newHash.equals(agencyHashes)) {
-						synchronized(agencyHashes) {
-							agencyHashes.put(agencyId, newAgencyHash);
-						}
-					}
-						
-				}
-					
-				synchronized(publishSucessful) {
-					publishSucessful = true;
-				}
+			String newHash = publishHtml("pub/gtfs-rt.html", args, fullHtmlHash, conn, "setravi", "gtfs-rt.html"); 
 			
-			}
-			catch(Exception e) {
-				
-				synchronized(publishSucessful) {
-					publishSucessful = false;
-				}
-				
+			if(!newHash.equals(fullHtmlHash)) {
 				synchronized(fullHtmlHash) {
-					fullHtmlHash = "";	
+					fullHtmlHash = newHash;
 				}
+			}
+		
+			List<Agency> agencies = Agency.findAll();
+			
+			for(Agency agency : agencies) {
+				
+				String agencyId = agency.gtfsAgencyId;
 				
 				synchronized(agencyHashes) {
-					agencyHashes.clear();
+					if(!agencyHashes.containsKey(agencyId)) {
+						agencyHashes.put(agencyId, "");
+					}	
 				}
 				
+				List<Alert> agencyAlerts = Alert.findActiveAlerts(agencyId, true);
+				args.put("alerts", agencyAlerts);
+				args.put("now", now);
+
+				String newAgencyHash = publishHtml("pub/gtfs-rt.html", args, agencyHashes.get(agencyId), conn, "setravi", "gtfs-rt-" + agencyId + ".html"); 
+				
+				if(!newHash.equals(agencyHashes)) {
+					synchronized(agencyHashes) {
+						agencyHashes.put(agencyId, newAgencyHash);
+					}
+				}
+					
 			}
+				
+			synchronized(publishSucessful) {
+				publishSucessful = true;
+			}
+		
+		}
+		catch(Exception e) {
+			
+			synchronized(publishSucessful) {
+				publishSucessful = false;
+			}
+			
+			synchronized(fullHtmlHash) {
+				fullHtmlHash = "";	
+			}
+			
+			synchronized(agencyHashes) {
+				agencyHashes.clear();
+			}
+			
 		}
 	}
 	
-	private String publishHtml(String templatePath, Map<String, Object> args, String previousHash, AmazonS3 conn, String remoteBucket, String remoteFile) throws IOException, NoSuchAlgorithmException {
+	private String publishHtml(String templatePath, Map<String, Object> args, String previousHash,  AmazonS3 conn, String remoteBucket, String remoteFile) throws IOException, NoSuchAlgorithmException {
 		
 		Template template = TemplateLoader.load(templatePath);
 		String fullHtml = template.render(args);
@@ -127,11 +135,25 @@ public class PublishRtJob extends Job {
 			
 			stream.reset();
 			
+			File file = new File("public/feeds/", remoteFile);
+			FileOutputStream fileOutputStream = new FileOutputStream(file);
+			
+			int read = 0;
+			byte[] bytes = new byte[1024];
+	 
+			while ((read = stream.read(bytes)) != -1) {
+				fileOutputStream.write(bytes, 0, read);
+			}
+
+			stream.reset();
+			
 			ObjectMetadata html = new ObjectMetadata();
 			html.setContentType("text/html");
 			
-			conn.putObject(remoteBucket, remoteFile, stream, html);
-			conn.setObjectAcl(remoteBucket, remoteFile, CannedAccessControlList.PublicRead);
+			if(conn != null) {
+				conn.putObject(remoteBucket, remoteFile, stream, html);
+				conn.setObjectAcl(remoteBucket, remoteFile, CannedAccessControlList.PublicRead);
+			}
 		}
 		
 		return currentHash;
