@@ -5,22 +5,94 @@
  <meta charset="UTF-8">
  <title></title>
  <link href="styles/bootstrap.min.css" rel="stylesheet" media="screen">
-</head>
-<body style="padding: 10px;">
 
-<center><img src="images/setravi_logo.png"/></center>
+<script>
+     function refresh() {
+    	 window.location.reload(true);
+     }
+
+     setTimeout(refresh, 120000);
+</script>
+
+<style>
+
+.header {
+	background: #7a7a7a; /* Old browsers */
+	background: -moz-linear-gradient(left,  #7a7a7a 0%, #b5b5b5 50%, #7a7a7a 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, right top, color-stop(0%,#7a7a7a), color-stop(50%,#b5b5b5), color-stop(100%,#7a7a7a)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(left,  #7a7a7a 0%,#b5b5b5 50%,#7a7a7a 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(left,  #7a7a7a 0%,#b5b5b5 50%,#7a7a7a 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(left,  #7a7a7a 0%,#b5b5b5 50%,#7a7a7a 100%); /* IE10+ */
+	background: linear-gradient(to right,  #7a7a7a 0%,#b5b5b5 50%,#7a7a7a 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#7a7a7a', endColorstr='#7a7a7a',GradientType=1 ); /* IE6-9 */
+
+	font-weight: bold;
+	font-size: 14px;
+	line-height: 30px;
+	width: 100%;
+	text-align: center;
+}
+
+.alert {
+	padding: 5px;	
+}
+
+.logo {
+	padding: 5px;
+	float: left;
+	margin-right: 15px;
+}
+
+.data {
+
+}
+
+.updated {
+	margin-right: 10px;
+	float: right;
+	font-size: 90%;
+}
+
+
+</style>
+
+</head>
+<body style="padding: 0px;">
+
+<div class="header">SISTEMA DE ALERTAS</div> 
+<center>${now}</center>
 
 <hr/>
 
 #{list alerts, as:'alert' }
-<h4>${alert.agencyId}:  ${alert.headerText}</h4>
-<p>${alert.descriptionText}</p>
-#{if alert.lastUpdated}
-<p><em>&{'rt.last-update'}: ${alert.lastUpdated.format('dd/MM/yy HH:mm')}</em></p>
-#{/if}
+
+	<div class="alert">
+		
+		<div class="logo">
+			<img  style="width: 50px;" src="agencies/
+		${alert.agencyId}.JPG"/>
+		</div>
+		
+		<div class="data">	
+			#{if alert.lastUpdated}
+				<p class="updated"><em>&{'rt.last-update'}: ${alert.lastUpdated.format('dd/MM/yy HH:mm')}</em></p>
+			#{/if}
+		
+			<h4>${alert.agencyId}: ${alert.headerText}</h4>
+			<p>${alert.descriptionText}</p>
+	 	</div>
+		
+	</div>
+	
+	<br clear="all"/>
+
+	
+
+#{/list}
+
 
 <hr/>
-#{/list}
+
 
 
 
