@@ -121,6 +121,32 @@ create.created-at=Creado
 create.updated-at=Actualizado
 
 
+# Select options
+
+select.none=(nada)
+select.technical-problem=Problemas técnicos
+select.strike=Huelga
+select.demonstration=Manifestación
+select.accident=Accidente
+select.holiday=Día festivo
+select.weather=Condiciones atmosféricas
+select.maintenance=Mantenimiento
+select.construction=Obras
+select.police-activity=Operativo policiaco
+select.medical-emergency=Emergencia médica
+select.unknown-cause=Causa desconocida
+select.other-cause=Otra causa
+select.no-service=Sin servicio
+select.reduced-service=Servicio limitado
+select.significant-delays=Retrasos significativos
+select.detour=Desvío
+select.additional-service=Servicio adicional
+select.modified-service=Servicio modificado
+select.stop-moved=Parada reubicada
+select.other-effect=Otro efecto
+select.unknown-effect=Efecto desconocido
+
+
 # user management
 
 #Change password
