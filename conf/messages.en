@@ -1,0 +1,182 @@
+# auth
+
+secure.title=
+secure.username=User
+secure.password=Password
+secure.remember= Remember me
+secure.signin=Sign in
+secure.error=Incorrect username or password
+secure.logout=Log out 
+secure.change-password=Change password
+
+
+# app 
+
+application.name=Public Transit Alerts
+
+# nav-bar
+
+nav-bar.agency=Transit Agency Information
+nav-bar.home=Home
+nav-bar.contact=Contact 
+nav-bar.user-greeting=Welcome!
+
+nav-bar.export=Export
+nav-bar.admin=Administrator
+
+nav-bar.map=Alerts Map
+nav-bar.all=All Alerts
+
+nav-bar.logout=Log out
+
+nav-bar.settings=Preferences
+
+nav-bar.manage-users=Manage users
+
+nav-bar.select-agency=Agencies
+
+
+# rt format
+
+rt.last-update=Last Update
+
+# shared
+
+shared.optional= Optional
+shared.required= Required
+
+shared.alerts=Alerts
+
+shared.details=Details
+
+shared.button.save=Save
+shared.button.delete=Delete
+shared.button.save-continue=Save and continue
+shared.button.edit=Edit
+shared.button.close=Close
+shared.button.cancel=Cancel
+shared.button.add=Add
+shared.button.update=Update
+shared.button.remove=Remove
+shared.button.change=Change
+
+shared.explore-search-routes=Explore/Search routes
+shared.new-route=New route
+
+shared.stop=Stations/Stops
+shared.route=Routes
+
+shared.loading=Loading
+
+# main 
+
+main.active-alerts=Active alerts
+main.future-alerts=Future alerts
+
+main.no-active-alerts=No active alerts
+main.no-future-alerts=No future alerts
+
+main.new-alert=Create new alert
+
+main.no-title=No title
+main.no-description=No description
+
+main.entities=Service Affected:
+
+
+# create
+
+create-alert.title=Create/edit alert
+
+create.general-info=General Information
+create.times=Dates / Times Affected
+create.entities=Transit Service Affected
+
+create.no-routes-stops=No routes / stops selected
+create.add-range=Additional Dates / Times
+create.save-failed=Could not create alert
+create.publicly-visible=Publicly Visible
+
+create.title=Title
+create.description=Description
+create.comments=Comments
+create.cause=Cause
+create.effect=Effect
+
+create.from=From
+create.to=To
+
+create.show-map=Show Map
+create.hide-map=Hide Map
+
+create.times=Dates / Times Affected
+
+create.entities=Transit Service Affected
+
+create.add-route=Add route
+
+create.add-stop=Add stop
+
+create.created-at=Created at
+create.updated-at=Updated at
+
+
+# Select options
+
+select.none=(None)
+select.technical-problem=Technical Problem
+select.strike=Strike
+select.demonstration=Demonstration
+select.accident=Accident
+select.holiday=Holiday
+select.weather=Weather
+select.maintenance=Maintenance
+select.construction=Construction
+select.police-activity=Police Activity
+select.medical-emergency=Medical Emergency
+select.unknown-cause=Unknown Cause
+select.other-cause=Other Cause
+select.no-service=No Service
+select.reduced-service=Reduced Service
+select.significant-delays=Significant Delays
+select.detour=Detour
+select.additional-service=Additional Service
+select.modified-service=Modified Service
+select.stop-moved=Stop Moved
+select.other-effect=Other Effect
+select.unknown-effect=Unknown Effect
+
+
+# user management
+
+#Change password
+
+user-mgmt.change-password-prompt=Type your current and new passwords
+user-mgmt.current-password=Current password
+user-mgmt.password-incorrect=Incorrect password
+user-mgmt.new-password=New password
+user-mgmt.new-password-again= New password (again)
+user-mgmt.passwords-dont-match=Passwords don't match.
+
+
+#Account management
+
+user-mgmt.account-management=Account Management
+user-mgmt.create-account=Create account
+user-mgmt.username=User
+user-mgmt.email=Email
+user-mgmt.last-login=Last login
+user-mgmt.agency=Agency
+user-mgmt.agency-admin=Agency administrator
+user-mgmt.active=Active
+
+user-mgmt-username-already-in-use=Username already in use
+user-mgmt-invalid-email=Invalid email
+
+# Create account
+user-mgmt.password=Password
+user-mgmt.password-again=Password (again)
+user-mgmt.agency=Transit Agency
+user-mgmt.admin-access=Administrator Privileges
+
+user-mgmt.edit-account=Edit account
