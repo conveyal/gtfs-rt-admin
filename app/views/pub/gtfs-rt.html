@@ -34,23 +34,19 @@
 }
 
 .alert {
-	padding: 5px;	
+	padding: 15px;	
+	margin: 0px;
 }
 
-.logo {
-	padding: 5px;
-	float: left;
-	margin-right: 15px;
-}
 
 .data {
-
+	width: 75%;	
 }
 
 .updated {
 	margin-right: 10px;
 	float: right;
-	font-size: 90%;
+	font-size: 80%;
 }
 
 
@@ -59,8 +55,12 @@
 </head>
 <body style="padding: 0px;">
 
-<div class="header">SISTEMA DE ALERTAS</div> 
+<div class="header">SISTEMA DE AVISOS</div> 
 <center>${now}</center>
+
+<p><img title="GDF SETRAVI" style="width: 100px; float: right; margin-right: 10px;" src="GDF_SETRAVI.JPG"/></p>
+
+<br clear="all"/>
 
 <hr/>
 
@@ -68,30 +68,26 @@
 
 	<div class="alert">
 		
-		<div class="logo">
-			<img  style="width: 50px;" src="agencies/
-		${alert.agencyId}.JPG"/>
-		</div>
-		
-		<div class="data">	
+		<span class="data">
 			#{if alert.lastUpdated}
-				<p class="updated"><em>&{'rt.last-update'}: ${alert.lastUpdated.format('dd/MM/yy HH:mm')}</em></p>
+				<p class="updated"><em>&{'rt.last-update'}:<br/> ${alert.lastUpdated.format('dd/MM/yy HH:mm')}</em></p>
 			#{/if}
-		
-			<h4>${alert.agencyId}: ${alert.headerText}</h4>
+		</span>
+
+		<span class="data">	
+			
+			<h4><img title="${alert.agencyId}" style="width: 35px; margin-right: 10px;" src="agencies/${alert.agencyId}.JPG"/> <nobr>${alert.headerText}</nobr></h4>
 			<p>${alert.descriptionText}</p>
-	 	</div>
+	 	</span>
 		
 	</div>
-	
-	<br clear="all"/>
 
-	
+<hr/>
 
 #{/list}
 
 
-<hr/>
+
 
 
 
