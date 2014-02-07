@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.TimeZone;
 
 import org.apache.commons.codec.binary.Hex;
 
@@ -45,6 +46,12 @@ public class PublishRtJob extends Job {
 		
 	public void doJob() throws UnsupportedEncodingException {
 
+		// create time zone object 
+		TimeZone tzone = TimeZone.getTimeZone("America/Mexico_City");
+	      
+	    // set time zone to default
+	    tzone.setDefault(tzone);
+		
 		SimpleDateFormat formatNow = 
 		    new SimpleDateFormat("EEEE d 'de' MMMM 'de' yyyy", new Locale("es", "ES"));
 		String now = formatNow.format(new Date());
