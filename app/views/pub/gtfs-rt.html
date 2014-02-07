@@ -58,7 +58,7 @@
 <div class="header">SISTEMA DE AVISOS</div> 
 <center>${now}</center>
 
-<p><img title="GDF SETRAVI" style="width: 100px; float: right; margin-right: 10px;" src="GDF_SETRAVI.JPG"/></p>
+<p><img title="GDF SETRAVI" style="width: 150px; float: right; margin-right: 10px;" src="GDF_SETRAVI.JPG"/></p>
 
 <br clear="all"/>
 
@@ -78,6 +78,19 @@
 			
 			<h4><img title="${alert.agencyId}" style="width: 35px; margin-right: 10px;" src="agencies/${alert.agencyId}.JPG"/> <nobr>${alert.headerText}</nobr></h4>
 			<p>${alert.descriptionText}</p>
+			
+				#{list alert.affectedEntities(), as:'affectedEntity' }
+				
+					#{if affectedEntity_isFirst}
+						<p><strong>Servicios Afectados:</strong>
+					#{/if}
+				
+					${affectedEntity.description}#{if affectedEntity_isLast}#{/if}#{else},#{/else}
+					
+				#{/list}
+				
+				
+			</p>
 	 	</span>
 		
 	</div>

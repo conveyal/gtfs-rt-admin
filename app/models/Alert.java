@@ -74,6 +74,13 @@ public class Alert extends Model implements Comparable {
     public static Alert factory(String id) {
       return Alert.findById(Long.parseLong(id));
     }
+    
+    public List<InformedEntity> affectedEntities() {
+    	
+    	List<InformedEntity> entities = InformedEntity.find("alert = ?", this).fetch();
+    	return entities;
+   
+    }
 
     static public List<Alert> findActiveAlerts(String agencyId, Boolean publiclyVisible) {
     	
