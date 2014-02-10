@@ -55,6 +55,8 @@ public class PublishRtJob extends Job {
 		SimpleDateFormat formatNow = 
 		    new SimpleDateFormat("EEEE d 'de' MMMM 'de' yyyy", new Locale("es", "ES"));
 		String now = formatNow.format(new Date());
+		
+		now = now.substring(0, 1).toUpperCase() + now.substring(1);
 				
 		AmazonS3 conn = null;
 		
