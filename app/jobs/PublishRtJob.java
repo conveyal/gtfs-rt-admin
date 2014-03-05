@@ -221,13 +221,18 @@ public class PublishRtJob extends Job {
 				
 				if(!newHash.isEmpty() && !newHash.equals(currentHash)) {
 					
-					FileInputStream pbStream = new FileInputStream(new File("public/feeds/gtfs-rt.pb"));
-					FileInputStream jsonStream = new FileInputStream(new File("public/feeds/gtfs-rt.json"));
+					File jsonFile = new File("public/feeds/gtfs-rt.json");
+					File pbFile = new File("public/feeds/gtfs-rt.pb");
+					
+					FileInputStream pbStream = new FileInputStream(pbFile);
+					FileInputStream jsonStream = new FileInputStream(jsonFile);
 					
 					ObjectMetadata protoBuff = new ObjectMetadata();
+					protoBuff.setContentLength(pbFile.length());
 					protoBuff.setContentType("application/x-protobuf");
 					
 					ObjectMetadata json = new ObjectMetadata();
+					json.setContentLength(jsonFile.length());
 					json.setContentType("text/json");
 					
 					if(conn != null) {
@@ -284,8 +289,8 @@ public class PublishRtJob extends Job {
 
 			stream.reset();
 			
-			
 			ObjectMetadata html = new ObjectMetadata();
+			html.setContentLength(file.length());
 			html.setContentType("text/html");
 			
 			if(conn != null) {
