@@ -217,7 +217,7 @@ public class PublishRtJob extends Job {
 			try {
 				stream = new FileInputStream(new File("public/feeds/gtfs-rt.pb"));
 				newHash = Hex.encodeHexString(Md5Utils.computeMD5Hash(stream));
-				
+				stream.reset();
 				if(!newHash.isEmpty() && !newHash.equals(currentHash)) {
 					
 					FileInputStream jsonStream = new FileInputStream(new File("public/feeds/gtfs-rt.json"));
@@ -280,7 +280,7 @@ public class PublishRtJob extends Job {
 			}
 
 			stream.reset();
-			fileOutputStream.close();
+			
 			
 			ObjectMetadata html = new ObjectMetadata();
 			html.setContentType("text/html");
@@ -289,6 +289,8 @@ public class PublishRtJob extends Job {
 				conn.putObject(remoteBucket, remoteFile, stream, html);
 				conn.setObjectAcl(remoteBucket, remoteFile, CannedAccessControlList.PublicRead);
 			}
+			
+			fileOutputStream.close();
 		}
 		
 		return currentHash;
