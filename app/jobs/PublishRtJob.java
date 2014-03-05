@@ -217,9 +217,11 @@ public class PublishRtJob extends Job {
 			try {
 				stream = new FileInputStream(new File("public/feeds/gtfs-rt.pb"));
 				newHash = Hex.encodeHexString(Md5Utils.computeMD5Hash(stream));
-				stream.reset();
+				stream.close();
+				
 				if(!newHash.isEmpty() && !newHash.equals(currentHash)) {
 					
+					FileInputStream pbStream = new FileInputStream(new File("public/feeds/gtfs-rt.pb"));
 					FileInputStream jsonStream = new FileInputStream(new File("public/feeds/gtfs-rt.json"));
 					
 					ObjectMetadata protoBuff = new ObjectMetadata();
@@ -229,17 +231,18 @@ public class PublishRtJob extends Job {
 					json.setContentType("text/json");
 					
 					if(conn != null) {
-						conn.putObject(remoteBucket, "gtfs-rt.pb", stream, protoBuff);
+						conn.putObject(remoteBucket, "gtfs-rt.pb", pbStream, protoBuff);
 						conn.setObjectAcl(remoteBucket, "gtfs-rt.pb", CannedAccessControlList.PublicRead);
 						
 						conn.putObject(remoteBucket, "gtfs-rt.json", jsonStream, json);
 						conn.setObjectAcl(remoteBucket, "gtfs-rt.json", CannedAccessControlList.PublicRead);
 					}
 					
+					pbStream.close();
 					jsonStream.close();
 				}
 				
-				stream.close();
+
 				
 			} catch (Exception e1) {
 				// TODO Auto-generated catch block
