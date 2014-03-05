@@ -2,6 +2,8 @@ package jobs;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -16,9 +18,12 @@ import java.util.Map;
 import java.util.TimeZone;
 
 import org.apache.commons.codec.binary.Hex;
+import org.codehaus.jackson.map.ObjectMapper;
 
 import models.Agency;
 import models.Alert;
+import models.InformedEntity;
+import models.TimeRange;
 
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.BasicAWSCredentials;
@@ -28,6 +33,7 @@ import com.amazonaws.services.s3.model.Bucket;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.util.Md5Utils;
+import com.google.transit.realtime.GtfsRealtime;
 
 import play.Logger;
 import play.Play;
@@ -76,6 +82,8 @@ public class PublishRtJob extends Job {
 			args.put("alerts", alerts);
 			args.put("now", now);
 			
+			publishPb(alerts, conn, "setravi");
+			
 			String newHash = publishHtml("pub/gtfs-rt.html", args, fullHtmlHash, conn, "setravi", "gtfs-rt.html"); 
 			
 			if(!newHash.equals(fullHtmlHash)) {
@@ -99,7 +107,7 @@ public class PublishRtJob extends Job {
 				List<Alert> agencyAlerts = Alert.findActiveAlerts(agencyId, true);
 				args.put("alerts", agencyAlerts);
 				args.put("now", now);
-
+								
 				String newAgencyHash = publishHtml("pub/gtfs-rt.html", args, agencyHashes.get(agencyId), conn, "setravi", "gtfs-rt-" + agencyId + ".html"); 
 				
 				if(!newHash.equals(agencyHashes)) {
@@ -132,6 +140,123 @@ public class PublishRtJob extends Job {
 		}
 	}
 	
+	private void publishPb(List<Alert> alerts, AmazonS3 conn, String remoteBucket) {
+		
+		FileInputStream stream;
+		String currentHash = "";
+		try {
+			stream = new FileInputStream(new File("public/feeds/gtfs-rt.pb"));
+			currentHash = Hex.encodeHexString(Md5Utils.computeMD5Hash(stream));
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
+
+		GtfsRealtime.FeedMessage.Builder feedBuilder = GtfsRealtime.FeedMessage.newBuilder();
+		
+		feedBuilder.getHeaderBuilder().setGtfsRealtimeVersion("1.0").setTimestamp(new Date().getTime());		
+		
+		for(Alert alert : alerts) {
+			
+			GtfsRealtime.FeedEntity.Builder entity = feedBuilder.addEntityBuilder();
+			
+			entity.setId(alert.id.toString());
+			
+			GtfsRealtime.Alert.Builder alertBuilder = entity.getAlertBuilder();
+				
+			alertBuilder.getHeaderTextBuilder().addTranslationBuilder().setLanguage("es").setText(alert.headerText);
+			alertBuilder.getDescriptionTextBuilder().addTranslationBuilder().setLanguage("es").setText(alert.descriptionText);	
+			
+			for(TimeRange range : alert.timeRanges) {
+				
+				GtfsRealtime.TimeRange.Builder period = GtfsRealtime.TimeRange.newBuilder();
+				
+				if(range.startTime != null)
+					period.setStart(range.startTime.getTime());
+				
+				if(range.endTime != null)
+					period.setStart(range.endTime.getTime());
+				
+				alertBuilder.addActivePeriod(period);
+			}
+			
+			for(InformedEntity ie : alert.informedEntities) {
+				GtfsRealtime.EntitySelector.Builder entitySelector = GtfsRealtime.EntitySelector.newBuilder();
+				
+				entitySelector.setAgencyId(alert.agencyId);
+				
+				if(ie.routeId != null)
+					entitySelector.setRouteId(ie.routeId);
+				
+				if(ie.stopId != null)
+					entitySelector.setStopId(ie.stopId);
+				
+				alertBuilder.addInformedEntity(entitySelector);
+			}
+			entity.setAlert(alertBuilder);
+			feedBuilder.addEntity(entity);
+		}
+		
+		FileOutputStream fos;
+		try {
+			fos = new FileOutputStream(new File("public/feeds/gtfs-rt.pb"));
+			GtfsRealtime.FeedMessage feed = feedBuilder.build();
+			
+			feed.writeTo(fos);
+			
+			fos.close();
+			
+			ObjectMapper mapper = new ObjectMapper();
+			JsonHeader header = new JsonHeader();
+			header.alerts = alerts;
+			mapper.writeValue(new File("public/feeds/gtfs-rt.json"), header);
+			
+			String newHash = "";
+			
+			try {
+				stream = new FileInputStream(new File("public/feeds/gtfs-rt.pb"));
+				newHash = Hex.encodeHexString(Md5Utils.computeMD5Hash(stream));
+				
+				if(!newHash.isEmpty() && !newHash.equals(currentHash)) {
+					
+					FileInputStream jsonStream = new FileInputStream(new File("public/feeds/gtfs-rt.json"));
+					
+					ObjectMetadata protoBuff = new ObjectMetadata();
+					protoBuff.setContentType("application/x-protobuf");
+					
+					ObjectMetadata json = new ObjectMetadata();
+					json.setContentType("text/json");
+					
+					if(conn != null) {
+						conn.putObject(remoteBucket, "gtfs-rt.pb", stream, protoBuff);
+						conn.setObjectAcl(remoteBucket, "gtfs-rt.pb", CannedAccessControlList.PublicRead);
+						
+						conn.putObject(remoteBucket, "gtfs-rt.json", jsonStream, json);
+						conn.setObjectAcl(remoteBucket, "gtfs-rt.json", CannedAccessControlList.PublicRead);
+					}
+					
+					jsonStream.close();
+				}
+				
+				stream.close();
+				
+			} catch (Exception e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			
+			
+			
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	
+		
+		
+	}
+	
 	private String publishHtml(String templatePath, Map<String, Object> args, String previousHash,  AmazonS3 conn, String remoteBucket, String remoteFile) throws IOException, NoSuchAlgorithmException {
 		
 		Template template = TemplateLoader.load(templatePath);
@@ -155,6 +280,7 @@ public class PublishRtJob extends Job {
 			}
 
 			stream.reset();
+			fileOutputStream.close();
 			
 			ObjectMetadata html = new ObjectMetadata();
 			html.setContentType("text/html");
@@ -166,6 +292,11 @@ public class PublishRtJob extends Job {
 		}
 		
 		return currentHash;
+	}
+	
+	public class JsonHeader {
+		public List<Alert> alerts = null;
+		public Date timestamp = new Date();
 	}
 	
 }

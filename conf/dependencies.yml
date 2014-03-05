@@ -10,7 +10,7 @@ require:
     - org.onebusaway -> onebusaway-gtfs 1.3.2
     - org.geotools -> gt-main 8.0-M4
     - org.opentripplanner -> opentripplanner-utils 0.9.1
-
+    - com.google.protobuf -> protobuf-java 2.5.0
 
 repositories:
 
