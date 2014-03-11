@@ -42,7 +42,7 @@ import play.jobs.Every;
 import play.templates.Template;
 import play.templates.TemplateLoader;
 
-@Every("10s")
+@Every("1m")
 public class PublishRtJob extends Job {
 
 	static Boolean publishSucessful = true;

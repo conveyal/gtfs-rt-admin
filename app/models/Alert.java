@@ -48,10 +48,8 @@ public class Alert extends Model implements Comparable {
 	
 	public String agencyId;
 	
-	@JsonIgnore
 	public String cause;
 	
-	@JsonIgnore
 	public String effect;
 	
 	@JsonIgnore
@@ -73,7 +71,6 @@ public class Alert extends Model implements Comparable {
     @JsonIgnore
     public Date lastUpdated;
     
-    @JsonIgnore
     public Boolean publiclyVisible;
     
     @JsonIgnore
