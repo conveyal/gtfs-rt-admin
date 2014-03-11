@@ -16,6 +16,7 @@ import javax.persistence.OneToMany;
 
 import org.apache.commons.codec.binary.Hex;
 import org.codehaus.jackson.annotate.JsonCreator;
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonManagedReference;
 import org.hsqldb.lib.MD5;
@@ -48,21 +49,31 @@ public class Alert extends Model implements Comparable {
 	public String agencyId;
 	
 	public String cause;
+	
 	public String effect;
 	
+	@JsonIgnore
     public String url;
-    public String headerText;
+    
+	@JsonIgnore
+	public String headerText;
     
     @Column(length = 8000,columnDefinition="TEXT")
     public String descriptionText;
     
+    @JsonIgnore
     @Column(length = 8000,columnDefinition="TEXT")
     public String commentsText;
     
+    @JsonIgnore
     public Date created;
+    
+    @JsonIgnore
     public Date lastUpdated;
     
     public Boolean publiclyVisible;
+    
+    @JsonIgnore
     public Boolean deleted;
     
     @JsonCreator
@@ -73,6 +84,13 @@ public class Alert extends Model implements Comparable {
     @JsonCreator
     public static Alert factory(String id) {
       return Alert.findById(Long.parseLong(id));
+    }
+    
+    public List<InformedEntity> affectedEntities() {
+    	
+    	List<InformedEntity> entities = InformedEntity.find("alert = ?", this).fetch();
+    	return entities;
+   
     }
 
     static public List<Alert> findActiveAlerts(String agencyId, Boolean publiclyVisible) {
