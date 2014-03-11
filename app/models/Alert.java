@@ -52,28 +52,22 @@ public class Alert extends Model implements Comparable {
 	
 	public String effect;
 	
-	@JsonIgnore
     public String url;
     
-	@JsonIgnore
 	public String headerText;
     
     @Column(length = 8000,columnDefinition="TEXT")
     public String descriptionText;
     
-    @JsonIgnore
     @Column(length = 8000,columnDefinition="TEXT")
     public String commentsText;
     
-    @JsonIgnore
     public Date created;
     
-    @JsonIgnore
     public Date lastUpdated;
     
     public Boolean publiclyVisible;
     
-    @JsonIgnore
     public Boolean deleted;
     
     @JsonCreator
