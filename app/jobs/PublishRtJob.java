@@ -42,7 +42,7 @@ import play.jobs.Every;
 import play.templates.Template;
 import play.templates.TemplateLoader;
 
-@Every("1m")
+@Every("10s")
 public class PublishRtJob extends Job {
 
 	static Boolean publishSucessful = true;
@@ -125,6 +125,8 @@ public class PublishRtJob extends Job {
 		}
 		catch(Exception e) {
 			
+			Logger.error(e.toString());
+			
 			synchronized(publishSucessful) {
 				publishSucessful = false;
 			}
@@ -165,8 +167,11 @@ public class PublishRtJob extends Job {
 			
 			GtfsRealtime.Alert.Builder alertBuilder = entity.getAlertBuilder();
 				
-			alertBuilder.getHeaderTextBuilder().addTranslationBuilder().setLanguage("es").setText(alert.headerText);
-			alertBuilder.getDescriptionTextBuilder().addTranslationBuilder().setLanguage("es").setText(alert.descriptionText);	
+			if(alert.headerText != null)
+				alertBuilder.getHeaderTextBuilder().addTranslationBuilder().setLanguage("es").setText(alert.headerText);
+			
+			if(alert.descriptionText != null)
+				alertBuilder.getDescriptionTextBuilder().addTranslationBuilder().setLanguage("es").setText(alert.descriptionText);	
 			
 			for(TimeRange range : alert.timeRanges) {
 				
