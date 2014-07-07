@@ -52,14 +52,19 @@ public class PublishRtJob extends Job {
 		
 	public void doJob() throws UnsupportedEncodingException {
 
-		// create time zone object 
-		TimeZone tzone = TimeZone.getTimeZone("America/Mexico_City");
-	      
-	    // set time zone to default
-	    tzone.setDefault(tzone);
+		String timeZoneStr = "America/Mexico_City";
 		
+		// create time zone object 
+		TimeZone tzone = TimeZone.getTimeZone(timeZoneStr);
+	   
 		SimpleDateFormat formatNow = 
 		    new SimpleDateFormat("EEEE d 'de' MMMM 'de' yyyy", new Locale("es", "ES"));
+		
+		SimpleDateFormat formatLastUpdate = 
+			    new SimpleDateFormat("dd/MM/yy HH:mm", new Locale("es", "ES"));
+		
+		formatLastUpdate.setTimeZone(tzone);
+		formatNow.setTimeZone(tzone);
 		String now = formatNow.format(new Date());
 		
 		now = now.substring(0, 1).toUpperCase() + now.substring(1);
@@ -81,8 +86,11 @@ public class PublishRtJob extends Job {
 			List<Alert> alerts = Alert.findActiveAlerts(null, true);
 			args.put("alerts", alerts);
 			args.put("now", now);
-			
 			publishPb(alerts, conn, "setravi");
+			
+			for(Alert a : alerts) {
+				a.setLastUpdatedString(formatLastUpdate);
+			}
 			
 			String newHash = publishHtml("pub/gtfs-rt.html", args, fullHtmlHash, conn, "setravi", "gtfs-rt.html"); 
 			
@@ -108,6 +116,10 @@ public class PublishRtJob extends Job {
 				args.put("alerts", agencyAlerts);
 				args.put("now", now);
 								
+				for(Alert a : agencyAlerts) {
+					a.setLastUpdatedString(formatLastUpdate);
+				}
+				
 				String newAgencyHash = publishHtml("pub/gtfs-rt.html", args, agencyHashes.get(agencyId), conn, "setravi", "gtfs-rt-" + agencyId + ".html"); 
 				
 				if(!newHash.equals(agencyHashes)) {

@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
 
 import models.Account;
 import models.Agency;
@@ -33,6 +34,11 @@ public class GtfsEntitiesCache {
 	public Map<String, List<String>> routeStopMap = new HashMap<String, List<String>>();
 	
 	public GtfsEntitiesCache() {
+		
+		// setting default server timezone to GMT on boot
+		TimeZone tz = TimeZone.getTimeZone("GMT");
+		TimeZone.setDefault(tz);
+		
 		load();
 	}
 	

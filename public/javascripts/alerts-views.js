@@ -245,10 +245,10 @@ G.AffectedTimesView = Backbone.View.extend({
 		var existingRanges = this.model.get('timeRanges');
 
 		if(fromto == 'from') {
-			existingRanges[pos].startTime = moment(evt.date).add('m', zoneOffset);
+			existingRanges[pos].startTime = moment(evt.date).add('m', zoneOffset).unix() * 1000;
 		}
 		else if(fromto == 'to') {
-			existingRanges[pos].endTime = moment(evt.date).add('m', zoneOffset);
+			existingRanges[pos].endTime = moment(evt.date).add('m', zoneOffset).unix() * 1000;
 		}
 
 		this.model.set('timeRanges', existingRanges);

@@ -95,6 +95,7 @@ public class Api extends Controller {
         Alert alert;
 
         try {
+        	String data = params.get("body");
             alert = mapper.readValue(params.get("body"), Alert.class);
 
             // security check
