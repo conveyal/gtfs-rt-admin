@@ -42,11 +42,11 @@ public class Alert extends Model implements Comparable {
 	*/
 	
 	@JsonManagedReference
-    @OneToMany(cascade = CascadeType.ALL)
+	 @OneToMany(cascade = CascadeType.ALL, mappedBy = "alert", orphanRemoval=true)
     public List<TimeRange> timeRanges;
 	
 	@JsonManagedReference
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "alert", orphanRemoval=true)
     public List<InformedEntity> informedEntities;
 	
 	public String agencyId;
