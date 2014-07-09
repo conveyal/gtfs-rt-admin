@@ -95,7 +95,8 @@ public class Alert extends Model implements Comparable {
     
     public void setLastUpdatedString(DateFormat df) {
     	
-    	lastUpdatedStr = df.format(lastUpdated);
+    	if(lastUpdated != null)
+    		lastUpdatedStr = df.format(lastUpdated);
     	
     }
     
