@@ -1,6 +1,8 @@
 package models;
 
 import java.security.MessageDigest;
+import java.sql.Timestamp;
+import java.text.DateFormat;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -13,6 +15,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.Transient;
 
 import org.apache.commons.codec.binary.Hex;
 import org.codehaus.jackson.annotate.JsonCreator;
@@ -39,11 +42,11 @@ public class Alert extends Model implements Comparable {
 	*/
 	
 	@JsonManagedReference
-    @OneToMany(cascade = CascadeType.ALL)
+	 @OneToMany(cascade = CascadeType.ALL, mappedBy = "alert", orphanRemoval=true)
     public List<TimeRange> timeRanges;
 	
 	@JsonManagedReference
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "alert", orphanRemoval=true)
     public List<InformedEntity> informedEntities;
 	
 	public String agencyId;
@@ -52,29 +55,26 @@ public class Alert extends Model implements Comparable {
 	
 	public String effect;
 	
-	@JsonIgnore
     public String url;
     
-	@JsonIgnore
 	public String headerText;
     
     @Column(length = 8000,columnDefinition="TEXT")
     public String descriptionText;
     
-    @JsonIgnore
     @Column(length = 8000,columnDefinition="TEXT")
     public String commentsText;
     
-    @JsonIgnore
     public Date created;
     
-    @JsonIgnore
     public Date lastUpdated;
     
     public Boolean publiclyVisible;
     
-    @JsonIgnore
     public Boolean deleted;
+    
+    @Transient
+    public transient String lastUpdatedStr;
     
     @JsonCreator
     public static Alert factory(long id) {
@@ -92,7 +92,14 @@ public class Alert extends Model implements Comparable {
     	return entities;
    
     }
-
+    
+    public void setLastUpdatedString(DateFormat df) {
+    	
+    	if(lastUpdated != null)
+    		lastUpdatedStr = df.format(lastUpdated);
+    	
+    }
+    
     static public List<Alert> findActiveAlerts(String agencyId, Boolean publiclyVisible) {
     	
     	List<TimeRange> timeRanges = TimeRange.find("(startTime < now() or startTime is null) and (endTime > now() or endTime is null) order by startTime, endTime").fetch();

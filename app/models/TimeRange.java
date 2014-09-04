@@ -1,12 +1,12 @@
 package models;
 
 import java.security.MessageDigest;
+import java.sql.Timestamp;
 import java.util.Date;
 import java.util.UUID;
 
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
-
 
 import org.apache.commons.codec.binary.Hex;
 import org.codehaus.jackson.annotate.JsonBackReference;
@@ -25,8 +25,8 @@ public class TimeRange extends Model {
 	@ManyToOne
     public Alert alert;
 
-	public Date startTime;
-	public Date endTime;
+	public Timestamp startTime;
+	public Timestamp endTime;
 	
 	@JsonCreator
     public static TimeRange factory(long id) {
